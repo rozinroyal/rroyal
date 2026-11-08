@@ -29,7 +29,16 @@ body{height:100%;margin:0;background:var(--sea);color:var(--ink);font:500 14px/1
 #msg{position:absolute;left:0;right:0;top:26%;text-align:center;font-family:var(--f-d);font-size:clamp(15px,4.4vw,22px);text-shadow:0 2px 0 rgba(0,0,0,.55);padding:0 8px;text-wrap:balance}
 #act{position:absolute;left:50%;bottom:124px;transform:translateX(-50%);display:flex;flex-direction:column;gap:8px;align-items:center}
 #stats{position:absolute;left:50%;bottom:0;transform:translateX(-50%);width:min(300px,100%);display:flex;flex-direction:column;gap:5px}
-.bar{height:8px;background:rgba(0,0,0,.5);border-radius:4px;overflow:hidden}
+.bar{position:relative;height:14px;background:rgba(0,0,0,.5);border-radius:5px;overflow:hidden}
+#usebar{height:6px}
+.bar .bt{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font:700 10px/1 var(--f-b);letter-spacing:.08em;color:#fff;text-shadow:0 1px 0 rgba(0,0,0,.85);pointer-events:none;font-variant-numeric:tabular-nums}
+#winfo{position:relative;display:flex;align-items:center;gap:8px;padding:5px 10px;background:var(--panel);border-radius:8px;overflow:hidden;min-height:28px;box-sizing:border-box}
+#winfo .n{flex:1;min-width:0;font-family:var(--f-d);font-size:14px;color:var(--flare);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#winfo .s{font:700 11px var(--f-b);letter-spacing:.1em;text-transform:uppercase;color:#ff9cc3;white-space:nowrap}
+#winfo .a{font-family:var(--f-d);font-size:18px;color:var(--ink);font-variant-numeric:tabular-nums;white-space:nowrap}
+#winfo.low .a{color:#ff9cc3}
+#winfo.off{opacity:.7}
+#winfo .p{position:absolute;left:0;bottom:0;height:3px;width:0;background:var(--flare)}
 .bar i{display:block;height:100%;width:0;background:var(--shield);transition:width .15s}
 .bar.hp i{background:var(--hp)}
 #wname{font-family:var(--f-d);font-size:15px;text-align:center;text-shadow:0 2px 0 rgba(0,0,0,.55)}
@@ -134,8 +143,9 @@ input:focus-visible{outline:3px solid var(--flare);outline-offset:1px}
     <button id="build" class="btn alt" type="button" hidden>WALL</button><button id="rel" class="btn alt" type="button" hidden>RELOAD</button>
     <div id="stats">
       <div id="brk"><span id="brkL">Bricks</span><i></i><i></i><i></i><i></i><i></i></div>
-      <div id="usebar" class="bar" hidden><i id="useB" style="background:#f2ecd9"></i></div><div class="bar"><i id="shB"></i></div>
-      <div class="bar hp"><i id="hpB"></i></div>
+      <div id="usebar" class="bar" hidden><i id="useB" style="background:#f2ecd9"></i></div><div class="bar"><i id="shB"></i><span class="bt" id="shT"></span></div>
+      <div class="bar hp"><i id="hpB"></i><span class="bt" id="hpT"></span></div>
+      <div id="winfo"><span class="n" id="wnm">No weapon</span><span class="s" id="wst"></span><span class="a" id="wam"></span><i class="p" id="wpg"></i></div>
       <div id="slots">
         <button class="slot" id="sl1" type="button" data-s="1"><kbd id="k1">1</kbd><b>Pickaxe</b></button>
         <button class="slot" id="sl2" type="button" data-s="2"><kbd id="k2">2</kbd><b id="sl2t">No weapon</b></button>
@@ -155,7 +165,7 @@ input:focus-visible{outline:3px solid var(--flare);outline-offset:1px}
     <div class="panel">
       <div class="brand">
         <p class="kick">2D battle royale · up to 100 players</p>
-        <h1><span class="r1">R</span>Royal<small class="ver">v3.1</small></h1>
+        <h1><span class="r1">R</span>Royal<small class="ver">v3.5</small></h1>
         <p class="lead">Jump from the plane, open chests for weapons, break rocks to build walls, and be the last one standing when the storm closes in on the island.</p>
       </div>
       <div class="acts">
@@ -252,6 +262,19 @@ input:focus-visible{outline:3px solid var(--flare);outline-offset:1px}
       <p class="kick">Changelog</p>
       <h2>What's new</h2>
       <div class="form">
+        <div class="nv"><b>v3.5</b><ul>
+          <li>New: weapon panel above the item bar with the weapon name, bullets left and a RELOADING status with a progress bar.</li>
+          <li>New: the Shield and HP bars now show their exact numbers.</li>
+        </ul></div>
+        <div class="nv"><b>v3.4</b><ul>
+          <li>New: if you sign in with Google, you can change your name any time in your Profile. Names already taken are blocked.</li>
+        </ul></div>
+        <div class="nv"><b>v3.3</b><ul>
+          <li>New: the online leaderboard now works on the website, and it saves your rank points for the Ranked tab.</li>
+        </ul></div>
+        <div class="nv"><b>v3.2</b><ul>
+          <li>New: sign in with Google from your Profile, no password needed.</li>
+        </ul></div>
         <div class="nv"><b>v3.1</b><ul>
           <li>Fix: in Ranked, some players stayed counted as alive at the end even though they were not in the match. The plane now only leaves once everyone has jumped.</li>
           <li>New: in your Profile you can see your password with a SHOW button, in case you forget it. If it is empty, type your password once to save it.</li>
@@ -1452,12 +1475,18 @@ function hud(){
   else if(Z.state==='shrink')z='Zone closing!';else z='Final zone';
   setTxt('zinfo',z);$('zinfo').classList.toggle('warn',Z.state!=='wait');
   $('hpB').style.width=Math.max(0,P.hp)+'%';$('shB').style.width=P.sh+'%';
-  setTxt('sl2t',P.w?(P.rl>0?'Reloading…':WP[P.w].n+' '+P.am+'/'+WP[P.w].mag):'No weapon');setTxt('sl3t','Kit x'+P.kits);setTxt('sl4t','Shield x'+P.shs);
+  setTxt('shT','SHIELD '+Math.ceil(P.sh)+' / 100');setTxt('hpT','HP '+Math.max(0,Math.ceil(P.hp))+' / 100');
+  const wp=P.w?WP[P.w]:null;
+  setTxt('wnm',wp?wp.n:'No weapon');setTxt('wam',wp?P.am+' / '+wp.mag:'');
+  setTxt('wst',wp?(P.rl>0?'Reloading…':(P.am<=0?'Empty':'')):'');
+  $('wpg').style.width=(wp&&P.rl>0?(1-P.rl/wp.rl)*100:0)+'%';
+  $('winfo').classList.toggle('low',!!wp&&P.am<=Math.ceil(wp.mag*.25));
+  setTxt('sl2t',P.w?WP[P.w].n:'No weapon');setTxt('sl3t','Kit x'+P.kits);setTxt('sl4t','Shield x'+P.shs);
   $('sl3').classList.toggle('on',!!(P.use&&P.use.k==='kit'));$('sl4').classList.toggle('on',!!(P.use&&P.use.k==='shield'));
   $('usebar').hidden=!P.use;if(P.use)$('useB').style.width=(P.use.t/P.use.d*100)+'%';
   $('rel').hidden=!(mode==='mobile'&&P.alive&&P.st==='ground'&&P.w&&P.am<WP[P.w].mag&&P.rl<=0);
   const useGun=!!(P.eq==='gun'&&P.w);
-  $('sl1').classList.toggle('on',!useGun);$('sl2').classList.toggle('on',useGun);
+  $('sl1').classList.toggle('on',!useGun);$('sl2').classList.toggle('on',useGun);$('winfo').classList.toggle('off',!useGun);
   const jb=$('jump'),showJ=P.alive&&P.st==='plane';
   jb.hidden=!showJ;jb.disabled=!plane.inside;setTxt('jump',plane.inside?'JUMP':'ARRIVING…');
   const nl=nearLoot(),sb=$('swap');
