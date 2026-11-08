@@ -1,4 +1,4 @@
-<!doctype html><html lang="en"><head><link rel="manifest" href="manifest.json"><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<!doctype html><html lang="en"><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
 <title>RRoyal</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bungee&family=Chakra+Petch:wght@500;700&display=swap">
@@ -2315,7 +2315,7 @@ async function cdoc(key){
   const id=await user.id();if(!id)return null;
   return db.collection('data/users/'+id).doc('acct-'+key.replace(/[^a-z0-9_]/g,c=>'-'+c.charCodeAt(0)));
 }
-async function cloudSave(){try{const d=await cdoc(acc.user.toLowerCase());if(d)await d.set(JSON.parse(JSON.stringify(acc)));}catch(e){}}
+async function cloudSave(){if(acc&&acc.gid)sbPush();try{const d=await cdoc(acc.user.toLowerCase());if(d)await d.set(JSON.parse(JSON.stringify(acc)));}catch(e){}}
 async function cloudGet(key){try{const d=await cdoc(key);if(!d)return null;const q=await d.get();return q.exists?JSON.parse(JSON.stringify(q.data())):null;}catch(e){return null;}}
 const nst=s=>{s=s||{};const n=k=>+s[k]||0;return {games:n('games'),wins:n('wins'),kills:n('kills'),best:n('best'),rg:n('rg'),rw:n('rw'),rk:n('rk'),rp:n('rp'),pk:n('pk')};};
 function figs(box,rows){box.textContent='';for(const r of rows){const d=document.createElement('div'),b=document.createElement('b'),sp=document.createElement('span');b.textContent=r[1];sp.textContent=r[0];d.append(b,sp);box.appendChild(d);}}
@@ -2459,7 +2459,7 @@ $('pDl').addEventListener('click',async()=>{
     document.body.appendChild(a);a.click();a.remove();pMsg('','File downloaded.');
   }catch(e){pMsg('Downloading is not possible here.');}
 });
-$('pOutBtn').addEventListener('click',()=>{sv();acc=null;try{localStorage.removeItem(SK);}catch(e){}pMsg();pView();});
+$('pOutBtn').addEventListener('click',()=>{sv();acc=null;sbSess=null;try{localStorage.removeItem(SK);localStorage.removeItem(SBS);}catch(e){}pMsg();pView();});
 $('pImp').addEventListener('click',()=>$('pFile').click());
 $('pFile').addEventListener('change',e=>{
   const f=e.target.files&&e.target.files[0];if(!f)return;
@@ -2485,12 +2485,70 @@ function gJwt(t){
   const b=t.split('.')[1].replace(/-/g,'+').replace(/_/g,'/');
   return JSON.parse(new TextDecoder().decode(Uint8Array.from(atob(b),c=>c.charCodeAt(0))));
 }
-function onGoogle(r){
+/* ---------- sync da conta Google com o Supabase (tabela rr_accounts) ---------- */
+var SBS='rroyal-sbsess',sbSess=null,gNonce='',sbSyncT=0;
+try{sbSess=JSON.parse(localStorage.getItem(SBS));}catch(e){}
+const sbBase=()=>SB.url.replace(/\/$/,'');
+const sbAH=t=>({apikey:SB.key,'Content-Type':'application/json',Authorization:'Bearer '+t});
+function sbSetSess(j,gid){
+  sbSess={at:j.access_token,rt:j.refresh_token,exp:Date.now()+(+j.expires_in||3600)*1000-60000,uid:j.user&&j.user.id,gid:gid||(sbSess&&sbSess.gid)||''};
+  try{localStorage.setItem(SBS,JSON.stringify(sbSess));}catch(e){}
+}
+async function sbExchange(idt,gid){
+  const body={provider:'google',id_token:idt};if(gNonce)body.nonce=gNonce;
+  const r=await fetch(sbBase()+'/auth/v1/token?grant_type=id_token',{method:'POST',headers:{apikey:SB.key,'Content-Type':'application/json'},body:JSON.stringify(body)});
+  const j=await r.json().catch(()=>({}));
+  if(!r.ok||!j.access_token)throw new Error(j.msg||j.error_description||j.message||('HTTP '+r.status));
+  sbSetSess(j,gid);
+}
+async function sbToken(){
+  if(!sbSess||!sbSess.rt)return null;
+  if(Date.now()<sbSess.exp)return sbSess.at;
+  try{
+    const r=await fetch(sbBase()+'/auth/v1/token?grant_type=refresh_token',{method:'POST',headers:{apikey:SB.key,'Content-Type':'application/json'},body:JSON.stringify({refresh_token:sbSess.rt})});
+    const j=await r.json().catch(()=>({}));
+    if(!r.ok||!j.access_token){if(r.status>=400&&r.status<500){sbSess=null;try{localStorage.removeItem(SBS);}catch(e){}}return null;}
+    sbSetSess(j);return sbSess.at;
+  }catch(e){return null;}
+}
+async function sbGetAcc(){
+  const t=await sbToken();if(!t||!sbSess.uid)throw new Error('no session');
+  const r=await fetch(sbBase()+'/rest/v1/rr_accounts?select=data&uid=eq.'+sbSess.uid,{headers:sbAH(t)});
+  if(!r.ok){let m='';try{m=(await r.json()).message||'';}catch(e){}throw new Error(m||('HTTP '+r.status));}
+  const j=await r.json();return j.length?j[0].data:null;
+}
+async function sbPutAcc(){
+  if(!acc||!acc.gid||!sbSess||sbSess.gid!==acc.gid)return;
+  const t=await sbToken();if(!t)return;
+  try{
+    await fetch(sbBase()+'/rest/v1/rr_accounts?on_conflict=uid',{method:'POST',headers:Object.assign(sbAH(t),{Prefer:'resolution=merge-duplicates,return=minimal'}),body:JSON.stringify({uid:sbSess.uid,data:JSON.parse(JSON.stringify(acc)),updated_at:new Date().toISOString()})});
+  }catch(e){}
+}
+function sbPush(){if(!sbSess)return;clearTimeout(sbSyncT);sbSyncT=setTimeout(sbPutAcc,1500);}
+/* qual conta tem mais progresso: jogos, depois pontos de rank, depois moedas */
+function accScore(a){const s=nst(a&&a.st);return [s.games,s.rp,(a&&a.cos&&+a.cos.coins)||0];}
+function accGt(x,y){const p=accScore(x),q=accScore(y);for(let i=0;i<3;i++){if(p[i]!==q[i])return p[i]>q[i];}return false;}
+function dropLocalGid(gid){
+  try{const all=ldAll();for(const k in all){if(all[k]&&all[k].gid===gid)delete all[k];}localStorage.setItem(AK,JSON.stringify(all));}catch(e){}
+}
+async function onGoogle(r){
   try{
     const p=gJwt(r.credential);
     if(!p||!p.sub||p.aud!==GCID)throw 0;
     const all=ldAll();
-    let a=Object.values(all).find(x=>x&&x.gid===p.sub);const had=!!a;
+    let a=Object.values(all).find(x=>x&&x.gid===p.sub),fresh=!a,note='';
+    try{
+      await sbExchange(r.credential,p.sub);
+      const sa=await sbGetAcc();
+      if(sa&&sa.gid===p.sub){
+        sa.st=nst(sa.st);
+        if(!a||!accGt(a,sa)){
+          if(a&&a.user.toLowerCase()!==String(sa.user).toLowerCase())lbDrop(a.user);
+          dropLocalGid(p.sub);a=sa;fresh=false;
+        }else if(String(sa.user).toLowerCase()!==a.user.toLowerCase())lbDrop(sa.user);
+      }
+      note=' Account synced online.';
+    }catch(e){note=' Online sync unavailable ('+((e&&e.message)||'error')+'). Your progress stays on this device for now.';}
     if(!a){
       let base=String(p.given_name||p.name||'Player').replace(/[^A-Za-z0-9_À-ÿ]/g,'').slice(0,16)||'Player';
       if(base.length<3)base=base.padEnd(3,'_');
@@ -2499,9 +2557,25 @@ function onGoogle(r){
       a={user:u,salt:'g',hash:'google',created:Date.now(),pw:'',gid:p.sub,st:nst({})};
     }
     a.st=nst(a.st);
-    if(had)vAcc(a);acc=a;sv();pView();pMsg('','Signed in with Google. You can change your name below.');
+    if(!fresh)vAcc(a);acc=a;sv();sbPutAcc();pView();pMsg('','Signed in with Google. You can change your name below.'+note);
   }catch(e){pMsg('Google sign-in failed. Try again.');}
 }
+/* ao abrir o jogo: se a conta Google no servidor tiver mais progresso, usa-a */
+(async function(){
+  try{
+    if(!acc||!acc.gid||!sbSess||sbSess.gid!==acc.gid)return;
+    const sa=await sbGetAcc();
+    if(!sa){sbPush();return;}
+    if(sa.gid!==acc.gid)return;
+    sa.st=nst(sa.st);
+    if(accGt(sa,acc)){
+      const old=acc.user;dropLocalGid(acc.gid);
+      acc=vAcc(sa);sv();
+      if(old.toLowerCase()!==acc.user.toLowerCase())lbDrop(old);
+      pView();
+    }else if(accGt(acc,sa))sbPush();
+  }catch(e){}
+})();
 async function lbTaken(name){
   if(!sbOn())return false;
   try{
@@ -2530,9 +2604,14 @@ $('nBtn').addEventListener('click',async()=>{
   pMsg(ok?'':'Could not save in this browser.',ok?'Name changed to '+u+'.':'');
   if(ok&&k!==ko)lbDrop(old);
 });
-function gInit(){
+async function gInit(){
   try{
-    google.accounts.id.initialize({client_id:GCID,callback:onGoogle});
+    let nh;
+    try{
+      gNonce=rndTok();
+      nh=Array.from(new Uint8Array(await crypto.subtle.digest('SHA-256',new TextEncoder().encode(gNonce))),x=>x.toString(16).padStart(2,'0')).join('');
+    }catch(e){gNonce='';nh=undefined;}
+    google.accounts.id.initialize(nh?{client_id:GCID,callback:onGoogle,nonce:nh}:{client_id:GCID,callback:onGoogle});
     google.accounts.id.renderButton($('gbtn'),{theme:'filled_black',size:'large',shape:'pill',text:'continue_with',width:300});
     $('gwrap').hidden=false;
     google.accounts.id.renderButton($('gbtn2'),{theme:'filled_black',size:'large',shape:'pill',text:'continue_with',width:240});
@@ -2578,4 +2657,4 @@ requestAnimationFrame(frame);
 })();
 </script>
 
-<script>if('serviceWorker' in navigator)navigator.serviceWorker.register('sw.js');</script></body></html>
+</body></html>
