@@ -90,6 +90,8 @@ h2{font-size:clamp(36px,11vw,56px);color:var(--flare)}
 .slot{pointer-events:auto;flex:1 1 0;min-width:0;display:flex;flex-direction:column;align-items:center;gap:1px;padding:5px 4px;background:var(--panel);border:2px solid rgba(242,236,217,.22);border-radius:8px;color:var(--ink);font-family:var(--f-b);cursor:pointer;touch-action:manipulation}
 .slot kbd{font:700 10px var(--f-b);color:var(--mute)}
 .slot b{font-family:var(--f-d);font-weight:400;font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%}
+.slot em{font:700 9px var(--f-b);font-style:normal;letter-spacing:.08em;text-transform:uppercase;color:var(--mute);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%}
+#sl3t,#sl4t{font-size:16px}
 .slot.on{border-color:var(--flare)}
 .slot:focus-visible{outline:3px solid var(--ink);outline-offset:2px}
 .figs{display:flex;gap:22px;flex-wrap:wrap}
@@ -98,6 +100,7 @@ h2{font-size:clamp(36px,11vw,56px);color:var(--flare)}
 .figs span{color:var(--mute);font-size:11px;letter-spacing:.12em;text-transform:uppercase}
 .lbrow{display:flex;gap:10px;align-items:center;width:100%;box-sizing:border-box;background:var(--panel);padding:6px 10px;border-radius:6px}
 .lbrow b{font-family:var(--f-d);font-weight:400;color:var(--flare);min-width:30px}.lbrow span{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.lbrow i{font-style:normal;font-variant-numeric:tabular-nums}
+.lbrow em{flex:none;display:flex;font-style:normal}
 .lbrow.me{outline:2px solid var(--flare)}#lbList{gap:6px}
 #gwrap{display:flex;flex-direction:column;align-items:center;gap:8px;width:100%;color:var(--mute);font-size:12px;letter-spacing:.12em;text-transform:uppercase}
 #gbtn{color-scheme:light;min-height:44px;pointer-events:auto}
@@ -149,7 +152,7 @@ input:focus-visible{outline:3px solid var(--flare);outline-offset:1px}
       <div id="slots">
         <button class="slot" id="sl1" type="button" data-s="1"><kbd id="k1">1</kbd><b>Pickaxe</b></button>
         <button class="slot" id="sl2" type="button" data-s="2"><kbd id="k2">2</kbd><b id="sl2t">No weapon</b></button>
-        <button class="slot" id="sl3" type="button" data-s="3"><kbd id="k3">3</kbd><b id="sl3t">Kit x0</b></button><button class="slot" id="sl4" type="button" data-s="4"><kbd id="k4">4</kbd><b id="sl4t">Shield x0</b></button>
+        <button class="slot" id="sl3" type="button" data-s="3"><kbd id="k3">3</kbd><b id="sl3t">x0</b><em>Med kit</em></button><button class="slot" id="sl4" type="button" data-s="4"><kbd id="k4">4</kbd><b id="sl4t">x0</b><em>Shield</em></button>
       </div>
     </div>
   </div>
@@ -165,7 +168,7 @@ input:focus-visible{outline:3px solid var(--flare);outline-offset:1px}
     <div class="panel">
       <div class="brand">
         <p class="kick">2D battle royale · up to 100 players</p>
-        <h1><span class="r1">R</span>Royal<small class="ver">v3.5</small></h1>
+        <h1><span class="r1">R</span>Royal<small class="ver">v3.7</small></h1>
         <p class="lead">Jump from the plane, open chests for weapons, break rocks to build walls, and be the last one standing when the storm closes in on the island.</p>
       </div>
       <div class="acts">
@@ -262,6 +265,14 @@ input:focus-visible{outline:3px solid var(--flare);outline-offset:1px}
       <p class="kick">Changelog</p>
       <h2>What's new</h2>
       <div class="form">
+        <div class="nv"><b>v3.7</b><ul>
+          <li>New: every rank has its own badge (Wood, Stone, Bronze, Silver, Gold, Platinum, Master, Champion). It shows in your Profile, in other players' profiles and next to every name on the leaderboard. The 3 dots under the badge show your division.</li>
+        </ul></div>
+        <div class="nv"><b>v3.6</b><ul>
+          <li>New: Med kits and Shields are picked up automatically when you walk over them (up to 3 of each).</li>
+          <li>New: damage numbers pop up when you hit an enemy. A red bigger number means a kill.</li>
+          <li>Fix: the Shield and Med kit counts in the item bar were cut off. They now show clearly (x0 to x3) with the name below.</li>
+        </ul></div>
         <div class="nv"><b>v3.5</b><ul>
           <li>New: weapon panel above the item bar with the weapon name, bullets left and a RELOADING status with a progress bar.</li>
           <li>New: the Shield and HP bars now show their exact numbers.</li>
@@ -383,7 +394,7 @@ const itemName=k=>LN[k]||WP[k].n;
 const PH=[{r:1900,wait:35,shrink:28,dps:1.5},{r:1250,wait:25,shrink:25,dps:3},{r:740,wait:22,shrink:22,dps:5},{r:400,wait:18,shrink:18,dps:8},{r:170,wait:14,shrink:14,dps:12},{r:52,wait:10,shrink:12,dps:18}];
 const PHR=PH.map(p=>({r:Math.round(p.r*2.2),wait:Math.round(p.wait*1.3),shrink:Math.round(p.shrink*1.5),dps:p.dps}));
 
-let state='menu',ents=[],P=null,bullets=[],loot=[],obs=[],builds=[],parts=[],feedL=[],plane=null,Z=null,spec=null;
+let state='menu',ents=[],P=null,bullets=[],loot=[],obs=[],builds=[],parts=[],dtx=[],feedL=[],plane=null,Z=null,spec=null;
 let G={time:0},overT=0,overShown=false,menuT=0,vw=0,vh=0,dpr=1,scale=1,mouseAng=0,mouseDown=false;
 const cam={x:W/2,y:H/2};
 const K={},sticks={mv:null,aim:null};
@@ -419,6 +430,27 @@ function rankOf(p){
   p=Math.max(0,p|0);let i=7;while(p<RT[i])i--;
   if(i===7)return {name:'Champion',i};
   const sz=(RT[i+1]-RT[i])/3;return {name:RN[i]+' '+(Math.min(2,Math.floor((p-RT[i])/sz))+1),i};
+}
+const RCOL=[['#8a5a2b','#4d3017','#c48a4f'],['#8d9aa3','#4c565e','#d3dbe0'],['#cd7f32','#7a4515','#f3b57a'],['#c9d1d6','#6c7a84','#f6fafc'],['#ffb81c','#a86f00','#ffe39a'],['#5fe0d8','#1f7f7a','#d2fffb'],['#b78bff','#5a3aa0','#eadcff'],['#ff4f8b','#8a1040','#ffd23f']];
+function rankIcon(r,px){
+  const i=r.i,c=RCOL[i],dv=i<7?+r.name.slice(-1):3;
+  const em=[
+    `<path d="M10 14q6-4 12 0M10 20q6-4 12 0" fill="none" stroke="${c[1]}" stroke-width="2.2" stroke-linecap="round"/>`,
+    `<polygon points="16,11 22,15 20,23 12,23 10,15" fill="${c[2]}" stroke="${c[1]}" stroke-width="1.4" stroke-linejoin="round"/>`,
+    `<path d="M10 16l6 5 6-5" fill="none" stroke="${c[2]}" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/>`,
+    `<path d="M10 13l6 5 6-5M10 20l6 5 6-5" fill="none" stroke="${c[1]}" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>`,
+    `<polygon points="16,10 18,15.25 23.61,15.53 19.23,19.05 20.7,24.47 16,21.4 11.3,24.47 12.77,19.05 8.39,15.53 14,15.25" fill="${c[2]}" stroke="${c[1]}" stroke-width="1.2" stroke-linejoin="round"/>`,
+    `<polygon points="16,10 23,18 16,27 9,18" fill="${c[2]}" stroke="${c[1]}" stroke-width="1.4" stroke-linejoin="round"/><path d="M9 18h14M16 10l-3 8 3 9 3-9z" fill="none" stroke="${c[1]}" stroke-width="1" stroke-linejoin="round"/>`,
+    `<path d="M9 24V14l4 5 3-7 3 7 4-5v10z" fill="${c[2]}" stroke="${c[1]}" stroke-width="1.4" stroke-linejoin="round"/>`,
+    `<path d="M8 24V13l4.5 5 3.5-8 3.5 8 4.5-5v11z" fill="${c[2]}" stroke="#fff" stroke-width="1.2" stroke-linejoin="round"/><circle cx="8" cy="12" r="1.6" fill="#fff"/><circle cx="16" cy="9" r="1.6" fill="#fff"/><circle cx="24" cy="12" r="1.6" fill="#fff"/>`
+  ][i];
+  let pips='';
+  if(i<7)for(let k=0;k<3;k++)pips+=`<circle cx="${11+k*5}" cy="38" r="1.8" fill="${k<dv?c[0]:'#000'}" opacity="${k<dv?1:.35}"/>`;
+  return `<svg viewBox="0 0 32 41" width="${px}" height="${Math.round(px*41/32)}" role="img" aria-label="${r.name}" style="flex:none;display:block"><path d="M16 2l13 5v11c0 8-6 13-13 16C9 31 3 26 3 18V7z" fill="${c[0]}" stroke="${c[1]}" stroke-width="1.6" stroke-linejoin="round"/><path d="M16 5l10 4v9c0 6-4.5 10-10 12.5C10.5 28 6 24 6 18V9z" fill="#fff" opacity=".18"/>${em}${pips}</svg>`;
+}
+function rankSet(el,r,rp,px){
+  el.innerHTML=rankIcon(r,px);el.style.display='flex';el.style.alignItems='center';el.style.gap='10px';
+  const t=document.createElement('span');t.textContent=r.name+' · '+rp+' RP';el.appendChild(t);
 }
 function rpDelta(r,place,kills){
   const G=[1.5,1.3,1.15,1,.85,.7,.55,.4][r],L=[.25,.5,.75,1,1.25,1.5,1.8,2.2][r];
@@ -645,6 +677,11 @@ function hurt(e,d,by){
   let rem=d;
   if(e.sh>0){const s=Math.min(e.sh,rem);e.sh-=s;rem-=s;}
   e.hp-=rem;e.hitT=.14;
+  if(by===P&&e!==P){
+    const v=Math.round(d),t=dtx.find(q=>q.e===e&&q.age<.04);
+    if(t){t.v+=v;t.k=t.k||e.hp<=0;}
+    else dtx.push({e,x:e.x+rnd(-8,8),y:e.y-24,v,age:0,life:.85,k:e.hp<=0});
+  }
   if(e===P)snd(180,.1,'square',.1,.5);
   if(e.hp<=0)die(e,by);
 }
@@ -658,6 +695,15 @@ function pickups(e){
     else if(it.k==='brick'){if(e.br<5){const g=Math.min(it.n||1,5-e.br);e.br+=g;it.n=(it.n||1)-g;if(it.n<=0)it.gone=true;if(e===P)snd(300,.1,'square',.08,1.3);}}
     else if(!e.w){giveW(e,it);it.gone=true;}
     else if(e.isBot&&WP[it.k].tier>WP[e.w].tier){loot.push({x:e.x,y:e.y,k:e.w,am:e.am});giveW(e,it);it.gone=true;}
+  }
+}
+function autoPick(e){
+  for(const it of loot){
+    if(it.gone||(it.k!=='med'&&it.k!=='shield'))continue;
+    const dx=it.x-e.x,dy=it.y-e.y;if(dx*dx+dy*dy>900)continue;
+    if(it.k==='med'){if(e.kits>=3)continue;e.kits++;}
+    else{if(e.shs>=3)continue;e.shs++;}
+    it.gone=true;snd(440,.12,'square',.08,1.4);
   }
 }
 function nearLoot(){
@@ -1032,7 +1078,7 @@ function botGround(b,dt){
 function startGame(){
   NP=ranked?100:20;W=H=ranked?9400:4200;PHc=ranked?PHR:PH;
   genMap();
-  ents=[];bullets=[];parts=[];feedL=[];G.time=0;overT=0;overShown=false;spec=null;
+  ents=[];bullets=[];parts=[];dtx=[];feedL=[];G.time=0;overT=0;overShown=false;spec=null;
   for(const k in K)K[k]=false;
   const a=rnd(0,TAU),dx=Math.cos(a),dy=Math.sin(a);
   const KK=W/4200,cx=W/2+rnd(-450,450)*KK,cy=H/2+rnd(-450,450)*KK,spd=330*KK;
@@ -1136,7 +1182,7 @@ function update(dt){
         else{e.ang=mouseAng;firing=mouseDown;}
         if(firing){e.use=null;if(e.eq==='gun'&&e.w)fire(e);else swing(e);}
       }
-      if(e.isBot)pickups(e);
+      if(e.isBot)pickups(e);else autoPick(e);
       if(Math.hypot(e.x-Z.cx,e.y-Z.cy)>Z.r&&Z.dps>0){
         e.hp-=Z.dps*dt;
         if(e.hp<=0)die(e,null);
@@ -1173,6 +1219,7 @@ function update(dt){
     if(dead)bullets.splice(i,1);
   }
   for(let i=parts.length-1;i>=0;i--){const p=parts[i];p.life-=dt;p.x+=p.vx*dt;p.y+=p.vy*dt;if(p.life<=0)parts.splice(i,1);}
+  for(let i=dtx.length-1;i>=0;i--){const t=dtx[i];t.age+=dt;t.life-=dt;t.y-=38*dt;if(t.life<=0)dtx.splice(i,1);}
   if(Math.floor(G.time*2)%6===0&&loot.length>400)loot=loot.filter(l=>!l.gone);
   // fim
   if(!overShown){if(!teamAlive(P.team)||aliveTeams()<=1){overT+=dt;if(overT>(P.alive?1.2:1.8))showOver();}else overT=0;}
@@ -1390,6 +1437,14 @@ function draw(){
   for(const b of bullets){ctx.strokeStyle=b.col;ctx.beginPath();ctx.moveTo(b.x,b.y);ctx.lineTo(b.x-b.vx*.03,b.y-b.vy*.03);ctx.stroke();}
   for(const p of parts){ctx.globalAlpha=Math.max(0,p.life*3);ctx.fillStyle=p.c;ctx.fillRect(p.x-1.5,p.y-1.5,3,3);}
   ctx.globalAlpha=1;
+  if(dtx.length){
+    ctx.save();ctx.textAlign='center';ctx.lineJoin='round';ctx.lineWidth=3;ctx.strokeStyle='rgba(0,0,0,.65)';
+    for(const t of dtx){
+      ctx.globalAlpha=Math.min(1,t.life*2.2);ctx.font=(t.k?20:15)+'px Bungee,Impact,sans-serif';
+      ctx.strokeText(t.v,t.x,t.y);ctx.fillStyle=t.k?'#ff5a5a':'#ffd23f';ctx.fillText(t.v,t.x,t.y);
+    }
+    ctx.restore();
+  }
   if(plane&&!plane.dead&&state!=='menu'){
     ctx.save();ctx.translate(plane.x+30,plane.y+50);ctx.rotate(plane.a);ctx.globalAlpha=.22;planeShape('#000');ctx.restore();
     ctx.save();ctx.translate(plane.x,plane.y);ctx.rotate(plane.a);planeShape();ctx.restore();
@@ -1481,7 +1536,7 @@ function hud(){
   setTxt('wst',wp?(P.rl>0?'Reloading…':(P.am<=0?'Empty':'')):'');
   $('wpg').style.width=(wp&&P.rl>0?(1-P.rl/wp.rl)*100:0)+'%';
   $('winfo').classList.toggle('low',!!wp&&P.am<=Math.ceil(wp.mag*.25));
-  setTxt('sl2t',P.w?WP[P.w].n:'No weapon');setTxt('sl3t','Kit x'+P.kits);setTxt('sl4t','Shield x'+P.shs);
+  setTxt('sl2t',P.w?WP[P.w].n:'No weapon');setTxt('sl3t','x'+P.kits);setTxt('sl4t','x'+P.shs);
   $('sl3').classList.toggle('on',!!(P.use&&P.use.k==='kit'));$('sl4').classList.toggle('on',!!(P.use&&P.use.k==='shield'));
   $('usebar').hidden=!P.use;if(P.use)$('useB').style.width=(P.use.t/P.use.d*100)+'%';
   $('rel').hidden=!(mode==='mobile'&&P.alive&&P.st==='ground'&&P.w&&P.am<WP[P.w].mag&&P.rl<=0);
@@ -1605,7 +1660,7 @@ async function cloudGet(key){try{const d=await cdoc(key);if(!d)return null;const
 const nst=s=>{s=s||{};const n=k=>+s[k]||0;return {games:n('games'),wins:n('wins'),kills:n('kills'),best:n('best'),rg:n('rg'),rw:n('rw'),rk:n('rk'),rp:n('rp'),pk:n('pk')};};
 function figs(box,rows){box.textContent='';for(const r of rows){const d=document.createElement('div'),b=document.createElement('b'),sp=document.createElement('span');b.textContent=r[1];sp.textContent=r[0];d.append(b,sp);box.appendChild(d);}}
 function statRows(s){const d=Math.max(1,s.games-s.wins);return [['rank pts',s.rp],['games',s.games],['wins',s.wins],['kills',s.kills],['K/D',(s.kills/d).toFixed(2)],['best place',s.best?'#'+s.best:'-'],['ranked games',s.rg],['ranked wins',s.rw],['ranked kills',s.rk],['peak RP',s.pk]];}
-function pvShow(v){const s=nst(v);$('pvN').textContent=String(v.name||'Player');$('pvR').textContent=rankOf(s.rp).name+' · '+s.rp+' RP';figs($('pvF'),statRows(s));show('pv');}
+function pvShow(v){const s=nst(v);$('pvN').textContent=String(v.name||'Player');rankSet($('pvR'),rankOf(s.rp),s.rp,34);figs($('pvF'),statRows(s));show('pv');}
 $('pvBack').addEventListener('click',()=>show('lb'));
 async function pushLb(){
   if(!acc)return 'skip';
@@ -1648,7 +1703,7 @@ async function lbLoad(){
       const r=document.createElement('div');r.className='lbrow'+(v.mine?' me':'');
       const a=document.createElement('b'),n=document.createElement('span'),c=document.createElement('i');
       a.textContent='#'+(i+1);n.textContent=String(v.name||'Player');c.textContent=lbTab==='rp'?rankOf(+v.rp||0).name+' · '+(+v.rp||0)+' RP':(+v[lbTab]||0)+(lbTab==='kills'?' kills':' wins');
-      r.append(a,n,c);r.addEventListener('click',()=>pvShow(v));box.appendChild(r);
+      const ic=document.createElement('em');ic.innerHTML=rankIcon(rankOf(+v.rp||0),22);r.append(a,ic,n,c);r.addEventListener('click',()=>pvShow(v));box.appendChild(r);
     });
   }catch(e){box.textContent='Could not load the leaderboard.';}
 }
@@ -1679,7 +1734,7 @@ function pView(){
   $('pOut').hidden=!!acc;$('pIn').hidden=!acc;
   $('profBtn').textContent=acc?'PROFILE · '+acc.user:'PROFILE';
   if(acc){
-    const s=acc.st;$('pName').textContent=acc.user;$('pShow').type='password';$('pShowBtn').textContent=acc.pw?'SHOW':'SAVE';$('pShow').readOnly=!!acc.pw;$('pShow').value=acc.pw||'';$('pShow').placeholder=acc.pw?'':'Type your password once to save it';$('pRank').textContent=rankOf(s.rp).name+' · '+s.rp+' RP';figs($('pFigs'),statRows(s));
+    const s=acc.st;$('pName').textContent=acc.user;$('pShow').type='password';$('pShowBtn').textContent=acc.pw?'SHOW':'SAVE';$('pShow').readOnly=!!acc.pw;$('pShow').value=acc.pw||'';$('pShow').placeholder=acc.pw?'':'Type your password once to save it';rankSet($('pRank'),rankOf(s.rp),s.rp,34);figs($('pFigs'),statRows(s));
     $('pShow').parentElement.hidden=!!acc.gid;
     $('nameRow').hidden=!acc.gid;if(acc.gid)$('nName').value=acc.user;
   }else{
