@@ -194,7 +194,7 @@ input:focus-visible{outline:3px solid var(--flare);outline-offset:1px}
     <div class="panel">
       <div class="brand">
         <p class="kick">2D battle royale · up to 100 players</p>
-        <h1><span class="r1">R</span>Royal<small class="ver">v4.0</small></h1>
+        <h1><span class="r1">R</span>Royal<small class="ver">v4.1</small></h1>
         <p class="lead">Jump from the plane, open chests for weapons, break rocks to build walls, and be the last one standing when the storm closes in on the island.</p>
       </div>
       <div class="acts">
@@ -291,6 +291,9 @@ input:focus-visible{outline:3px solid var(--flare);outline-offset:1px}
       <p class="kick">Changelog</p>
       <h2>What's new</h2>
       <div class="form">
+        <div class="nv"><b>v4.1</b><ul>
+          <li>New: controller support on PC and phone (Xbox, PlayStation and most Bluetooth or USB pads). Left stick moves, right stick aims and shoots, RT shoots, A jumps and picks up, B or LT builds a wall, X reloads, Y swaps Pickaxe and weapon, LB uses a Med kit, RB uses a Shield, Back opens the map. Press any button once so the browser detects the pad.</li>
+        </ul></div>
         <div class="nv"><b>v4.0</b><ul>
           <li>New: rank animation at the end of a Ranked match. Your soldier faces the screen, the RP counts up or down next to your badge, and when your rank changes the badge flashes and swaps.</li>
         </ul></div>
@@ -896,6 +899,7 @@ function inputVec(){
   if(K[KB.left]||ar('arrowleft'))x--;if(K[KB.right]||ar('arrowright'))x++;if(K[KB.up]||ar('arrowup'))y--;if(K[KB.down]||ar('arrowdown'))y++;
   const l=Math.hypot(x,y);if(l>0){x/=l;y/=l;}
   if(sticks.mv){x+=sticks.mv.vx;y+=sticks.mv.vy;}
+  if(GP.on){x+=GP.mx;y+=GP.my;}
   const m=Math.hypot(x,y);if(m>1){x/=m;y/=m;}
   return [x,y];
 }
@@ -1171,6 +1175,29 @@ function startGame(){
   for(const s of ['menu','qmode','pv','tmode','ctrl','prof','keys','lb','news','cred','over'])$(s).hidden=true;
   $('hud').hidden=false;mapOpen=false;$('bigmap').hidden=true;$('mapx').hidden=true;rkStop();$('rka').hidden=true;
 }
+/* ---------- gamepad ---------- */
+const GP={on:false,mx:0,my:0,ax:0,ay:0,am:0,ang:0,aimOn:false,fire:false},GPB={};
+function pollPad(){
+  let p=null;
+  try{const l=navigator.getGamepads?navigator.getGamepads():[];for(const g of l)if(g&&g.connected){p=g;break;}}catch(e){}
+  if(!p){GP.on=false;GP.mx=GP.my=GP.ax=GP.ay=GP.am=0;GP.aimOn=false;GP.fire=false;return;}
+  GP.on=true;
+  const dz=(x,y)=>{const m=Math.hypot(x,y);if(m<.2)return [0,0,0];const s=Math.min(1,(m-.2)/.8);return [x/m*s,y/m*s,s];};
+  const a=p.axes,l=dz(a[0]||0,a[1]||0),r=dz(a[2]||0,a[3]||0);
+  GP.mx=l[0];GP.my=l[1];GP.ax=r[0];GP.ay=r[1];GP.am=r[2];GP.aimOn=r[2]>0;if(GP.aimOn)GP.ang=Math.atan2(r[1],r[0]);
+  const bp=i=>!!(p.buttons[i]&&(p.buttons[i].pressed||p.buttons[i].value>.5));
+  const edge=i=>{const n=bp(i),o=GPB[i];GPB[i]=n;return n&&!o;};
+  GP.fire=bp(7);
+  const eA=edge(0),eB=edge(1),eX=edge(2),eY=edge(3),eLB=edge(4),eRB=edge(5),eLT=edge(6),eBk=edge(8);
+  if(!P||hudEdit||state==='menu')return;
+  if(eA){if(P.st==='plane')doJump();else doTake();}
+  if(eB||eLT)doBuild();
+  if(eX)startReload(P);
+  if(eY)doSlot(P.eq==='gun'?1:2);
+  if(eLB)doSlot(3);
+  if(eRB)doSlot(4);
+  if(eBk)toggleMap();
+}
 /* ---------- rank animation ---------- */
 let rkA=null;
 function rkStop(){if(rkA){cancelAnimationFrame(rkA.raf);rkA=null;}}
@@ -1307,6 +1334,7 @@ function update(dt){
         if(s&&Math.hypot(s.vx,s.vy)>.2){e.ang=Math.atan2(s.vy,s.vx);firing=Math.hypot(s.vx,s.vy)>.45;}
         else if(mode==='mobile'){if(ix||iy)e.ang=turnTo(e.ang,Math.atan2(iy,ix),12*dt);}
         else{e.ang=mouseAng;firing=mouseDown;}
+        if(GP.on){if(GP.aimOn){e.ang=GP.ang;mouseAng=GP.ang;if(GP.am>.5)firing=true;}if(GP.fire)firing=true;}
         if(firing){e.use=null;if(e.eq==='gun'&&e.w)fire(e);else swing(e);}
         else if(!e.use){if(e.hp<50&&e.kits>0)startUse(e,'kit');else if(e.sh<=50&&e.shs>0)startUse(e,'shield');}
       }
@@ -2020,7 +2048,7 @@ function frame(ts){
   const rot=mode==='mobile'&&state!=='menu'&&vh>vw;
   if(cache.rot!==rot){cache.rot=rot;$('rotate').hidden=!rot;if(rot){sticks.mv=null;sticks.aim=null;}}
   if(state==='menu')menuT+=dt;
-  else if(!rot&&!frozen)update(dt);
+  else if(!rot&&!frozen){pollPad();update(dt);}
   draw();hud();if(mapOpen)drawBig();
   requestAnimationFrame(frame);
 }
