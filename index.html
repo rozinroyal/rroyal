@@ -215,6 +215,7 @@ input:focus-visible{outline:3px solid var(--flare);outline-offset:1px}
       <div id="pIn" class="form" hidden>
         <h2 id="pName"></h2>
         <div id="pRank" class="rk" style="font-size:22px"></div><div id="pFigs" class="figs"></div>
+        <div id="nameRow" class="pw" hidden><input id="nName" type="text" placeholder="Your name" maxlength="16" autocomplete="off" autocapitalize="off" spellcheck="false"><button id="nBtn" class="btn alt" type="button">CHANGE NAME</button></div>
         <div class="row2"><button id="pSave" class="btn" type="button">SAVE</button><button id="pDl" class="btn alt" type="button">DOWNLOAD</button></div>
         <div class="pw"><input id="pShow" type="password" readonly placeholder="Password"><button id="pShowBtn" class="btn alt" type="button">SHOW</button></div>
         <button id="pOutBtn" class="btn alt" type="button">Log out</button>
@@ -1651,6 +1652,7 @@ function pView(){
   if(acc){
     const s=acc.st;$('pName').textContent=acc.user;$('pShow').type='password';$('pShowBtn').textContent=acc.pw?'SHOW':'SAVE';$('pShow').readOnly=!!acc.pw;$('pShow').value=acc.pw||'';$('pShow').placeholder=acc.pw?'':'Type your password once to save it';$('pRank').textContent=rankOf(s.rp).name+' · '+s.rp+' RP';figs($('pFigs'),statRows(s));
     $('pShow').parentElement.hidden=!!acc.gid;
+    $('nameRow').hidden=!acc.gid;if(acc.gid)$('nName').value=acc.user;
   }else{
     $('tabNew').classList.toggle('on',regMode);$('tabIn').classList.toggle('on',!regMode);
     $('pGo').textContent=regMode?'CREATE ACCOUNT':'LOG IN';
@@ -1749,9 +1751,37 @@ function onGoogle(r){
       a={user:u,salt:'g',hash:'google',created:Date.now(),pw:'',gid:p.sub,st:nst({})};
     }
     a.st=nst(a.st);
-    acc=a;sv();pView();pMsg('','Signed in with Google.');
+    acc=a;sv();pView();pMsg('','Signed in with Google. You can change your name below.');
   }catch(e){pMsg('Google sign-in failed. Try again.');}
 }
+async function lbTaken(name){
+  if(!sbOn())return false;
+  try{
+    const r=await fetch(sbU('?select=name&limit=1&name=eq.'+encodeURIComponent(name)),{headers:sbH()});
+    if(!r.ok)return false;
+    return (await r.json()).length>0;
+  }catch(e){return false;}
+}
+async function lbDrop(name){
+  if(!sbOn())return;
+  try{await fetch(sbU('?name=eq.'+encodeURIComponent(name)),{method:'DELETE',headers:Object.assign(sbH(),{Prefer:'return=minimal'})});}catch(e){}
+}
+$('nBtn').addEventListener('click',async()=>{
+  if(!acc||!acc.gid)return;
+  const u=$('nName').value.trim(),old=acc.user;
+  if(!/^[A-Za-z0-9_À-ÿ]{3,16}$/.test(u))return pMsg('Name: 3-16 letters, numbers or _.');
+  if(u===old)return pMsg('','That is already your name.');
+  const all=ldAll(),k=u.toLowerCase(),ko=old.toLowerCase();
+  if(k!==ko&&all[k])return pMsg('That name is taken. Pick another.');
+  if(k!==ko&&await lbTaken(u))return pMsg('That name is already on the leaderboard. Pick another.');
+  delete all[ko];
+  try{localStorage.setItem(AK,JSON.stringify(all));}catch(e){}
+  acc.user=u;
+  const ok=sv();
+  pView();
+  pMsg(ok?'':'Could not save in this browser.',ok?'Name changed to '+u+'.':'');
+  if(ok&&k!==ko)lbDrop(old);
+});
 function gInit(){
   try{
     google.accounts.id.initialize({client_id:GCID,callback:onGoogle});
