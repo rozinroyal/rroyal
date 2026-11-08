@@ -168,7 +168,7 @@ input:focus-visible{outline:3px solid var(--flare);outline-offset:1px}
     <div class="panel">
       <div class="brand">
         <p class="kick">2D battle royale · up to 100 players</p>
-        <h1><span class="r1">R</span>Royal<small class="ver">v3.7</small></h1>
+        <h1><span class="r1">R</span>Royal<small class="ver">v3.8</small></h1>
         <p class="lead">Jump from the plane, open chests for weapons, break rocks to build walls, and be the last one standing when the storm closes in on the island.</p>
       </div>
       <div class="acts">
@@ -265,6 +265,9 @@ input:focus-visible{outline:3px solid var(--flare);outline-offset:1px}
       <p class="kick">Changelog</p>
       <h2>What's new</h2>
       <div class="form">
+        <div class="nv"><b>v3.8</b><ul>
+          <li>New (PC): scroll the mouse wheel to switch between the Pickaxe and your weapon. You can also click the slots of the item bar with the mouse.</li>
+        </ul></div>
         <div class="nv"><b>v3.7</b><ul>
           <li>New: every rank has its own badge (Wood, Stone, Bronze, Silver, Gold, Platinum, Master, Champion). It shows in your Profile, in other players' profiles and next to every name on the leaderboard. The 3 dots under the badge show your division.</li>
         </ul></div>
@@ -906,6 +909,14 @@ window.addEventListener('blur',()=>{for(const k in K)K[k]=false;mouseDown=false;
 $('jump').addEventListener('pointerdown',e=>{e.preventDefault();doJump();});
 $('swap').addEventListener('pointerdown',e=>{e.preventDefault();doTake();});
 document.querySelectorAll('.slot').forEach(s=>s.addEventListener('pointerdown',e=>{e.preventDefault();doSlot(+s.dataset.s);}));
+let wheelT=0;
+window.addEventListener('wheel',e=>{
+  if(mode!=='pc'||state==='menu'||mapOpen||!P||!P.alive||P.st!=='ground'||!P.w)return;
+  if(e.target&&e.target.closest&&e.target.closest('.screen'))return;
+  e.preventDefault();
+  const t=performance.now();if(t-wheelT<160)return;wheelT=t;
+  doSlot(P.eq==='gun'?1:2);
+},{passive:false});
 $('build').addEventListener('pointerdown',e=>{e.preventDefault();doBuild();});
 function show(id){for(const s of ['menu','qmode','pv','tmode','ctrl','prof','keys','lb','news','cred','over']){$(s).hidden=s!==id;if(s===id)$(s).scrollTop=0;}}
 function mark(){
