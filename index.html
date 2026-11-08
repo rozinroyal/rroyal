@@ -216,7 +216,7 @@ input:focus-visible{outline:3px solid var(--flare);outline-offset:1px}
   <section id="menu" class="screen">
     <div class="lobby">
       <div class="lp">
-        <p class="kick" style="text-align:center">RRoyal · v5.8</p>
+        <p class="kick" style="text-align:center">RRoyal · v6.0</p>
         <h3 class="lt">BATTLE ROYALE</h3>
         <button id="modeBtn" class="btn alt" type="button"><span id="modeT">RANKED: OFF</span><small id="modeS">Solo</small></button>
         <button id="play" class="btn big" type="button">PLAY</button>
@@ -307,6 +307,12 @@ input:focus-visible{outline:3px solid var(--flare);outline-offset:1px}
       <p class="kick">Changelog</p>
       <h2>What's new</h2>
       <div class="form">
+        <div class="nv"><b>v6.0</b><ul>
+          <li>New: houses have roofs, so you cannot see inside until you walk in. The roof fades away when you enter, and bots and loot inside stay hidden from outside.</li>
+          <li>New: rooms inside houses, with furniture, and bigger hotels with a lobby desk, several rooms and extra chests.</li>
+          <li>New: cities and towns have streets and a hotel, and roads link the places on the map. Roads show on the minimap.</li>
+          <li>Ranked: the map is now twice as big, with 12 new places, including 3 more cities, a resort and more towns.</li>
+        </ul></div>
         <div class="nv"><b>v5.8</b><ul>
           <li>Fix: the game no longer pauses when you switch to another tab or window on PC. The match keeps running in the background, with the sound muted.</li>
         </ul></div>
@@ -544,7 +550,7 @@ const RAR=[{n:'Common',d:1,r:1,c:'#c9d1d6'},{n:'Uncommon',d:1.1,r:.9,c:'#5ee08a'
 function rollR(ch){const w=ch?[45,28,16,8,3]:[60,25,10,4,1];let r=Math.random()*100;for(let i=0;i<5;i++){r-=w[i];if(r<=0)return i;}return 0;}
 const itemName=k=>LN[k]||WP[k].n;
 const PH=[{r:1900,wait:35,shrink:28,dps:1.5},{r:1250,wait:25,shrink:25,dps:3},{r:740,wait:22,shrink:22,dps:5},{r:400,wait:18,shrink:18,dps:8},{r:170,wait:14,shrink:14,dps:12},{r:52,wait:10,shrink:12,dps:18}];
-const PHR=PH.map(p=>({r:Math.round(p.r*2.2),wait:Math.round(p.wait*1.3),shrink:Math.round(p.shrink*1.5),dps:p.dps}));
+const PHR=PH.map(p=>({r:Math.round(p.r*3.1),wait:Math.round(p.wait*1.4),shrink:Math.round(p.shrink*1.9),dps:p.dps}));
 
 let state='menu',ents=[],P=null,bullets=[],loot=[],obs=[],builds=[],parts=[],dtx=[],feedL=[],plane=null,Z=null,spec=null;
 let G={time:0},overT=0,overShown=false,menuT=0,vw=0,vh=0,dpr=1,scale=1,mouseAng=0,mouseDown=false;
@@ -863,44 +869,116 @@ function addWalls(b){
   };
   segH(b.y,side===0,-1);segH(b.y+b.h-t,side===1,1);segV(b.x,side===2,-1);segV(b.x+b.w-t,side===3,1);
 }
-let chests=[],trees=[];
+let chests=[],trees=[],roads=[],rfT=0;
+const onRoad=(x,y,m)=>roads.some(r=>x>r.x-m&&x<r.x+r.w+m&&y>r.y-m&&y<r.y+r.h+m);
+function addInterior(b){
+  const t=10,g=80,n=b.kind==='hotel'?2:b.w>=140?1:0;b.parts=[];
+  for(let i=1;i<=n;i++){
+    const px=b.x+b.w*i/(n+1),gy=b.y+t+14+rs(0,1)*(b.h-2*t-28-g);
+    addObs({t:'r',x:px-5,y:b.y+t,w:t,h:gy-b.y-t});
+    addObs({t:'r',x:px-5,y:gy+g,w:t,h:b.y+b.h-t-gy-g});
+    b.parts.push({x:px,gy:gy+g/2});
+  }
+  b.fur=[];const T=['bed','sofa','table','shelf','rug','bed'],cnt=b.kind==='hotel'?8:Math.min(6,2+Math.floor(b.w*b.h/9000));
+  if(b.kind==='hotel'&&b.door)b.fur.push({t:'desk',x:b.door.x-b.door.nx*58,y:b.door.y-b.door.ny*58});
+  let q=0;
+  while(b.fur.length<cnt&&q<60){
+    q++;const x=rs(b.x+30,b.x+b.w-30),y=rs(b.y+28,b.y+b.h-28);
+    if(b.door&&Math.hypot(x-b.door.x,y-b.door.y)<64)continue;
+    if(b.parts.some(p=>Math.abs(x-p.x)<34)||b.fur.some(f=>Math.hypot(f.x-x,f.y-y)<46))continue;
+    b.fur.push({t:T[Math.floor(rs(0,T.length))],x,y});
+  }
+}
+function drawFur(b){
+  for(const f of b.fur){
+    const x=f.x,y=f.y;
+    if(f.t==='bed'){ctx.fillStyle='#5b3a24';ctx.fillRect(x-17,y-24,34,48);ctx.fillStyle='#e9e4d6';ctx.fillRect(x-14,y-20,28,40);ctx.fillStyle='#6f93c4';ctx.fillRect(x-14,y-2,28,22);ctx.fillStyle='#fff';ctx.fillRect(x-11,y-18,22,9);}
+    else if(f.t==='sofa'){ctx.fillStyle='#46598a';ctx.fillRect(x-24,y-11,48,22);ctx.fillStyle='#5d74ab';ctx.fillRect(x-24,y-11,48,8);}
+    else if(f.t==='table'){ctx.fillStyle='#4a2f1a';for(const c of [[-22,-14],[18,-14],[-22,10],[18,10]])ctx.fillRect(x+c[0],y+c[1],6,6);ctx.fillStyle='#7a5230';ctx.fillRect(x-16,y-11,32,22);ctx.fillStyle='#8f6238';ctx.fillRect(x-14,y-9,28,18);}
+    else if(f.t==='shelf'){ctx.fillStyle='#3f2a18';ctx.fillRect(x-20,y-6,40,12);ctx.fillStyle='#c77d3a';ctx.fillRect(x-17,y-3,6,6);ctx.fillStyle='#3a8f6a';ctx.fillRect(x-8,y-3,8,6);ctx.fillStyle='#b43c3c';ctx.fillRect(x+3,y-3,7,6);}
+    else if(f.t==='desk'){ctx.fillStyle='#2f2118';ctx.fillRect(x-36,y-9,72,18);ctx.fillStyle='#6b4a2b';ctx.fillRect(x-34,y-7,68,14);ctx.fillStyle='#d9d4c0';ctx.fillRect(x-6,y-5,12,8);}
+    else{ctx.fillStyle='#7b2d2d';ctx.fillRect(x-26,y-18,52,36);ctx.strokeStyle='#c9a24a';ctx.lineWidth=2;ctx.strokeRect(x-22,y-14,44,28);}
+  }
+}
+function drawRoofs(vx,vy,gr,vis){
+  const now=performance.now(),k=Math.min(1,Math.min(.1,(now-(rfT||now))/1000)*9);rfT=now;
+  for(const b of builds){
+    if(!vis(b.cx,b.cy,300)){b.ra=1;continue;}
+    const inn=gr&&vx>b.x&&vx<b.x+b.w&&vy>b.y&&vy<b.y+b.h,a0=b.ra===undefined?1:b.ra;
+    b.ra=a0+((inn?0:1)-a0)*k;
+    if(b.ra<.02)continue;
+    const K=b.kind,col=K==='hotel'?'#35507a':K==='barn'?'#a33a2c':K==='city'?'#7d838c':K==='farm'?'#8f7a4a':K==='town'?'#9b6a4a':'#b5583c';
+    ctx.save();ctx.globalAlpha=b.ra;
+    ctx.fillStyle='rgba(0,0,0,.25)';ctx.fillRect(b.x+5,b.y+7,b.w,b.h);
+    ctx.fillStyle=col;ctx.fillRect(b.x,b.y,b.w,b.h);
+    ctx.fillStyle='rgba(255,255,255,.14)';ctx.fillRect(b.x,b.y,b.w,b.h*.5);
+    ctx.fillStyle='rgba(0,0,0,.2)';ctx.fillRect(b.x,b.y+b.h*.5,b.w,b.h*.5);
+    ctx.strokeStyle='rgba(0,0,0,.16)';ctx.lineWidth=1;ctx.beginPath();for(let y=b.y+10;y<b.y+b.h;y+=10){ctx.moveTo(b.x,y);ctx.lineTo(b.x+b.w,y);}ctx.stroke();
+    ctx.strokeStyle='rgba(0,0,0,.5)';ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(b.x,b.cy);ctx.lineTo(b.x+b.w,b.cy);ctx.stroke();
+    ctx.strokeStyle='#1c1612';ctx.lineWidth=2.5;ctx.strokeRect(b.x,b.y,b.w,b.h);
+    if(K==='hotel'){ctx.font='26px Bungee,Impact,sans-serif';ctx.textAlign='center';ctx.lineWidth=5;ctx.strokeStyle='rgba(0,0,0,.6)';ctx.strokeText('HOTEL',b.cx,b.cy+9);ctx.fillStyle='#f2ecd9';ctx.fillText('HOTEL',b.cx,b.cy+9);ctx.fillStyle='#9aa3a9';ctx.fillRect(b.x+16,b.y+14,26,18);ctx.fillRect(b.x+b.w-42,b.y+b.h-32,26,18);}
+    if(K==='city'){ctx.fillStyle='#9aa3a9';ctx.fillRect(b.x+10,b.y+10,18,14);ctx.fillRect(b.x+b.w-28,b.y+b.h-24,18,14);}
+    if(K==='barn'){ctx.strokeStyle='#f2ecd9';ctx.lineWidth=3;ctx.beginPath();ctx.moveTo(b.x+10,b.y+10);ctx.lineTo(b.x+b.w-10,b.y+b.h-10);ctx.moveTo(b.x+b.w-10,b.y+10);ctx.lineTo(b.x+10,b.y+b.h-10);ctx.stroke();}
+    const d=b.door;if(d){ctx.fillStyle='#6b4a2b';if(d.ny)ctx.fillRect(d.x-24,d.y-5,48,10);else ctx.fillRect(d.x-5,d.y-24,10,48);ctx.fillStyle='#e0b43a';ctx.fillRect(d.x-2,d.y-2,4,4);}
+    ctx.restore();
+  }
+}
 const HS=[[80,70],[110,90],[140,110],[170,130],[210,150],[250,180]];
 const ovl=(a,b,m)=>!(a.x+a.w+m<b.x||a.x>b.x+b.w+m||a.y+a.h+m<b.y||a.y>b.y+b.h+m);
 function genMap(){
-  obs=[];grid=new Map();builds=[];loot=[];chests=[];trees=[];const A=W*H/17640000;
+  roads=[];obs=[];grid=new Map();builds=[];loot=[];chests=[];trees=[];const A=W*H/17640000;
   const PLS=[
  {n:'Pine Hollow',k:'village',x:.2,y:.2,c:5,r:230},{n:'Red Barn',k:'barn',x:.5,y:.2,c:3,r:150},{n:'Northgate',k:'town',x:.8,y:.2,c:7,r:280},
  {n:'Sunny Farm',k:'farm',x:.2,y:.5,c:4,r:200},{n:'Rozin City',k:'city',x:.5,y:.5,c:12,r:360},{n:'Stonebridge',k:'town',x:.8,y:.5,c:7,r:280},
  {n:'Harbor Point',k:'village',x:.2,y:.8,c:5,r:230},{n:'Dusty Barn',k:'barn',x:.5,y:.8,c:3,r:150},{n:'Eagle Fort',k:'village',x:.8,y:.8,c:5,r:230},
- {n:'Maple Town',k:'town',x:.35,y:.35,c:7,r:280,rk:1},{n:'Golden Barn',k:'barn',x:.65,y:.35,c:3,r:150,rk:1},{n:'Willow Farm',k:'farm',x:.35,y:.65,c:4,r:200,rk:1},{n:'Ironworks',k:'village',x:.65,y:.65,c:5,r:230,rk:1}];
+ {n:'Maple Town',k:'town',x:.35,y:.35,c:7,r:280,rk:1},{n:'Golden Barn',k:'barn',x:.65,y:.35,c:3,r:150,rk:1},{n:'Willow Farm',k:'farm',x:.35,y:.65,c:4,r:200,rk:1},{n:'Ironworks',k:'village',x:.65,y:.65,c:5,r:230,rk:1},
+ {n:'Crown City',k:'city',x:.5,y:.35,c:12,r:360,rk:1},{n:'Port Royal',k:'city',x:.12,y:.65,c:12,r:360,rk:1},{n:'Sky Tower',k:'city',x:.65,y:.88,c:12,r:360,rk:1},
+ {n:'Grand Resort',k:'resort',x:.88,y:.35,c:6,r:300,rk:1},{n:'Lakeside',k:'town',x:.12,y:.35,c:7,r:280,rk:1},{n:'Ashford',k:'town',x:.88,y:.65,c:7,r:280,rk:1},
+ {n:'Cedar Ridge',k:'village',x:.35,y:.12,c:5,r:230,rk:1},{n:'Mill Creek',k:'village',x:.65,y:.12,c:5,r:230,rk:1},{n:'Fox Hollow',k:'village',x:.12,y:.88,c:5,r:230,rk:1},
+ {n:'Salt Flats',k:'barn',x:.35,y:.88,c:3,r:150,rk:1},{n:'Pebble Farm',k:'farm',x:.88,y:.12,c:4,r:200,rk:1},{n:'Oak Mill',k:'farm',x:.88,y:.88,c:4,r:200,rk:1}];
   PLACES=PLS.filter(p=>ranked||!p.rk).map(p=>Object.assign({},p,{px:p.x*W,py:p.y*H}));
   let tries=0,n=0,sd=1234567;
   rr=()=>{sd=(sd+0x6D2B79F5)|0;let t=Math.imul(sd^sd>>>15,1|sd);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296;};
+  roads=[];
   for(const p of PLACES){
-    let t=0,c=0;
+    if(p.k!=='city'&&p.k!=='town'&&p.k!=='resort')continue;
+    const L=p.r+110;roads.push({x:p.px-L,y:p.py-20,w:2*L,h:40});
+    if(p.k==='city')roads.push({x:p.px-20,y:p.py-L,w:40,h:2*L});
+  }
+  const link=new Set();
+  PLACES.forEach((p,i)=>{
+    let bj=-1,bd=1e12;PLACES.forEach((q,j)=>{if(j===i)return;const d=(p.px-q.px)**2+(p.py-q.py)**2;if(d<bd){bd=d;bj=j;}});
+    const k=Math.min(i,bj)+'-'+Math.max(i,bj);if(link.has(k))return;link.add(k);
+    const q=PLACES[bj];
+    roads.push({x:Math.min(p.px,q.px)-18,y:p.py-18,w:Math.abs(p.px-q.px)+36,h:36});
+    roads.push({x:q.px-18,y:Math.min(p.py,q.py)-18,w:36,h:Math.abs(p.py-q.py)+36});
+  });
+  for(const p of PLACES){
+    let t=0,c=0;const nh=p.k==='resort'?2:(p.k==='city'||p.k==='town')?1:0;
     while(c<p.c&&t<250){
-      t++;
-      const z=p.k==='barn'&&c===0?[230,160]:HS[Math.floor(rr()*(p.k==='city'?6:4))],w=Math.floor(z[0]*rs(.9,1.15)),h=Math.floor(z[1]*rs(.9,1.15));
-      const x=p.px+rs(-p.r,p.r)-w/2,y=p.py+rs(-p.r,p.r)-h/2,b={x,y,w,h,cx:x+w/2,cy:y+h/2,kind:p.k};
-      if(x<140||y<140||x+w>W-140||y+h>H-140||builds.some(o=>ovl(b,o,64)))continue;
+      t++;const hot=c<nh&&t<=6;
+      const z=hot?[320,220]:p.k==='barn'&&c===0?[230,160]:HS[Math.floor(rr()*(p.k==='city'?6:4))],w=Math.floor(z[0]*rs(.9,1.15)),h=Math.floor(z[1]*rs(.9,1.15));
+      const ox=hot?(p.k==='city'?210:p.k==='resort'?(c?-250:250):240)+rs(-30,30):rs(-p.r,p.r),oy=hot?-170+rs(-20,20):rs(-p.r,p.r);
+      const x=p.px+ox-w/2,y=p.py+oy-h/2,b={x,y,w,h,cx:x+w/2,cy:y+h/2,kind:hot?'hotel':p.k==='resort'?'town':p.k};
+      if(x<140||y<140||x+w>W-140||y+h>H-140||builds.some(o=>ovl(b,o,64))||roads.some(r=>ovl(b,r,12)))continue;
       builds.push(b);c++;
     }
   }
-  builds.forEach(addWalls);
+  builds.forEach(b=>{addWalls(b);addInterior(b);});
   rr=Math.random;
   const LH=Math.round(16*A);
   while(n<LH&&tries<800*A){
     tries++;
     const z=HS[Math.floor(Math.random()*4)],x=rnd(180,W-180-z[0]),y=rnd(180,H-180-z[1]),b={x,y,w:z[0],h:z[1],cx:x+z[0]/2,cy:y+z[1]/2};
-    if(builds.some(o=>ovl(b,o,260)))continue;
+    if(builds.some(o=>ovl(b,o,260))||roads.some(r=>ovl(b,r,16)))continue;
     builds.push(b);n++;
   }
-  builds.filter(b=>!b.door).forEach(addWalls);
+  builds.filter(b=>!b.door).forEach(b=>{addWalls(b);addInterior(b);});
   for(const b of builds){
-    const cnt=b.w*b.h>26000?3:b.w*b.h>13000?2:1;let t=0,k=0;
+    const cnt=b.kind==='hotel'?5:b.w*b.h>26000?3:b.w*b.h>13000?2:1;let t=0,k=0;
     while(k<cnt&&t<40){
       t++;const x=rnd(b.x+24,b.x+b.w-24),y=rnd(b.y+22,b.y+b.h-22);
-      if(Math.hypot(x-b.door.x,y-b.door.y)<50||chests.some(c=>Math.hypot(c.x-x,c.y-y)<46))continue;
+      if(Math.hypot(x-b.door.x,y-b.door.y)<50||b.parts.some(p=>Math.abs(x-p.x)<30)||chests.some(c=>Math.hypot(c.x-x,c.y-y)<46))continue;
       chests.push({x,y,open:false});k++;
     }
     for(let i=0;i<1+Math.floor(Math.random()*2);i++)loot.push(mkLoot(rnd(b.x+24,b.x+b.w-24),rnd(b.y+24,b.y+b.h-24),Math.random()<.5?'med':'shield'));
@@ -908,17 +986,17 @@ function genMap(){
   tries=0;n=0;
   while(n<460*A&&tries<9000*A){
     tries++;const x=rnd(60,W-60),y=rnd(60,H-60),r=rnd(14,30);
-    if(inBuild(x,y,50)||qObs(x-100,y-100,x+100,y+100).some(o=>o.t==='c'&&Math.hypot(o.x-x,o.y-y)<o.r+r+36))continue;
+    if(inBuild(x,y,50)||onRoad(x,y,r+10)||qObs(x-100,y-100,x+100,y+100).some(o=>o.t==='c'&&Math.hypot(o.x-x,o.y-y)<o.r+r+36))continue;
     addObs({t:'c',x,y,r,k:'rock',hits:0});n++;
   }
   tries=0;n=0;
-  while(n<34*A&&tries<1500*A){tries++;const x=rnd(100,W-100),y=rnd(100,H-100);if(inBuild(x,y,40)||blocked(x,y)||chests.some(c=>Math.hypot(c.x-x,c.y-y)<120))continue;chests.push({x,y,open:false});n++;}
+  while(n<34*A&&tries<1500*A){tries++;const x=rnd(100,W-100),y=rnd(100,H-100);if(inBuild(x,y,40)||onRoad(x,y,30)||blocked(x,y)||chests.some(c=>Math.hypot(c.x-x,c.y-y)<120))continue;chests.push({x,y,open:false});n++;}
   tries=0;n=0;
   while(n<50*A&&tries<600*A){tries++;const x=rnd(80,W-80),y=rnd(80,H-80);if(inBuild(x,y,20)||blocked(x,y))continue;loot.push(mkLoot(x,y,Math.random()<.5?'med':'shield'));n++;}
   tries=0;n=0;
   while(n<700*A&&tries<9000*A){
     tries++;const x=rnd(50,W-50),y=rnd(50,H-50),r=rnd(26,48);
-    if(inBuild(x,y,r+16)||qObs(x-110,y-110,x+110,y+110).some(o=>o.t==='c'&&Math.hypot(o.x-x,o.y-y)<o.r+r*.55+30)||chests.some(c=>Math.hypot(c.x-x,c.y-y)<r+30))continue;
+    if(inBuild(x,y,r+16)||onRoad(x,y,r+10)||qObs(x-110,y-110,x+110,y+110).some(o=>o.t==='c'&&Math.hypot(o.x-x,o.y-y)<o.r+r*.55+30)||chests.some(c=>Math.hypot(c.x-x,c.y-y)<r+30))continue;
     trees.push({x,y,r,p:Math.random()<.3?1:0});addObs({t:'c',k:'tree',x,y,r:r*.55});n++;
   }
 }
@@ -1366,12 +1444,20 @@ function avoidRocks(b,tx,ty){
   const side=((best.x-b.x)*-uy+(best.y-b.y)*ux)>0?-1:1,m=best.r+R+16;
   return [best.x-uy*side*m+ux*8,best.y+ux*side*m+uy*8];
 }
+function viaPart(h,b,tx,ty){
+  const ps=h.parts;if(!ps||!ps.length)return null;
+  let best=null,bd=1e9;
+  for(const p of ps){if((b.x<p.x)===(tx<p.x))continue;const d=Math.abs(b.x-p.x);if(d<bd){bd=d;best=p;}}
+  if(!best||(Math.abs(b.x-best.x)<22&&Math.abs(b.y-best.gy)<30))return null;
+  return [best.x,best.gy];
+}
 function route(b,tx,ty){
   for(const h of builds){
     const d=h.door;if(!d)continue;
     const bi=inR(h,b.x,b.y,0),ti=inR(h,tx,ty,0);
-    if(bi&&ti)continue;
+    if(bi&&ti){const vp=viaPart(h,b,tx,ty);if(vp)return vp;continue;}
     if(bi){
+      const vp=viaPart(h,b,d.x,d.y);if(vp)return vp;
       if(Math.hypot(b.x-d.x,b.y-d.y)<22)return [d.x+d.nx*45,d.y+d.ny*45];
       return [d.x,d.y];
     }
@@ -1461,7 +1547,7 @@ function botGround(b,dt){
 
 /* ---------- partida ---------- */
 function startGame(){
-  NP=ranked?100:20;W=H=ranked?9400:4200;PHc=ranked?PHR:PH;
+  NP=ranked?100:20;W=H=ranked?13300:4200;PHc=ranked?PHR:PH;
   genMap();
   ents=[];bullets=[];parts=[];dtx=[];feedL=[];fx=[];sprays=[];G.time=0;overT=0;overShown=false;spec=null;
   for(const k in K)K[k]=false;
@@ -1899,14 +1985,25 @@ function draw(){
   const vis=(x,y,m)=>x>x0-m&&x<x1+m&&y>y0-m&&y<y1+m;
   ctx.fillStyle='#d8c48e';ctx.fillRect(-34,-34,W+68,H+68);
   ctx.fillStyle=grassPat;ctx.fillRect(12,12,W-24,H-24);
+  ctx.lineCap='butt';
+  for(const r of roads){
+    if(r.x>x1||r.x+r.w<x0||r.y>y1||r.y+r.h<y0)continue;
+    ctx.fillStyle='#4a4f55';ctx.fillRect(r.x,r.y,r.w,r.h);
+    ctx.strokeStyle='#6a7078';ctx.lineWidth=3;ctx.strokeRect(r.x+1.5,r.y+1.5,r.w-3,r.h-3);
+    ctx.strokeStyle='rgba(230,211,106,.75)';ctx.lineWidth=2.5;ctx.setLineDash([22,18]);ctx.beginPath();
+    if(r.w>r.h){const a=Math.max(r.x,x0);ctx.lineDashOffset=(a-r.x)%40;ctx.moveTo(a,r.y+r.h/2);ctx.lineTo(Math.min(r.x+r.w,x1),r.y+r.h/2);}
+    else{const a=Math.max(r.y,y0);ctx.lineDashOffset=(a-r.y)%40;ctx.moveTo(r.x+r.w/2,a);ctx.lineTo(r.x+r.w/2,Math.min(r.y+r.h,y1));}
+    ctx.stroke();ctx.setLineDash([]);ctx.lineDashOffset=0;
+  }
   // pisos
   for(const b of builds){
     if(!vis(b.cx,b.cy,200))continue;
-    ctx.fillStyle=b.kind==='barn'?'#9a5a3e':b.kind==='city'?'#8d8f96':b.kind==='farm'?'#b89a5a':'#a98a63';ctx.fillRect(b.x,b.y,b.w,b.h);
+    ctx.fillStyle=b.kind==='hotel'?'#b9a27a':b.kind==='barn'?'#9a5a3e':b.kind==='city'?'#8d8f96':b.kind==='farm'?'#b89a5a':'#a98a63';ctx.fillRect(b.x,b.y,b.w,b.h);
     ctx.strokeStyle='rgba(0,0,0,.09)';ctx.lineWidth=1;ctx.beginPath();
     for(let y=b.y+18;y<b.y+b.h;y+=18){ctx.moveTo(b.x,y);ctx.lineTo(b.x+b.w,y);}
     ctx.stroke();
   }
+  for(const b of builds)if(b.fur&&(b.ra===undefined?1:b.ra)<.98&&vis(b.cx,b.cy,200))drawFur(b);
   for(let i=sprays.length-1;i>=0;i--){
     const sp=sprays[i],ag=G.time-sp.t;if(ag>60){sprays.splice(i,1);continue;}if(!vis(sp.x,sp.y,50))continue;
     ctx.save();ctx.translate(sp.x,sp.y);ctx.rotate(sp.rot);ctx.globalAlpha=ag>45?(60-ag)/15:.95;ctx.scale(.55,.55);sprayArt(sp.id);ctx.restore();
@@ -1957,6 +2054,7 @@ function draw(){
   if(P&&P.alive&&P.st==='ground'&&P.eq==='gun'&&P.w&&WP[P.w]&&!frozen)drawAim(P);
   ctx.lineWidth=2.5;ctx.lineCap='round';
   for(const b of bullets){ctx.strokeStyle=b.col;ctx.beginPath();ctx.moveTo(b.x,b.y);ctx.lineTo(b.x-b.vx*.03,b.y-b.vy*.03);ctx.stroke();}
+  {const VV=(P&&P.alive)?P:(spec||P);if(VV)drawRoofs(VV.x,VV.y,VV.st==='ground',vis);}
   for(const p of parts){const sz=p.s||3;ctx.globalAlpha=Math.max(0,Math.min(1,p.life*3));ctx.fillStyle=p.c;ctx.fillRect(p.x-sz/2,p.y-sz/2,sz,sz);}
   for(const f of fx){
     if(f.t<0)continue;const pr=f.t/f.life;ctx.globalAlpha=1-pr;
@@ -2000,6 +2098,7 @@ function drawMini(){
   m.clearRect(0,0,120,120);m.fillStyle='#17414f';m.fillRect(0,0,120,120);
   m.fillStyle='#5f8a4e';m.fillRect(0,0,120,120);
   m.fillStyle='#ffd23f';for(const c of chests)if(!c.open)m.fillRect(c.x*s-1,c.y*s-1,2,2);
+  m.fillStyle='#5a6068';for(const r of roads)m.fillRect(r.x*s,r.y*s,Math.max(1,r.w*s),Math.max(1,r.h*s));
   m.fillStyle='#d8c48e';for(const b of builds)m.fillRect(b.x*s,b.y*s,Math.max(3,b.w*s),Math.max(3,b.h*s));
   m.beginPath();m.rect(0,0,120,120);m.arc(Z.cx*s,Z.cy*s,Math.max(.5,Z.r*s),0,TAU,true);m.fillStyle='rgba(224,48,122,.4)';m.fill('evenodd');
   m.strokeStyle='#e0307a';m.lineWidth=1.5;m.beginPath();m.arc(Z.cx*s,Z.cy*s,Math.max(.5,Z.r*s),0,TAU);m.stroke();
@@ -2027,6 +2126,7 @@ function drawBig(){
   if(c.width!==w||c.height!==h){c.width=w;c.height=h;}
   const g=c.getContext('2d'),sz=Math.min(w,h)-90,ox=(w-sz)/2,oy=(h-sz)/2+20,s=sz/W,X=x=>ox+x*s,Y=y=>oy+y*s;
   g.clearRect(0,0,w,h);g.fillStyle='#17414f';g.fillRect(ox-12,oy-12,sz+24,sz+24);g.fillStyle='#5f8a4e';g.fillRect(ox,oy,sz,sz);
+  g.fillStyle='#5a6068';for(const r of roads)g.fillRect(X(r.x),Y(r.y),Math.max(1.5,r.w*s),Math.max(1.5,r.h*s));
   g.fillStyle='#d8c48e';for(const b of builds)g.fillRect(X(b.x),Y(b.y),Math.max(3,b.w*s),Math.max(3,b.h*s));
   g.fillStyle='#ffd23f';for(const q of chests)if(!q.open)g.fillRect(X(q.x)-1.5,Y(q.y)-1.5,3,3);
   g.save();g.beginPath();g.rect(ox,oy,sz,sz);g.clip();g.beginPath();g.rect(ox,oy,sz,sz);g.arc(X(Z.cx),Y(Z.cy),Math.max(.5,Z.r*s),0,TAU,true);g.fillStyle='rgba(224,48,122,.35)';g.fill('evenodd');
