@@ -1560,7 +1560,7 @@ function sv(){
 }
 let lastPush=Promise.resolve('skip');
 async function use(n){try{return window.claude?await window.claude.use(n):null;}catch(e){return null;}}
-const SB={url:'',key:''},VER=1;
+const SB={url:'https://qbnomfpbdkegqywcsdhr.supabase.co',key:'sb_publishable_VX0-W2vuiENv-dlipCaErQ_aWvCrjb_'},VER=1;
 let sbErr='';
 const sbOn=()=>!!(SB.url&&SB.key);
 const sbH=()=>{const h={apikey:SB.key,'Content-Type':'application/json'};if(!SB.key.startsWith('sb_'))h.Authorization='Bearer '+SB.key;return h;};
@@ -1582,7 +1582,7 @@ async function pushLb(){
   await cloudSave();
   if(sbOn()){
     try{
-      const r=await fetch(sbU('?on_conflict=name'),{method:'POST',headers:Object.assign(sbH(),{Prefer:'resolution=merge-duplicates,return=minimal'}),body:JSON.stringify({name:acc.user,wins:acc.st.wins,kills:acc.st.kills,games:acc.st.games,ver:VER})});
+      const r=await fetch(sbU('?on_conflict=name'),{method:'POST',headers:Object.assign(sbH(),{Prefer:'resolution=merge-duplicates,return=minimal'}),body:JSON.stringify({name:acc.user,wins:acc.st.wins,kills:acc.st.kills,games:acc.st.games,rp:+acc.st.rp||0,ver:VER})});
       if(r.ok)return 'ok';
       let t='';try{t=(await r.json()).message||'';}catch(e){}
       sbErr=r.status+(t?': '+t:'');return 'fail';
@@ -1602,7 +1602,7 @@ async function lbLoad(){
   try{
     let rows;
     if(sbOn()){
-      const r=await fetch(sbU('?select=name,wins,kills&order='+lbTab+'.desc,name.asc&limit=20'),{headers:sbH()});
+      const r=await fetch(sbU('?select=name,wins,kills,games,rp&order='+lbTab+'.desc,name.asc&limit=20'),{headers:sbH()});
       if(!r.ok)throw 0;
       rows=(await r.json()).map(v=>Object.assign({mine:!!acc&&v.name===acc.user},v));
     }else{
