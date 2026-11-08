@@ -216,7 +216,7 @@ input:focus-visible{outline:3px solid var(--flare);outline-offset:1px}
   <section id="menu" class="screen">
     <div class="lobby">
       <div class="lp">
-        <p class="kick" style="text-align:center">RRoyal · v5.7</p>
+        <p class="kick" style="text-align:center">RRoyal · v5.8</p>
         <h3 class="lt">BATTLE ROYALE</h3>
         <button id="modeBtn" class="btn alt" type="button"><span id="modeT">RANKED: OFF</span><small id="modeS">Solo</small></button>
         <button id="play" class="btn big" type="button">PLAY</button>
@@ -307,6 +307,9 @@ input:focus-visible{outline:3px solid var(--flare);outline-offset:1px}
       <p class="kick">Changelog</p>
       <h2>What's new</h2>
       <div class="form">
+        <div class="nv"><b>v5.8</b><ul>
+          <li>Fix: the game no longer pauses when you switch to another tab or window on PC. The match keeps running in the background, with the sound muted.</li>
+        </ul></div>
         <div class="nv"><b>v5.7</b><ul>
           <li>New: a white aim line shows how far your weapon reaches. The shotgun shows its spread as an angle.</li>
         </ul></div>
@@ -779,7 +782,7 @@ $('spray').addEventListener('pointerdown',e=>{e.preventDefault();doSpray(P);});
 
 /* ---------- som ---------- */
 function snd(f,d,type,v,slide){
-  if(!ac||v<=0.002)return;
+  if(!ac||v<=0.002||document.hidden)return;
   try{
     const t=ac.currentTime,o=ac.createOscillator(),g=ac.createGain();
     o.type=type||'square';o.frequency.setValueAtTime(f,t);
@@ -2450,6 +2453,15 @@ function resize(){
 }
 window.addEventListener('resize',resize);
 let last=0;
+let bgLast=0;
+function bgTick(){
+  if(!document.hidden||state==='menu'||frozen||!P)return;
+  const now=performance.now();let el=Math.min(3,(now-bgLast)/1000);bgLast=now;
+  while(el>0.0005){const d=Math.min(.05,el);el-=d;update(d);}
+}
+document.addEventListener('visibilitychange',()=>{bgLast=performance.now();if(document.hidden){for(const k in K)K[k]=false;mouseDown=false;}});
+try{const bw=new Worker(URL.createObjectURL(new Blob(['setInterval(function(){postMessage(0)},50)'],{type:'text/javascript'})));bw.onmessage=bgTick;}catch(e){}
+setInterval(bgTick,1000);
 function frame(ts){
   const dt=Math.min(.05,(ts-last)/1000||.016);last=ts;
   const rot=mode==='mobile'&&state!=='menu'&&vh>vw;
