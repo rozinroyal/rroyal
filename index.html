@@ -212,11 +212,11 @@ input:focus-visible{outline:3px solid var(--flare);outline-offset:1px}
     <div class="row2"><button id="hReset" class="btn alt" type="button">Reset</button><button id="hDone" class="btn" type="button">Done</button></div>
   </div>
 
-  <nav id="nav" hidden><button id="navPlay" class="nb" type="button">PLAY</button><button id="navLock" class="nb" type="button">LOCKER</button><button id="navShop" class="nb" type="button">ITEM SHOP</button><button id="lbBtn" class="nb" type="button">LEADERBOARD</button><button id="keysBtn" class="nb" type="button">SETTINGS</button><span class="sp"></span><span id="coinPill" class="coinpill"></span><button id="profBtn" class="nb" type="button">PROFILE</button></nav>
+  <nav id="nav" hidden><button id="navPlay" class="nb" type="button">PLAY</button><button id="navLock" class="nb" type="button">LOCKER</button><button id="navShop" class="nb" type="button">ITEM SHOP</button><button id="navBP" class="nb" type="button">BATTLE PASS</button><button id="lbBtn" class="nb" type="button">LEADERBOARD</button><button id="keysBtn" class="nb" type="button">SETTINGS</button><span class="sp"></span><span id="coinPill" class="coinpill"></span><button id="profBtn" class="nb" type="button">PROFILE</button></nav>
   <section id="menu" class="screen">
     <div class="lobby">
       <div class="lp">
-        <p class="kick" style="text-align:center">RRoyal · v5.0</p>
+        <p class="kick" style="text-align:center">RRoyal · v5.1</p>
         <h3 class="lt">BATTLE ROYALE</h3>
         <button id="modeBtn" class="btn alt" type="button"><span id="modeT">RANKED: OFF</span><small id="modeS">Solo</small></button>
         <button id="play" class="btn big" type="button">PLAY</button>
@@ -307,6 +307,12 @@ input:focus-visible{outline:3px solid var(--flare);outline-offset:1px}
       <p class="kick">Changelog</p>
       <h2>What's new</h2>
       <div class="form">
+        <div class="nv"><b>v5.1</b><ul>
+          <li>New: free BATTLE PASS with 150 levels (100 XP each) and a season timer that ends on 1 Jan 2027, 00:00 Germany.</li>
+          <li>New: 3 daily missions (1 x 150 XP, 2 x 50 XP) that reset at 0:00 Germany time.</li>
+          <li>New: XP from 1 per kill and 15 per win. Rewards include sprays, a few coins, a pickaxe at level 50 and a skin at level 150.</li>
+          <li>Change: coins are now earned only through the Battle Pass.</li>
+        </ul></div>
         <div class="nv"><b>v5.0</b><ul>
           <li>New: Fortnite-style main menu with PLAY, LOCKER, ITEM SHOP, LEADERBOARD and SETTINGS. Pick your mode next to PLAY and see your skin in the lobby.</li>
           <li>New: the LOCKER only equips what you own and the ITEM SHOP is where you spend coins.</li>
@@ -411,6 +417,22 @@ input:focus-visible{outline:3px solid var(--flare);outline-offset:1px}
     <div class="cards"><button class="card" type="button" data-m="solo"><b>SOLO</b><span>Quick match. Free for all, 20 players.</span></button><button class="card" type="button" data-m="duo"><b>DUOS</b><span>10 duos. You play with 1 bot ally.</span></button><button class="card" type="button" data-m="squad"><b>SQUADS</b><span>5 squads of 4. You play with 3 bot allies.</span></button><button class="card" type="button" data-m="ranked"><b>RANKED</b><span>100 players, huge map. Needs an account.</span></button></div>
     <p id="mdErr"></p><button id="modesBack" class="btn alt" type="button">Back</button></div></section>
 
+<style>
+#bpBarW{width:100%;height:12px;background:rgba(0,0,0,.4);border-radius:6px;overflow:hidden}#bpBar{height:100%;background:var(--flare);width:0}
+.bpm{display:flex;justify-content:space-between;gap:8px;width:100%;box-sizing:border-box;background:var(--panel);border-radius:8px;padding:8px 12px;font-size:13px}.bpm.ok{color:var(--hp)}.bpm b{font-family:var(--f-d);font-weight:400;color:var(--flare)}
+.lcard.lock{opacity:.55}.lcard.tiny{padding:4px;min-height:0}.lcard .cn2{font-family:var(--f-d);font-size:20px;color:var(--flare);padding:14px 0}
+</style>
+  <section id="bp" class="screen" hidden>
+    <div class="panel col" style="max-width:640px">
+      <button id="bpBack2" class="btn alt" type="button" style="position:sticky;top:0;z-index:5;align-self:flex-start;padding:8px 18px;font-size:14px">&larr; BACK</button><p class="kick">Free Battle Pass</p><h2 id="bpT">Level 0 / 150</h2>
+      <p id="bpEnd" class="kick" style="margin:0"></p>
+      <div id="bpBarW"><div id="bpBar"></div></div><p id="bpXp" class="kick" style="margin:0"></p>
+      <p class="kick" style="margin:0">Daily missions · <span id="bpRst"></span> · 1 kill = 1 XP · win = 15 XP</p>
+      <div id="bpMs" style="display:flex;flex-direction:column;gap:6px;width:100%"></div>
+      <div id="bpGrid" class="lgrid"></div>
+      <button id="bpBack" class="btn alt" type="button">Back</button>
+    </div>
+  </section>
   <section id="locker" class="screen" hidden>
     <div class="panel col" style="max-width:600px">
       <p class="kick" id="lkK">Wardrobe</p><h2 id="lkT">Locker</h2>
@@ -465,7 +487,7 @@ input:focus-visible{outline:3px solid var(--flare);outline-offset:1px}
         <div><b id="ovP"></b><span>place</span></div>
         <div><b id="ovK"></b><span>kills</span></div>
         <div><b id="ovS"></b><span>time</span></div>
-        <div><b id="ovC"></b><span>coins</span></div>
+        <div><b id="ovC"></b><span>pass XP</span></div>
       </div>
       <div class="row2">
         <button id="again" class="btn big" type="button">PLAY AGAIN</button>
@@ -534,13 +556,17 @@ const GLS=[{id:'g_classic',n:'Classic Chute',p:0},{id:'g_delta',n:'Sky Delta',p:
 const SPR=[{id:'s_rroyal',n:'RRoyal',p:0},{id:'s_gg',n:'GG',p:100},{id:'s_crown',n:'Crown',p:250},{id:'s_skull',n:'Skull',p:300}];
 const WCS=[{id:'w_orig',n:'Original',p:0},{id:'w_gold',n:'Gold',p:400,c:'#ffd23f',m:'#8a6512',s:'#e8c04a'},{id:'w_crimson',n:'Crimson',p:300,c:'#ff5a5a',m:'#6e1f1c',s:'#d98a86'},{id:'w_ice',n:'Ice',p:300,c:'#8fe3ff',m:'#245a73',s:'#bfe9f7'},{id:'w_toxic',n:'Toxic',p:500,c:'#c8ff3d',m:'#2f4a12',s:'#a6d65b'}];
 const FXS=[{id:'x_default',n:'Classic Burst',p:0},{id:'x_confetti',n:'Confetti',p:300},{id:'x_shock',n:'Shockwave',p:400},{id:'x_bolt',n:'Lightning',p:600}];
+const BPSP=[[5,'GL','#6ee7a0'],[15,'WOW','#ffd23f'],[25,'LOL','#4fb4ff'],[35,'HOT','#ff6b3d'],[65,'BOSS','#e0307a'],[85,'EZ','#b78bff'],[115,'KING','#ffd23f'],[135,'GOAT','#f2ecd9']];
+for(const a of BPSP)SPR.push({id:'s_bp'+a[0],n:a[1]+' (Pass)',p:9999,bp:1,t:a[1],col:a[2]});
+PICKS.push({id:'p_battle',n:'Battle Axe',p:9999,bp:1,h:'#2a2a33',hd:'#ff5a3d',sh:2});
+OUTS.push({id:'o_champion',n:'Champion',p:9999,bp:1,vest:'#7a2cff',hair:'#fff3c4',band:'#ffd23f',leg:'#3b1a78',glove:'#150a30',ring:'#d9b8ff'});
 const CATS={o:['Outfits',OUTS],p:['Pickaxes',PICKS],g:['Gliders',GLS],s:['Sprays',SPR],w:['Weapon colors',WCS],x:['Elim effects',FXS]};
 const ITEM={};for(const k in CATS)for(const it of CATS[k][1])ITEM[it.id]=it;
 let fx=[],sprays=[],WT=null,guestCos=null,lkCat='o',lkMode='locker',BN=[];
 const COIN='<i class="cn"></i>';
 function normCos(c){
   c=c&&typeof c==='object'?c:{};
-  const o={coins:c.coins===undefined?200:Math.max(0,Math.floor(+c.coins)||0),own:Array.isArray(c.own)?c.own.filter(i=>ITEM[i]):[],eq:{}};
+  const o={bp:c.bp,coins:c.coins===undefined?0:Math.max(0,Math.floor(+c.coins)||0),own:Array.isArray(c.own)?c.own.filter(i=>ITEM[i]):[],eq:{}};
   for(const k in CATS){const e=c.eq&&c.eq[k];o.eq[k]=ITEM[e]&&(ITEM[e].p===0||o.own.includes(e))?e:CATS[k][1][0].id;}
   return o;
 }
@@ -588,7 +614,8 @@ function sprayArt(id){
   const bg={s_rroyal:['#0d2b38','#ffb81c'],s_gg:['#16384a','#6ee7a0'],s_crown:['#2a1d00','#ffd23f'],s_skull:['#241b2e','#b78bff']}[id]||['#0d2b38','#ffb81c'];
   ctx.fillStyle=bg[0];rr(-60,-36,120,72,14);ctx.fill();ctx.strokeStyle=bg[1];ctx.lineWidth=5;ctx.stroke();
   ctx.textAlign='center';ctx.textBaseline='middle';
-  if(id==='s_crown'){ctx.fillStyle='#ffd23f';ctx.beginPath();ctx.moveTo(-30,16);ctx.lineTo(-34,-14);ctx.lineTo(-15,2);ctx.lineTo(0,-20);ctx.lineTo(15,2);ctx.lineTo(34,-14);ctx.lineTo(30,16);ctx.closePath();ctx.fill();ctx.fillStyle='#e0307a';circ(0,6,4.5);circ(-17,8,3.2);circ(17,8,3.2);}
+  if(ITEM[id]&&ITEM[id].t){ctx.strokeStyle=ITEM[id].col;ctx.stroke();ctx.font='34px Bungee,Impact,sans-serif';ctx.fillStyle=ITEM[id].col;ctx.fillText(ITEM[id].t,0,-2);}
+  else if(id==='s_crown'){ctx.fillStyle='#ffd23f';ctx.beginPath();ctx.moveTo(-30,16);ctx.lineTo(-34,-14);ctx.lineTo(-15,2);ctx.lineTo(0,-20);ctx.lineTo(15,2);ctx.lineTo(34,-14);ctx.lineTo(30,16);ctx.closePath();ctx.fill();ctx.fillStyle='#e0307a';circ(0,6,4.5);circ(-17,8,3.2);circ(17,8,3.2);}
   else if(id==='s_skull'){ctx.fillStyle='#f2ecd9';circ(0,-6,22);rr(-12,8,24,16,4);ctx.fill();ctx.fillStyle='#241b2e';circ(-8,-6,6);circ(8,-6,6);ctx.fillRect(-1.5,2,3,6);for(let i=-6;i<=6;i+=6)ctx.fillRect(i-.75,12,1.5,10);}
   else if(id==='s_gg'){ctx.font="40px Bungee,Impact,sans-serif";ctx.fillStyle=bg[1];ctx.fillText('GG',0,-2);}
   else{ctx.font="19px Bungee,Impact,sans-serif";const w1=ctx.measureText('R').width,w2=ctx.measureText('Royal').width,x0=-(w1+w2)/2;ctx.textAlign='left';ctx.fillStyle='#f2ecd9';ctx.fillText('R',x0,0);ctx.fillStyle='#ffb81c';ctx.fillText('Royal',x0+w1,0);}
@@ -630,7 +657,7 @@ function lkDraw(){
   $('lkCoins').innerHTML=COIN+c.coins;$('lkName').hidden=!!acc||shop;$('lkAs').textContent=!shop&&acc?'Playing as '+acc.user:'';
   if(!acc&&document.activeElement!==$('lkIn'))$('lkIn').value=playerName()==='Player'?'':playerName();
   document.querySelectorAll('#lkTabs .btn').forEach(b=>b.classList.toggle('on',b.dataset.c===lkCat));
-  const list=CATS[lkCat][1].filter(it=>shop?it.p>0:(it.p===0||c.own.includes(it.id)));
+  const list=CATS[lkCat][1].filter(it=>shop?(it.p>0&&!it.bp):(it.p===0||c.own.includes(it.id)));
   if(!list.length)g.textContent='Nothing here yet.';
   for(const it of list){
     const own=it.p===0||c.own.includes(it.id),eq=c.eq[lkCat]===it.id;
@@ -641,7 +668,7 @@ function lkDraw(){
     if(shop){b.disabled=own;if(own)b.textContent='OWNED';else b.innerHTML=COIN+it.p;}
     else{b.disabled=eq;b.textContent=eq?'EQUIPPED':'EQUIP';}
     b.addEventListener('click',()=>{
-      if(shop){if(own)return;if(c.coins<it.p){$('lkMsg').textContent='Not enough coins. Play matches to earn more.';return;}c.coins-=it.p;c.own.push(it.id);c.eq[lkCat]=it.id;$('lkMsg').textContent='Purchased and equipped.';}
+      if(shop){if(own)return;if(c.coins<it.p){$('lkMsg').textContent='Not enough coins. Coins only come from the Battle Pass.';return;}c.coins-=it.p;c.own.push(it.id);c.eq[lkCat]=it.id;$('lkMsg').textContent='Purchased and equipped.';}
       else{c.eq[lkCat]=it.id;$('lkMsg').textContent='';}
       saveCos();refreshCoins();lkDraw();
     });
@@ -649,6 +676,46 @@ function lkDraw(){
   }
 }
 document.querySelectorAll('#lkTabs .btn').forEach(b=>b.addEventListener('click',()=>{lkCat=b.dataset.c;$('lkMsg').textContent='';lkDraw();}));
+/* ---------- battle pass ---------- */
+const BP_END=Date.UTC(2026,11,31,23,0,0),BP_MAX=150,BP_XP=100;/* 1 jan 2027 00:00 Alemanha = 31 dez 23:00 UTC */
+function bpGet(){const c=getCos();if(!c.bp||typeof c.bp!=='object')c.bp={};const b=c.bp;b.xp=Math.max(0,Math.min(BP_MAX*BP_XP,Math.floor(+b.xp)||0));if(!Array.isArray(b.cl))b.cl=[];if(!Array.isArray(b.m))b.m=[];if(typeof b.d!=='string')b.d='';return b;}
+function bpRew(l){if(l===50)return{k:'p',id:'p_battle'};if(l===150)return{k:'o',id:'o_champion'};if(BPSP.some(a=>a[0]===l))return{k:'s',id:'s_bp'+l};if(l%10===0)return{c:25};return null;}
+function berlin(){const p={};for(const o of new Intl.DateTimeFormat('en-GB',{timeZone:'Europe/Berlin',hourCycle:'h23',year:'numeric',month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit',second:'2-digit'}).formatToParts(new Date()))p[o.type]=o.value;return{d:p.year+'-'+p.month+'-'+p.day,left:86400-(+p.hour*3600+ +p.minute*60+ +p.second)};}
+function bpDaily(b){const t=berlin();if(b.d!==t.d||b.m.length!==3){let h=0;for(const ch of t.d)h=(h*31+ch.charCodeAt(0))>>>0;
+  const B=[['win',1,'Win 1 match'],['kill',5,'Get 5 eliminations'],['game',4,'Play 4 matches']],S=[['kill',2,'Get 2 eliminations'],['game',2,'Play 2 matches'],['kill',3,'Get 3 eliminations'],['game',1,'Play 1 match'],['kill',1,'Get 1 elimination']];
+  const i=h%S.length,j=(i+1+(h>>3)%(S.length-1))%S.length;
+  b.d=t.d;b.m=[[B[h%B.length],150],[S[i],50],[S[j],50]].map(([a,x])=>({t:a[0],n:a[1],q:a[2],x,p:0,ok:0}));}return t;}
+function bpAward(kills,win){const b=bpGet();bpDaily(b);if(Date.now()>=BP_END)return 0;let xp=kills+(win?15:0);
+  for(const m of b.m){if(m.ok)continue;m.p=Math.min(m.n,m.p+(m.t==='kill'?kills:m.t==='win'?(win?1:0):1));if(m.p>=m.n){m.ok=1;xp+=m.x;}}
+  b.xp=Math.min(BP_MAX*BP_XP,b.xp+xp);return xp;}
+function bpClaim(l){const b=bpGet(),r=bpRew(l);if(!r||b.cl.includes(l)||b.xp<l*BP_XP)return;const c=getCos();if(r.c)c.coins+=r.c;else if(!c.own.includes(r.id))c.own.push(r.id);b.cl.push(l);saveCos();refreshCoins();bpDraw();}
+function bpTimers(t){const L=Math.max(0,Math.floor((BP_END-Date.now())/1000));
+  $('bpEnd').textContent=L>0?'Season ends in '+Math.floor(L/86400)+'d '+Math.floor(L%86400/3600)+'h '+Math.floor(L%3600/60)+'m '+L%60+'s (1 Jan 2027, 00:00 Germany)':'Season ended';
+  $('bpRst').textContent='resets in '+Math.floor(t.left/3600)+'h '+Math.floor(t.left%3600/60)+'m '+t.left%60+'s (0:00 Germany)';}
+setInterval(()=>{try{if($('bp').hidden)return;const t=berlin();if(bpGet().d!==t.d)bpDraw();else bpTimers(t);}catch(e){}},1000);
+function bpDraw(){
+  const b=bpGet(),t=bpDaily(b),on=Date.now()<BP_END,lv=Math.floor(b.xp/BP_XP),L=Math.max(0,Math.floor((BP_END-Date.now())/1000));
+  $('bpT').textContent='Level '+lv+' / '+BP_MAX;
+  bpTimers(t);
+  $('bpBar').style.width=(lv>=BP_MAX?100:b.xp%BP_XP)+'%';$('bpXp').textContent=lv>=BP_MAX?'Max level':(b.xp%BP_XP)+' / '+BP_XP+' XP';
+  const ms=$('bpMs');ms.textContent='';
+  for(const m of b.m){const d=document.createElement('div');d.className='bpm'+(m.ok?' ok':'');const a=document.createElement('span'),z=document.createElement('b');a.textContent=m.q+' ('+m.p+'/'+m.n+')';z.textContent=(m.ok?'DONE ':'+')+m.x+' XP';d.append(a,z);ms.appendChild(d);}
+  const g=$('bpGrid');g.textContent='';
+  for(let l=1;l<=BP_MAX;l++){
+    const r=bpRew(l),got=b.cl.includes(l),can=b.xp>=l*BP_XP,d=document.createElement('div');
+    d.className='lcard'+(r?'':' tiny')+(can?'':' lock');
+    const n=document.createElement('b');n.textContent='LV '+l+(r?'':' ·  -');d.appendChild(n);
+    if(r){
+      if(r.c){const x=document.createElement('div');x.className='cn2';x.innerHTML=COIN+r.c;d.appendChild(x);}
+      else{const c2=document.createElement('canvas');c2.width=96;c2.height=72;icon(r.k,ITEM[r.id],c2);d.appendChild(c2);const nm=document.createElement('span');nm.textContent=ITEM[r.id].n;nm.style.fontSize='11px';d.appendChild(nm);}
+      const bt=document.createElement('button');bt.type='button';bt.className='btn alt';bt.textContent=got?'CLAIMED':can?'CLAIM':'LOCKED';bt.disabled=got||!can;bt.addEventListener('click',()=>bpClaim(l));d.appendChild(bt);
+    }
+    g.appendChild(d);
+  }
+}
+$('navBP').addEventListener('click',()=>{bpDraw();show('bp');});
+$('bpBack').addEventListener('click',()=>show('menu'));
+$('bpBack2').addEventListener('click',()=>show('menu'));
 $('navPlay').addEventListener('click',()=>show('menu'));
 $('navLock').addEventListener('click',()=>{lkMode='locker';lkDraw();show('locker');});
 $('navShop').addEventListener('click',()=>{lkMode='shop';lkDraw();show('locker');});
@@ -1181,9 +1248,9 @@ window.addEventListener('wheel',e=>{
   doSlot(P.eq==='gun'?1:2);
 },{passive:false});
 $('build').addEventListener('pointerdown',e=>{e.preventDefault();doBuild();});
-function show(id){for(const s of ['menu','qmode','pv','tmode','ctrl','prof','keys','lb','news','cred','over','locker','modes']){$(s).hidden=s!==id;if(s===id)$(s).scrollTop=0;}
+function show(id){for(const s of ['menu','qmode','pv','tmode','ctrl','prof','keys','lb','news','cred','over','locker','modes','bp']){$(s).hidden=s!==id;if(s===id)$(s).scrollTop=0;}
   const nv=['menu','modes','locker','lb','keys','prof','pv','news','cred'].includes(id);$('nav').hidden=!nv;$('app').classList.toggle('hasnav',nv);
-  const on=(id==='menu'||id==='modes')?'navPlay':id==='locker'?(lkMode==='shop'?'navShop':'navLock'):(id==='lb'||id==='pv')?'lbBtn':id==='prof'?'profBtn':['keys','news','cred'].includes(id)?'keysBtn':'';
+  const on=(id==='menu'||id==='modes')?'navPlay':id==='bp'?'navBP':id==='locker'?(lkMode==='shop'?'navShop':'navLock'):(id==='lb'||id==='pv')?'lbBtn':id==='prof'?'profBtn':['keys','news','cred'].includes(id)?'keysBtn':'';
   document.querySelectorAll('#nav .nb').forEach(b=>b.classList.toggle('on',b.id===on));
   refreshCoins();if(id==='menu')refreshMode();}
 function mark(){
@@ -1384,7 +1451,7 @@ function startGame(){
   cam.x=plane.x;cam.y=plane.y;
   state='plane';
   sticks.mv=null;sticks.aim=null;mouseDown=false;
-  for(const s of ['menu','qmode','pv','tmode','ctrl','prof','keys','lb','news','cred','over','locker','modes'])$(s).hidden=true;$('nav').hidden=true;$('app').classList.remove('hasnav');
+  for(const s of ['menu','qmode','pv','tmode','ctrl','prof','keys','lb','news','cred','over','locker','modes','bp'])$(s).hidden=true;$('nav').hidden=true;$('app').classList.remove('hasnav');
   $('hud').hidden=false;mapOpen=false;$('bigmap').hidden=true;$('mapx').hidden=true;rkStop();$('rka').hidden=true;
 }
 /* ---------- gamepad ---------- */
@@ -1510,8 +1577,7 @@ function showOver(){
   const s=Math.floor(G.time);$('ovS').textContent=Math.floor(s/60)+':'+String(s%60).padStart(2,'0');
   $('over').hidden=false;
   const pl=win?1:(teamPlace[P.team]||P.place);$('ovR').textContent='';
-  const earn=Math.round((10+P.kills*20+(win?100:pl<=3?50:pl<=10?20:0)+Math.min(60,Math.floor(G.time/10)))*(ranked?1.5:1));
-  getCos().coins+=earn;$('ovC').innerHTML=COIN+'+'+earn;refreshCoins();
+  const earn=bpAward(P.kills,win);$('ovC').textContent='+'+earn;
   if(acc){
     const st=acc.st;
     st.games++;if(win)st.wins++;st.kills+=P.kills;if(!st.best||pl<st.best)st.best=pl;
