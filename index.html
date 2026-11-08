@@ -216,7 +216,7 @@ input:focus-visible{outline:3px solid var(--flare);outline-offset:1px}
   <section id="menu" class="screen">
     <div class="lobby">
       <div class="lp">
-        <p class="kick" style="text-align:center">RRoyal · v5.4</p>
+        <p class="kick" style="text-align:center">RRoyal · v5.5</p>
         <h3 class="lt">BATTLE ROYALE</h3>
         <button id="modeBtn" class="btn alt" type="button"><span id="modeT">RANKED: OFF</span><small id="modeS">Solo</small></button>
         <button id="play" class="btn big" type="button">PLAY</button>
@@ -307,6 +307,9 @@ input:focus-visible{outline:3px solid var(--flare);outline-offset:1px}
       <p class="kick">Changelog</p>
       <h2>What's new</h2>
       <div class="form">
+        <div class="nv"><b>v5.5</b><ul>
+          <li>Security: coins, Battle Pass progress, items and stats are now signed. If saved data or an exported account file is edited, it is detected and reset.</li>
+        </ul></div>
         <div class="nv"><b>v5.4</b><ul>
           <li>Change: in Duos and Squads you can no longer be revived once the final zone has closed. A revive timer that already started keeps counting.</li>
         </ul></div>
@@ -577,22 +580,37 @@ const CATS={o:['Outfits',OUTS],p:['Pickaxes',PICKS],g:['Gliders',GLS],s:['Sprays
 const ITEM={};for(const k in CATS)for(const it of CATS[k][1])ITEM[it.id]=it;
 let fx=[],sprays=[],WT=null,guestCos=null,lkCat='o',lkMode='locker',BN=[];
 const COIN='<i class="cn"></i>';
+/* ---------- protecao anti-batota (assinatura dos dados guardados) ---------- */
+const LEG=(()=>{try{return !localStorage.getItem('rroyal-sigv');}catch(e){return true;}})();
+const SALT='rr7#k9Qx!v2Lm@Zr';
+function h53(t,seed){let h1=0xdeadbeef^seed,h2=0x41c6ce57^seed;for(let i=0;i<t.length;i++){const c=t.charCodeAt(i);h1=Math.imul(h1^c,2654435761);h2=Math.imul(h2^c,1597334677);}h1=Math.imul(h1^(h1>>>16),2246822507)^Math.imul(h2^(h2>>>13),3266489909);h2=Math.imul(h2^(h2>>>16),2246822507)^Math.imul(h1^(h1>>>13),3266489909);return (4294967296*(2097151&h2)+(h1>>>0)).toString(36);}
+const sg=t=>h53(SALT+t+SALT,7)+h53(t+SALT,13);
+function cosSig(c){const n=normCos(c),b=n.bp&&typeof n.bp==='object'?n.bp:{};return sg('c'+JSON.stringify([n.coins,n.own.slice().sort(),n.eq,Math.floor(+b.xp)||0,(Array.isArray(b.cl)?b.cl:[]).slice().sort((x,y)=>x-y),typeof b.d==='string'?b.d:'',Array.isArray(b.m)?b.m:[]]));}
+const stSig=t=>sg('s'+JSON.stringify(nst(t)));
+function putGuest(g){localStorage.setItem('rroyal-cos',JSON.stringify(Object.assign({},g,{_s:cosSig(g)})));}
+function vAcc(a){
+  if(!a||typeof a!=='object')return a;let bad=false;
+  if(a.cos&&a.cos.eq&&(a.cs?a.cs!==cosSig(a.cos):!LEG)){a.cos=normCos(null);a.cs=cosSig(a.cos);bad=true;}
+  if(a.st&&(a.ss?a.ss!==stSig(a.st):!LEG)){a.st=nst({});a.ss=stSig(a.st);bad=true;}
+  if(bad)setTimeout(()=>{try{pMsg('Altered data was detected and has been reset.');}catch(e){}},80);
+  return a;
+}
 function normCos(c){
   c=c&&typeof c==='object'?c:{};
   const o={bp:c.bp,coins:c.coins===undefined?0:Math.max(0,Math.floor(+c.coins)||0),own:Array.isArray(c.own)?c.own.filter(i=>ITEM[i]):[],eq:{}};
   for(const k in CATS){const e=c.eq&&c.eq[k];o.eq[k]=ITEM[e]&&(ITEM[e].p===0||o.own.includes(e))?e:CATS[k][1][0].id;}
   return o;
 }
-function guestLoad(){if(!guestCos){let r=null;try{r=JSON.parse(localStorage.getItem('rroyal-cos'));}catch(e){}guestCos=normCos(r);}return guestCos;}
+function guestLoad(){if(!guestCos){let r=null;try{r=JSON.parse(localStorage.getItem('rroyal-cos'));}catch(e){}if(r&&(r._s?r._s!==cosSig(r):!LEG))r=null;guestCos=normCos(r);}return guestCos;}
 function getCos(){
   if(acc){
-    if(!acc.cos||!acc.cos.eq){const g=guestLoad();acc.cos=normCos(JSON.parse(JSON.stringify(g)));g.coins=0;try{localStorage.setItem('rroyal-cos',JSON.stringify(g));}catch(e){}}
+    if(!acc.cos||!acc.cos.eq){const g=guestLoad();acc.cos=normCos(JSON.parse(JSON.stringify(g)));g.coins=0;try{putGuest(g);}catch(e){}}
     return acc.cos;
   }
   return guestLoad();
 }
 const cur=k=>ITEM[getCos().eq[k]]||CATS[k][1][0];
-function saveCos(){if(acc)sv();else try{localStorage.setItem('rroyal-cos',JSON.stringify(guestLoad()));}catch(e){}}
+function saveCos(){if(acc)sv();else try{putGuest(guestLoad());}catch(e){}}
 function playerName(){
   if(acc)return acc.user;
   let n='';try{n=localStorage.getItem('rroyal-name')||'';}catch(e){}
@@ -2124,7 +2142,7 @@ const ldAll=()=>{try{return JSON.parse(localStorage.getItem(AK))||{};}catch(e){r
 function sv(){
   if(!acc)return false;
   let ok=false;
-  try{const a=ldAll();a[acc.user.toLowerCase()]=acc;localStorage.setItem(AK,JSON.stringify(a));localStorage.setItem(SK,acc.user.toLowerCase());ok=true;}catch(e){}
+  try{if(acc.cos&&acc.cos.eq)acc.cs=cosSig(acc.cos);acc.st=nst(acc.st);acc.ss=stSig(acc.st);const a=ldAll();a[acc.user.toLowerCase()]=acc;localStorage.setItem(AK,JSON.stringify(a));localStorage.setItem(SK,acc.user.toLowerCase());ok=true;}catch(e){}
   lastPush=pushLb();
   return ok;
 }
@@ -2263,7 +2281,7 @@ $('pGo').addEventListener('click',async()=>{
     if(!a)return pMsg('No account with that username on this device. If you created it elsewhere, import the file or open the game with the same Claude account.');
     const h1=await hashPw(a.user,p,a.salt),h2=await hashPw(a.user,p,a.salt,true);
     if(a.hash!==h1&&a.hash!==h2)return pMsg('Wrong password.');
-    acc=a;acc.pw=p;sv();try{localStorage.setItem(SK,key);}catch(e){}
+    a=vAcc(a);acc=a;acc.pw=p;sv();try{localStorage.setItem(SK,key);}catch(e){}
     $('pPass').value='';pView();pMsg('','Logged in.');
   }
 });
@@ -2294,13 +2312,14 @@ $('pFile').addEventListener('change',e=>{
       const a=JSON.parse(r.result);
       if(!a||typeof a.user!=='string'||!a.hash||!a.salt||!a.st)throw 0;
       a.st=nst(a.st);
-      acc=a;sv();pView();pMsg('','Account imported.');
+      vAcc(a);acc=a;sv();pView();pMsg('','Account imported.');
     }catch(err){pMsg('Invalid account file.');}
     e.target.value='';
   };
   r.readAsText(f);
 });
-try{const k=localStorage.getItem(SK),a=k&&ldAll()[k];if(a){acc=a;acc.st=nst(acc.st);}}catch(e){}
+if(LEG){try{putGuest(guestLoad());const all=ldAll();for(const k in all){const a=all[k];if(a&&typeof a==='object'){a.st=nst(a.st);a.ss=stSig(a.st);if(a.cos&&a.cos.eq)a.cs=cosSig(a.cos);}}localStorage.setItem(AK,JSON.stringify(all));localStorage.setItem('rroyal-sigv','1');}catch(e){}}
+try{const k=localStorage.getItem(SK),a=k&&ldAll()[k];if(a){acc=vAcc(a);acc.st=nst(acc.st);}}catch(e){}
 pView();
 
 /* ---------- login com Google ---------- */
@@ -2314,7 +2333,7 @@ function onGoogle(r){
     const p=gJwt(r.credential);
     if(!p||!p.sub||p.aud!==GCID)throw 0;
     const all=ldAll();
-    let a=Object.values(all).find(x=>x&&x.gid===p.sub);
+    let a=Object.values(all).find(x=>x&&x.gid===p.sub);const had=!!a;
     if(!a){
       let base=String(p.given_name||p.name||'Player').replace(/[^A-Za-z0-9_À-ÿ]/g,'').slice(0,16)||'Player';
       if(base.length<3)base=base.padEnd(3,'_');
@@ -2323,7 +2342,7 @@ function onGoogle(r){
       a={user:u,salt:'g',hash:'google',created:Date.now(),pw:'',gid:p.sub,st:nst({})};
     }
     a.st=nst(a.st);
-    acc=a;sv();pView();pMsg('','Signed in with Google. You can change your name below.');
+    if(had)vAcc(a);acc=a;sv();pView();pMsg('','Signed in with Google. You can change your name below.');
   }catch(e){pMsg('Google sign-in failed. Try again.');}
 }
 async function lbTaken(name){
