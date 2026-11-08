@@ -122,6 +122,32 @@ input:focus-visible{outline:3px solid var(--flare);outline-offset:1px}
 .tabs{display:flex;gap:8px}.tabs .btn.on{background:var(--flare);color:#2a1d00}.tabs .btn:not(.on){background:var(--ink)}
 #pErr{margin:0;min-height:18px;color:#ff9cc3;font-size:13px}#pOk{margin:0;min-height:18px;color:var(--hp);font-size:13px}
 .form{display:flex;flex-direction:column;gap:10px;width:100%}
+#rka{z-index:20;align-items:center;background:radial-gradient(circle at 50% 45%,#1d5266,#0a1c26 78%);overflow:hidden}
+#rka .rays{position:absolute;left:50%;top:50%;width:170vmax;height:170vmax;margin:-85vmax 0 0 -85vmax;background:repeating-conic-gradient(rgba(255,184,28,.12) 0 8deg,transparent 8deg 16deg);animation:rkspin 28s linear infinite;opacity:.35;transition:opacity .6s;pointer-events:none;-webkit-mask:radial-gradient(circle,#000 0,transparent 45%);mask:radial-gradient(circle,#000 0,transparent 45%)}
+#rka.up .rays{opacity:1;background:repeating-conic-gradient(rgba(255,210,63,.3) 0 8deg,transparent 8deg 16deg)}
+#rka.down .rays{opacity:.9;background:repeating-conic-gradient(rgba(224,48,122,.28) 0 8deg,transparent 8deg 16deg)}
+@keyframes rkspin{to{transform:rotate(360deg)}}
+#rka .panel{position:relative;z-index:1;gap:10px}
+#rka h2{min-height:1em}
+#rka.up h2{color:#ffd23f}#rka.down h2{color:#ff7aa8}
+.stage{display:flex;align-items:center;justify-content:center;gap:clamp(16px,6vw,56px);flex-wrap:wrap}
+#rkPl{height:min(44vh,260px);width:auto;aspect-ratio:180/260}
+.rkside{display:flex;flex-direction:column;align-items:center;gap:6px;min-width:190px}
+#rkBadge{display:flex;filter:drop-shadow(0 4px 0 rgba(0,0,0,.35))}
+#rkBadge.pop{animation:rkpop 1s ease-out}
+#rkBadge.popd{animation:rkpopd 1s ease-out}
+@keyframes rkpop{0%{transform:scale(1);filter:brightness(1)}30%{transform:scale(1.6) rotate(-8deg);filter:brightness(2.4) drop-shadow(0 0 26px #ffd23f)}60%{transform:scale(.9) rotate(4deg);filter:brightness(1.4) drop-shadow(0 0 14px #ffd23f)}100%{transform:scale(1);filter:brightness(1) drop-shadow(0 4px 0 rgba(0,0,0,.35))}}
+@keyframes rkpopd{0%{transform:scale(1)}20%{transform:scale(1.15) translateX(-8px)}35%{transform:scale(.7) translateX(8px);filter:brightness(.6) drop-shadow(0 0 22px #e0307a)}55%{transform:scale(.85) translateX(-5px)}100%{transform:scale(1);filter:brightness(1) drop-shadow(0 4px 0 rgba(0,0,0,.35))}}
+#rkFl{position:absolute;inset:0;background:#fff;opacity:0;pointer-events:none;z-index:2}
+#rkFl.go{animation:rkfl .55s ease-out}
+@keyframes rkfl{0%{opacity:.7}100%{opacity:0}}
+#rkName{font-size:26px}
+#rkRp{font-family:var(--f-d);font-size:34px;font-variant-numeric:tabular-nums}
+.rkbar{width:200px;height:12px;background:rgba(0,0,0,.5);border-radius:6px;overflow:hidden}
+.rkbar i{display:block;height:100%;width:0;background:linear-gradient(90deg,#ffb81c,#ffd23f)}
+#rkD{font-family:var(--f-d);font-size:22px;animation:rkin .5s ease-out both;animation-delay:.3s}
+#rkD.pos{color:var(--hp)}#rkD.neg{color:#ff7aa8}
+@keyframes rkin{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
 </style>
 
 <div id="app">
@@ -168,7 +194,7 @@ input:focus-visible{outline:3px solid var(--flare);outline-offset:1px}
     <div class="panel">
       <div class="brand">
         <p class="kick">2D battle royale · up to 100 players</p>
-        <h1><span class="r1">R</span>Royal<small class="ver">v3.8</small></h1>
+        <h1><span class="r1">R</span>Royal<small class="ver">v4.0</small></h1>
         <p class="lead">Jump from the plane, open chests for weapons, break rocks to build walls, and be the last one standing when the storm closes in on the island.</p>
       </div>
       <div class="acts">
@@ -265,6 +291,12 @@ input:focus-visible{outline:3px solid var(--flare);outline-offset:1px}
       <p class="kick">Changelog</p>
       <h2>What's new</h2>
       <div class="form">
+        <div class="nv"><b>v4.0</b><ul>
+          <li>New: rank animation at the end of a Ranked match. Your soldier faces the screen, the RP counts up or down next to your badge, and when your rank changes the badge flashes and swaps.</li>
+        </ul></div>
+        <div class="nv"><b>v3.9</b><ul>
+          <li>New: auto heal. Your Med kit is used on its own when your health drops below 50, and a Shield when your shield is at 50 or less. It stops when you shoot or swing, and starts again when you stop.</li>
+        </ul></div>
         <div class="nv"><b>v3.8</b><ul>
           <li>New (PC): scroll the mouse wheel to switch between the Pickaxe and your weapon. You can also click the slots of the item bar with the mouse.</li>
         </ul></div>
@@ -353,6 +385,24 @@ input:focus-visible{outline:3px solid var(--flare);outline-offset:1px}
     <div class="panel col center">
       <h2>Rotate your phone</h2>
       <p class="lead">RRoyal is played in landscape.</p>
+    </div>
+  </section>
+
+  <section id="rka" class="screen" hidden>
+    <div class="rays"></div><div id="rkFl"></div>
+    <div class="panel center">
+      <h2 id="rkT"></h2>
+      <div class="stage">
+        <canvas id="rkPl" width="180" height="260"></canvas>
+        <div class="rkside">
+          <div id="rkBadge"></div>
+          <div id="rkName" class="rk"></div>
+          <div id="rkRp"></div>
+          <div class="rkbar"><i id="rkBar"></i></div>
+          <div id="rkD"></div>
+        </div>
+      </div>
+      <button id="rkGo" class="btn big" type="button">SKIP</button>
     </div>
   </section>
 
@@ -1119,8 +1169,74 @@ function startGame(){
   state='plane';
   sticks.mv=null;sticks.aim=null;mouseDown=false;
   for(const s of ['menu','qmode','pv','tmode','ctrl','prof','keys','lb','news','cred','over'])$(s).hidden=true;
-  $('hud').hidden=false;mapOpen=false;$('bigmap').hidden=true;$('mapx').hidden=true;
+  $('hud').hidden=false;mapOpen=false;$('bigmap').hidden=true;$('mapx').hidden=true;rkStop();$('rka').hidden=true;
 }
+/* ---------- rank animation ---------- */
+let rkA=null;
+function rkStop(){if(rkA){cancelAnimationFrame(rkA.raf);rkA=null;}}
+function drawFront(c,t,mood){
+  const g=c.getContext('2d'),w=c.width,h=c.height;
+  g.clearRect(0,0,w,h);
+  const cx=w/2,jump=mood>0?Math.abs(Math.sin(t*5))*18:0,bob=mood===0?Math.sin(t*2.2)*2:0,by=h-40-jump+bob;
+  const RR=(x,y,ww,hh,col,r)=>{g.fillStyle=col;g.beginPath();if(g.roundRect)g.roundRect(x,y,ww,hh,r);else g.rect(x,y,ww,hh);g.fill();};
+  g.fillStyle='rgba(0,0,0,.3)';g.beginPath();g.ellipse(cx,h-22,46-jump*.6,10,0,0,TAU);g.fill();
+  RR(cx-25,by-54,22,54,'#2d3338',7);RR(cx+3,by-54,22,54,'#2d3338',7);
+  RR(cx-28,by-12,26,14,'#1a1d1f',6);RR(cx+2,by-12,26,14,'#1a1d1f',6);
+  const arm=(s)=>{
+    const sx=cx+s*30,sy=by-112,ex=cx+s*(mood>0?64:46),ey=mood>0?by-158:(mood<0?by-50:by-58);
+    g.lineCap='round';g.strokeStyle='#5d7a4b';g.lineWidth=20;g.beginPath();g.moveTo(sx,sy);g.lineTo(ex,ey);g.stroke();
+    if(s<0){g.strokeStyle='#d2452b';g.lineWidth=20;g.lineCap='butt';g.beginPath();g.moveTo(sx+(ex-sx)*.3,sy+(ey-sy)*.3);g.lineTo(sx+(ex-sx)*.48,sy+(ey-sy)*.48);g.stroke();}
+    g.fillStyle='#e8bf94';g.beginPath();g.arc(ex,ey,11,0,TAU);g.fill();
+  };
+  arm(-1);arm(1);
+  RR(cx-36,by-126,72,78,'#5d7a4b',18);
+  RR(cx-28,by-92,18,18,'#3f4d34',4);RR(cx+10,by-92,18,18,'#3f4d34',4);
+  RR(cx-36,by-62,72,8,'#47573a',3);
+  RR(cx-30,by-138,60,18,'#f2ecd9',9);RR(cx+8,by-130,16,38,'#e2dac0',6);
+  g.fillStyle='#e8bf94';g.beginPath();g.arc(cx,by-162,31,0,TAU);g.fill();
+  g.fillStyle='#e5c548';g.beginPath();g.arc(cx,by-166,32,Math.PI,0);g.closePath();g.fill();
+  g.beginPath();g.arc(cx-26,by-160,9,0,TAU);g.arc(cx+26,by-160,9,0,TAU);g.fill();
+  g.fillStyle='#1a1d1f';g.beginPath();g.arc(cx-11,by-158,3.6,0,TAU);g.arc(cx+11,by-158,3.6,0,TAU);g.fill();
+  g.strokeStyle='#8a4a2a';g.lineWidth=2.6;g.lineCap='round';g.beginPath();
+  if(mood<0)g.arc(cx,by-138,9,Math.PI*1.15,Math.PI*1.85);else g.arc(cx,by-150,10,Math.PI*.15,Math.PI*.85);
+  g.stroke();
+}
+function rankAnim(old,nw,dl){
+  rkStop();
+  const box=$('rka'),pl=$('rkPl'),badge=$('rkBadge'),rpEl=$('rkRp'),dEl=$('rkD'),bar=$('rkBar'),nm=$('rkName'),btn=$('rkGo'),tt=$('rkT'),fl=$('rkFl');
+  const diff=nw-old,mood=diff>0?1:diff<0?-1:0,dur=Math.min(2600,1200+Math.abs(diff)*10),delay=900;
+  const frac=rp=>{const r=rankOf(rp);if(r.i===7)return 1;const sz=(RT[r.i+1]-RT[r.i])/3,d=Math.min(2,Math.floor((rp-RT[r.i])/sz));return (rp-(RT[r.i]+d*sz))/sz;};
+  let cur=rankOf(old).name,t0=null,changed=false;
+  box.hidden=false;box.classList.remove('up','down');fl.className='';badge.className='';
+  btn.textContent='SKIP';tt.textContent='RANKED';
+  badge.innerHTML=rankIcon(rankOf(old),120);nm.textContent=cur;rpEl.textContent=old+' RP';bar.style.width=(frac(old)*100)+'%';
+  dEl.className=diff>=0?'pos':'neg';dEl.textContent=(diff>=0?'+':'')+diff+' RP';
+  const paint=(rp,pop)=>{
+    const r=rankOf(rp);rpEl.textContent=rp+' RP';bar.style.width=(frac(rp)*100)+'%';
+    if(r.name!==cur){
+      cur=r.name;changed=true;badge.innerHTML=rankIcon(r,120);nm.textContent=r.name;
+      if(pop){badge.className='';void badge.offsetWidth;badge.className=mood>0?'pop':'popd';fl.className='';void fl.offsetWidth;fl.className='go';box.classList.add(mood>0?'up':'down');}
+    }
+  };
+  let skip=false;
+  const loop=ts=>{
+    if(!rkA)return;
+    if(t0===null)t0=ts;
+    const el=ts-t0,t=el/1000,p=skip?1:Math.max(0,Math.min(1,(el-delay)/dur)),e=1-Math.pow(1-p,3);
+    paint(Math.round(old+diff*e),!skip);
+    if(p>=1&&!rkA.done){
+      rkA.done=true;paint(nw,false);
+      if(changed)box.classList.add(mood>0?'up':'down');
+      btn.textContent='CONTINUE';
+      tt.textContent=changed?(mood>0?'RANK UP!':'RANK DOWN'):(mood>0?'GREAT MATCH':mood<0?'TOUGH MATCH':'RESULT');
+    }
+    drawFront(pl,t,rkA.done?mood:0);
+    rkA.raf=requestAnimationFrame(loop);
+  };
+  rkA={raf:0,done:false,skip:()=>{skip=true;}};
+  rkA.raf=requestAnimationFrame(loop);
+}
+$('rkGo').addEventListener('click',()=>{if(!rkA)return;if(!rkA.done)rkA.skip();else{rkStop();$('rka').hidden=true;}});
 function showOver(){
   overShown=true;state='over';
   const win=teamAlive(P.team)&&aliveTeams()<=1;frozen=win&&P.alive;
@@ -1137,7 +1253,7 @@ function showOver(){
     if(ranked){
       const old=st.rp,r0=rankOf(old).i,dl=rpDelta(r0,pl,P.kills);
       st.rp=Math.max(0,old+dl);st.pk=Math.max(st.pk,st.rp);st.rg++;if(win)st.rw++;st.rk+=P.kills;
-      const r1=rankOf(st.rp);
+      const r1=rankOf(st.rp);rankAnim(old,st.rp,dl);
       $('ovR').textContent=(dl>=0?'+':'')+dl+' RP · '+r1.name+(r1.i>r0?' · RANK UP!':r1.i<r0?' · Rank down':'');
     }
     sv();
@@ -1192,6 +1308,7 @@ function update(dt){
         else if(mode==='mobile'){if(ix||iy)e.ang=turnTo(e.ang,Math.atan2(iy,ix),12*dt);}
         else{e.ang=mouseAng;firing=mouseDown;}
         if(firing){e.use=null;if(e.eq==='gun'&&e.w)fire(e);else swing(e);}
+        else if(!e.use){if(e.hp<50&&e.kits>0)startUse(e,'kit');else if(e.sh<=50&&e.shs>0)startUse(e,'shield');}
       }
       if(e.isBot)pickups(e);else autoPick(e);
       if(Math.hypot(e.x-Z.cx,e.y-Z.cy)>Z.r&&Z.dps>0){
