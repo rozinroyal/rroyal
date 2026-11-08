@@ -194,7 +194,7 @@ input:focus-visible{outline:3px solid var(--flare);outline-offset:1px}
     <div class="panel">
       <div class="brand">
         <p class="kick">2D battle royale · up to 100 players</p>
-        <h1><span class="r1">R</span>Royal<small class="ver">v4.1</small></h1>
+        <h1><span class="r1">R</span>Royal<small class="ver">v4.2</small></h1>
         <p class="lead">Jump from the plane, open chests for weapons, break rocks to build walls, and be the last one standing when the storm closes in on the island.</p>
       </div>
       <div class="acts">
@@ -202,7 +202,7 @@ input:focus-visible{outline:3px solid var(--flare);outline-offset:1px}
         <div class="row2">
           <button id="profBtn" class="btn alt" type="button">PROFILE</button>
           <button id="lbBtn" class="btn alt" type="button">LEADERBOARD</button>
-          <button id="keysBtn" class="btn alt" type="button">KEYBINDS</button>
+          <button id="keysBtn" class="btn alt" type="button">SETTINGS</button>
           <button id="hudBtn" class="btn alt" type="button">HUD LAYOUT</button>
           <button id="newsBtn" class="btn alt" type="button">WHAT'S NEW</button>
           <button id="credits" class="btn alt" type="button">CREDITS</button>
@@ -232,7 +232,7 @@ input:focus-visible{outline:3px solid var(--flare);outline-offset:1px}
       <p class="kick">Controls</p>
       <h2>How will you play?</h2>
       <div class="cards">
-        <button class="card" type="button" data-mode="pc"><b>PC</b><span>Keyboard and mouse. The mouse aims and shoots, right click builds a wall. Change the keys in KEYBINDS on the main menu.</span></button>
+        <button class="card" type="button" data-mode="pc"><b>PC</b><span>Keyboard and mouse. The mouse aims and shoots, right click builds a wall. Change the keys in SETTINGS on the main menu.</span></button>
         <button class="card" type="button" data-mode="mobile"><b>MOBILE</b><span>Play in landscape. Left stick moves, right stick aims and shoots, the Wall button builds.</span></button>
       </div>
       <button id="ctrlBack" class="btn alt" type="button">Back</button>
@@ -267,10 +267,10 @@ input:focus-visible{outline:3px solid var(--flare);outline-offset:1px}
 
   <section id="keys" class="screen" hidden>
     <div class="panel col">
-      <p class="kick">Settings</p>
-      <h2>Keybinds</h2>
+      <p class="kick">Game</p>
+      <h2>Settings</h2><div class="kbrow"><span>Auto heal</span><button id="ahBtn" class="btn alt" type="button"></button></div><p class="kick">Keyboard</p>
       <div id="kbList" class="form"></div>
-      <p class="kick">Click a key, then press the new one. Esc cancels.</p>
+      <p class="kick">Controller</p><div id="padList" class="form"></div><p class="kick">Click a key or a controller button, then press the new one. Esc cancels.</p>
       <div class="row2"><button id="kbReset" class="btn alt" type="button">Reset</button><button id="keysBack" class="btn alt" type="button">Back</button></div>
     </div>
   </section>
@@ -291,8 +291,11 @@ input:focus-visible{outline:3px solid var(--flare);outline-offset:1px}
       <p class="kick">Changelog</p>
       <h2>What's new</h2>
       <div class="form">
+        <div class="nv"><b>v4.2</b><ul>
+          <li>New: KEYBINDS is now SETTINGS. You can rebind the controller buttons there (click an action, then press the new button on your pad), and turn Auto heal ON or OFF.</li>
+        </ul></div>
         <div class="nv"><b>v4.1</b><ul>
-          <li>New: controller support on PC and phone (Xbox, PlayStation and most Bluetooth or USB pads). Left stick moves, right stick aims and shoots, RT shoots, A jumps and picks up, B or LT builds a wall, X reloads, Y swaps Pickaxe and weapon, LB uses a Med kit, RB uses a Shield, Back opens the map. Press any button once so the browser detects the pad.</li>
+          <li>New: controller support on PC and phone (Xbox, PlayStation and most Bluetooth or USB pads). Left stick moves, right stick aims and shoots, RT shoots, A jumps and picks up, B builds a wall, X reloads, Y swaps Pickaxe and weapon, LB uses a Med kit, RB uses a Shield, Back opens the map. Press any button once so the browser detects the pad.</li>
         </ul></div>
         <div class="nv"><b>v4.0</b><ul>
           <li>New: rank animation at the end of a Ranked match. Your soldier faces the screen, the RP counts up or down next to your badge, and when your rank changes the badge flashes and swaps.</li>
@@ -459,7 +462,14 @@ const KD={up:'w',down:'s',left:'a',right:'d',jump:' ',take:'f',build:'q',s1:'1',
 const KB=Object.assign({},KD);
 try{const o=JSON.parse(localStorage.getItem('rroyal-keys'));if(o)for(const a in KD)if(typeof o[a]==='string'&&o[a])KB[a]=o[a];}catch(e){}
 const kname=k=>k===' '?'Space':k.length===1?k.toUpperCase():k.replace(/^arrow/,'Arrow ').replace(/^./,c=>c.toUpperCase());
-let rebind=null;
+let rebind=null,rebindPad=null,AH=true;
+const PN={jump:'Jump / pick up',build:'Build wall',reload:'Reload',swap:'Pickaxe / weapon',kit:'Use Med kit',shield:'Use Shield',fire:'Fire',map:'Map'};
+const PD={jump:0,build:1,reload:2,swap:3,kit:4,shield:5,fire:7,map:8};
+const GPD=Object.assign({},PD);
+const PBN=['A','B','X','Y','LB','RB','LT','RT','Back','Start','L3','R3','D-Up','D-Down','D-Left','D-Right','Home'];
+const pbname=i=>PBN[i]||'Button '+i;
+try{const o=JSON.parse(localStorage.getItem('rroyal-pad'));if(o)for(const a in PD)if(Number.isInteger(o[a])&&o[a]>=0)GPD[a]=o[a];}catch(e){}
+try{if(localStorage.getItem('rroyal-autoheal')==='0')AH=false;}catch(e){}
 let ac=null,ranked=false,NP=20,PHc=PH,mapOpen=false,PLACES=[],rr=Math.random,grid=new Map(),stamp=0;const rs=(a,b)=>a+rr()*(b-a);
 const SR=42;
 let tmode='solo',TS=1,teamPlace={},frozen=false;
@@ -944,6 +954,7 @@ cv.addEventListener('pointerup',endPtr);cv.addEventListener('pointercancel',endP
 cv.addEventListener('contextmenu',e=>e.preventDefault());
 window.addEventListener('keydown',e=>{
   if(e.target&&e.target.tagName==='INPUT')return;
+  if(rebindPad){e.preventDefault();if(e.key==='Escape'){rebindPad=null;kbDraw();}return;}
   const k=e.key.toLowerCase();
   if(rebind){
     e.preventDefault();
@@ -1187,17 +1198,40 @@ function pollPad(){
   GP.mx=l[0];GP.my=l[1];GP.ax=r[0];GP.ay=r[1];GP.am=r[2];GP.aimOn=r[2]>0;if(GP.aimOn)GP.ang=Math.atan2(r[1],r[0]);
   const bp=i=>!!(p.buttons[i]&&(p.buttons[i].pressed||p.buttons[i].value>.5));
   const edge=i=>{const n=bp(i),o=GPB[i];GPB[i]=n;return n&&!o;};
-  GP.fire=bp(7);
-  const eA=edge(0),eB=edge(1),eX=edge(2),eY=edge(3),eLB=edge(4),eRB=edge(5),eLT=edge(6),eBk=edge(8);
+  GP.fire=bp(GPD.fire);
+  const eA=edge(GPD.jump),eB=edge(GPD.build),eX=edge(GPD.reload),eY=edge(GPD.swap),eLB=edge(GPD.kit),eRB=edge(GPD.shield),eBk=edge(GPD.map);
   if(!P||hudEdit||state==='menu')return;
   if(eA){if(P.st==='plane')doJump();else doTake();}
-  if(eB||eLT)doBuild();
+  if(eB)doBuild();
   if(eX)startReload(P);
   if(eY)doSlot(P.eq==='gun'?1:2);
   if(eLB)doSlot(3);
   if(eRB)doSlot(4);
   if(eBk)toggleMap();
 }
+function padDraw(){
+  const l=$('padList');l.textContent='';
+  for(const a in PD){
+    const r=document.createElement('div');r.className='kbrow';
+    const t=document.createElement('span');t.textContent=PN[a];
+    const b=document.createElement('button');b.type='button';b.className='btn alt';b.textContent=rebindPad&&rebindPad.a===a?'Press a button…':pbname(GPD[a]);
+    b.addEventListener('click',()=>{rebind=null;rebindPad={a,armed:false};kbDraw();});
+    r.append(t,b);l.appendChild(r);
+  }
+  $('ahBtn').textContent=AH?'ON':'OFF';
+}
+function padListen(){
+  let p=null;try{const l=navigator.getGamepads?navigator.getGamepads():[];for(const g of l)if(g&&g.connected){p=g;break;}}catch(e){}
+  if(!p)return;
+  const down=[];p.buttons.forEach((b,i)=>{if(b&&(b.pressed||b.value>.5))down.push(i);});
+  if(!rebindPad.armed){if(!down.length)rebindPad.armed=true;return;}
+  if(!down.length)return;
+  const a=rebindPad.a,n=down[0],old=GPD[a];
+  for(const o in GPD)if(o!==a&&GPD[o]===n)GPD[o]=old;
+  GPD[a]=n;try{localStorage.setItem('rroyal-pad',JSON.stringify(GPD));}catch(e){}
+  rebindPad=null;padDraw();
+}
+$('ahBtn').addEventListener('click',()=>{AH=!AH;try{localStorage.setItem('rroyal-autoheal',AH?'1':'0');}catch(e){}padDraw();});
 /* ---------- rank animation ---------- */
 let rkA=null;
 function rkStop(){if(rkA){cancelAnimationFrame(rkA.raf);rkA=null;}}
@@ -1336,7 +1370,7 @@ function update(dt){
         else{e.ang=mouseAng;firing=mouseDown;}
         if(GP.on){if(GP.aimOn){e.ang=GP.ang;mouseAng=GP.ang;if(GP.am>.5)firing=true;}if(GP.fire)firing=true;}
         if(firing){e.use=null;if(e.eq==='gun'&&e.w)fire(e);else swing(e);}
-        else if(!e.use){if(e.hp<50&&e.kits>0)startUse(e,'kit');else if(e.sh<=50&&e.shs>0)startUse(e,'shield');}
+        else if(AH&&!e.use){if(e.hp<50&&e.kits>0)startUse(e,'kit');else if(e.sh<=50&&e.shs>0)startUse(e,'shield');}
       }
       if(e.isBot)pickups(e);else autoPick(e);
       if(Math.hypot(e.x-Z.cx,e.y-Z.cy)>Z.r&&Z.dps>0){
@@ -1775,14 +1809,14 @@ function kbDraw(){
     const r=document.createElement('div');r.className='kbrow';
     const t=document.createElement('span');t.textContent=KN[a];
     const b=document.createElement('button');b.type='button';b.className='btn alt';b.textContent=rebind===a?'Press a key…':kname(KB[a]);
-    b.addEventListener('click',()=>{rebind=a;kbDraw();});
+    b.addEventListener('click',()=>{rebind=a;rebindPad=null;kbDraw();});
     r.append(t,b);l.appendChild(r);
   }
-  $('k1').textContent=kname(KB.s1);$('k2').textContent=kname(KB.s2);$('k3').textContent=kname(KB.s3);$('k4').textContent=kname(KB.s4);
+  padDraw();$('k1').textContent=kname(KB.s1);$('k2').textContent=kname(KB.s2);$('k3').textContent=kname(KB.s3);$('k4').textContent=kname(KB.s4);
 }
-$('keysBtn').addEventListener('click',()=>{rebind=null;kbDraw();show('keys');});
-$('keysBack').addEventListener('click',()=>{rebind=null;show('menu');});
-$('kbReset').addEventListener('click',()=>{Object.assign(KB,KD);rebind=null;try{localStorage.setItem('rroyal-keys',JSON.stringify(KB));}catch(e){}kbDraw();});
+$('keysBtn').addEventListener('click',()=>{rebind=null;rebindPad=null;kbDraw();show('keys');});
+$('keysBack').addEventListener('click',()=>{rebind=null;rebindPad=null;show('menu');});
+$('kbReset').addEventListener('click',()=>{Object.assign(KB,KD);Object.assign(GPD,PD);rebindPad=null;try{localStorage.setItem('rroyal-pad',JSON.stringify(GPD));}catch(e){}rebind=null;try{localStorage.setItem('rroyal-keys',JSON.stringify(KB));}catch(e){}kbDraw();});
 kbDraw();
 $('pEye').addEventListener('click',()=>{const h=$('pPass').type==='password';$('pPass').type=h?'text':'password';$('pEye').textContent=h?'HIDE':'SHOW';$('pEye').setAttribute('aria-pressed',String(h));});
 $('newsBtn').addEventListener('click',()=>show('news'));
@@ -2047,6 +2081,7 @@ function frame(ts){
   const dt=Math.min(.05,(ts-last)/1000||.016);last=ts;
   const rot=mode==='mobile'&&state!=='menu'&&vh>vw;
   if(cache.rot!==rot){cache.rot=rot;$('rotate').hidden=!rot;if(rot){sticks.mv=null;sticks.aim=null;}}
+  if(rebindPad)padListen();
   if(state==='menu')menuT+=dt;
   else if(!rot&&!frozen){pollPad();update(dt);}
   draw();hud();if(mapOpen)drawBig();
