@@ -90,6 +90,8 @@ h2{font-size:clamp(36px,11vw,56px);color:var(--flare)}
 .lbrow{display:flex;gap:10px;align-items:center;width:100%;box-sizing:border-box;background:var(--panel);padding:6px 10px;border-radius:6px}
 .lbrow b{font-family:var(--f-d);font-weight:400;color:var(--flare);min-width:30px}.lbrow span{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.lbrow i{font-style:normal;font-variant-numeric:tabular-nums}
 .lbrow.me{outline:2px solid var(--flare)}#lbList{gap:6px}
+#gwrap{display:flex;flex-direction:column;align-items:center;gap:8px;width:100%;color:var(--mute);font-size:12px;letter-spacing:.12em;text-transform:uppercase}
+#gbtn{color-scheme:light;min-height:44px;pointer-events:auto}
 .pw{display:flex;gap:8px;width:100%}.pw input{flex:1;min-width:0}.pw .btn{flex:0 0 auto;font-size:12px;padding:8px 12px}
 #jMv,#jAim{position:absolute;top:70%;width:84px;height:84px;margin:-42px 0 0 -42px;border:3px solid rgba(242,236,217,.28);border-radius:50%;box-sizing:border-box}
 #jMv{left:20%}#jAim{left:80%}
@@ -207,6 +209,7 @@ input:focus-visible{outline:3px solid var(--flare);outline-offset:1px}
         <input id="pUser" type="text" placeholder="Username" maxlength="16" autocomplete="username" autocapitalize="off" spellcheck="false">
         <div class="pw"><input id="pPass" type="password" placeholder="Password" maxlength="40" autocomplete="current-password"><button id="pEye" class="btn alt" type="button" aria-pressed="false">SHOW</button></div>
         <button id="pGo" class="btn" type="button">CREATE ACCOUNT</button>
+        <div id="gwrap" hidden><span>or</span><div id="gbtn"></div></div>
         <button id="pImp" class="btn alt" type="button">Import account (file)</button>
       </div>
       <div id="pIn" class="form" hidden>
@@ -1647,6 +1650,7 @@ function pView(){
   $('profBtn').textContent=acc?'PROFILE · '+acc.user:'PROFILE';
   if(acc){
     const s=acc.st;$('pName').textContent=acc.user;$('pShow').type='password';$('pShowBtn').textContent=acc.pw?'SHOW':'SAVE';$('pShow').readOnly=!!acc.pw;$('pShow').value=acc.pw||'';$('pShow').placeholder=acc.pw?'':'Type your password once to save it';$('pRank').textContent=rankOf(s.rp).name+' · '+s.rp+' RP';figs($('pFigs'),statRows(s));
+    $('pShow').parentElement.hidden=!!acc.gid;
   }else{
     $('tabNew').classList.toggle('on',regMode);$('tabIn').classList.toggle('on',!regMode);
     $('pGo').textContent=regMode?'CREATE ACCOUNT':'LOG IN';
@@ -1724,6 +1728,42 @@ $('pFile').addEventListener('change',e=>{
 });
 try{const k=localStorage.getItem(SK),a=k&&ldAll()[k];if(a){acc=a;acc.st=nst(acc.st);}}catch(e){}
 pView();
+
+/* ---------- login com Google ---------- */
+const GCID='845966972059-9sp86vmbs1c6f6oivaml83kgk0sj6b00.apps.googleusercontent.com';
+function gJwt(t){
+  const b=t.split('.')[1].replace(/-/g,'+').replace(/_/g,'/');
+  return JSON.parse(new TextDecoder().decode(Uint8Array.from(atob(b),c=>c.charCodeAt(0))));
+}
+function onGoogle(r){
+  try{
+    const p=gJwt(r.credential);
+    if(!p||!p.sub||p.aud!==GCID)throw 0;
+    const all=ldAll();
+    let a=Object.values(all).find(x=>x&&x.gid===p.sub);
+    if(!a){
+      let base=String(p.given_name||p.name||'Player').replace(/[^A-Za-z0-9_À-ÿ]/g,'').slice(0,16)||'Player';
+      if(base.length<3)base=base.padEnd(3,'_');
+      let u=base,i=1;
+      while(all[u.toLowerCase()]){const n=String(++i);u=base.slice(0,16-n.length)+n;}
+      a={user:u,salt:'g',hash:'google',created:Date.now(),pw:'',gid:p.sub,st:nst({})};
+    }
+    a.st=nst(a.st);
+    acc=a;sv();pView();pMsg('','Signed in with Google.');
+  }catch(e){pMsg('Google sign-in failed. Try again.');}
+}
+function gInit(){
+  try{
+    google.accounts.id.initialize({client_id:GCID,callback:onGoogle});
+    google.accounts.id.renderButton($('gbtn'),{theme:'filled_black',size:'large',shape:'pill',text:'continue_with',width:300});
+    $('gwrap').hidden=false;
+  }catch(e){}
+}
+(function(){
+  const s=document.createElement('script');
+  s.src='https://accounts.google.com/gsi/client';s.async=true;s.onload=gInit;s.onerror=()=>{};
+  document.head.appendChild(s);
+})();
 
 /* ---------- ciclo ---------- */
 function resize(){
