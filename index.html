@@ -216,7 +216,7 @@ input:focus-visible{outline:3px solid var(--flare);outline-offset:1px}
   <section id="menu" class="screen">
     <div class="lobby">
       <div class="lp">
-        <p class="kick" style="text-align:center">RRoyal · v5.1</p>
+        <p class="kick" style="text-align:center">RRoyal · v5.4</p>
         <h3 class="lt">BATTLE ROYALE</h3>
         <button id="modeBtn" class="btn alt" type="button"><span id="modeT">RANKED: OFF</span><small id="modeS">Solo</small></button>
         <button id="play" class="btn big" type="button">PLAY</button>
@@ -307,6 +307,17 @@ input:focus-visible{outline:3px solid var(--flare);outline-offset:1px}
       <p class="kick">Changelog</p>
       <h2>What's new</h2>
       <div class="form">
+        <div class="nv"><b>v5.4</b><ul>
+          <li>Change: in Duos and Squads you can no longer be revived once the final zone has closed. A revive timer that already started keeps counting.</li>
+        </ul></div>
+        <div class="nv"><b>v5.3</b><ul>
+          <li>Balance: SMG damage x1.3, Rifle damage x1.3, Shotgun damage x2.0.</li>
+        </ul></div>
+        <div class="nv"><b>v5.2</b><ul>
+          <li>New: weapon rarities (Common, Uncommon, Rare, Epic, Legendary). Higher rarity means more damage and faster reload. Chests give better odds.</li>
+          <li>Change: teammate names are now red in Duos and Squads.</li>
+          <li>Change: the Battle Pass has a BACK button at the top and live timers.</li>
+        </ul></div>
         <div class="nv"><b>v5.1</b><ul>
           <li>New: free BATTLE PASS with 150 levels (100 XP each) and a season timer that ends on 1 Jan 2027, 00:00 Germany.</li>
           <li>New: 3 daily missions (1 x 150 XP, 2 x 50 XP) that reset at 0:00 Germany time.</li>
@@ -510,13 +521,15 @@ const NAMES=['Ghost99','Nova_X','Blaze','Viper','Rogue','Echo','Titan','Frost','
 
 const WP={
   pistol:{n:'Pistol',dmg:16,rate:.32,spd:950,rng:620,spr:.035,pel:1,col:'#c9d1d6',tier:1,len:14,f:520,mag:12,rl:1.4},
-  smg:{n:'SMG',dmg:6,rate:.085,spd:1000,rng:520,spr:.1,pel:1,col:'#ffd23f',tier:2,len:20,f:700,mag:30,rl:1.8},
-  shotgun:{n:'Shotgun',dmg:9,rate:.85,spd:850,rng:330,spr:.3,pel:6,col:'#ff6b3d',tier:2,len:30,f:200,mag:6,rl:2.4},
-  rifle:{n:'Rifle',dmg:15,rate:.17,spd:1250,rng:900,spr:.045,pel:1,col:'#6ee7a0',tier:3,len:30,f:420,mag:25,rl:2},
+  smg:{n:'SMG',dmg:7.8,rate:.085,spd:1000,rng:520,spr:.1,pel:1,col:'#ffd23f',tier:2,len:20,f:700,mag:30,rl:1.8},
+  shotgun:{n:'Shotgun',dmg:18,rate:.85,spd:850,rng:330,spr:.3,pel:6,col:'#ff6b3d',tier:2,len:30,f:200,mag:6,rl:2.4},
+  rifle:{n:'Rifle',dmg:19.5,rate:.17,spd:1250,rng:900,spr:.045,pel:1,col:'#6ee7a0',tier:3,len:30,f:420,mag:25,rl:2},
   sniper:{n:'Sniper',dmg:80,rate:1.4,spd:2200,rng:1600,spr:.004,pel:1,col:'#b78bff',tier:3,len:38,f:300,mag:5,rl:2.6}
 };
 const LW=[['pistol',26],['smg',20],['shotgun',16],['rifle',14],['sniper',6],['med',12],['shield',12]];
 const LN={med:'Med kit',shield:'Shield'};
+const RAR=[{n:'Common',d:1,r:1,c:'#c9d1d6'},{n:'Uncommon',d:1.1,r:.9,c:'#5ee08a'},{n:'Rare',d:1.2,r:.8,c:'#4fb4ff'},{n:'Epic',d:1.35,r:.7,c:'#b78bff'},{n:'Legendary',d:1.5,r:.6,c:'#ffb81c'}];
+function rollR(ch){const w=ch?[45,28,16,8,3]:[60,25,10,4,1];let r=Math.random()*100;for(let i=0;i<5;i++){r-=w[i];if(r<=0)return i;}return 0;}
 const itemName=k=>LN[k]||WP[k].n;
 const PH=[{r:1900,wait:35,shrink:28,dps:1.5},{r:1250,wait:25,shrink:25,dps:3},{r:740,wait:22,shrink:22,dps:5},{r:400,wait:18,shrink:18,dps:8},{r:170,wait:14,shrink:14,dps:12},{r:52,wait:10,shrink:12,dps:18}];
 const PHR=PH.map(p=>({r:Math.round(p.r*2.2),wait:Math.round(p.wait*1.3),shrink:Math.round(p.shrink*1.5),dps:p.dps}));
@@ -803,7 +816,7 @@ function qObs(x0,y0,x1,y1){
 function inBuild(x,y,m){return builds.some(b=>x>b.x-m&&x<b.x+b.w+m&&y>b.y-m&&y<b.y+b.h+m);}
 function blocked(x,y){return qObs(x-60,y-60,x+60,y+60).some(o=>o.t==='c'&&Math.hypot(x-o.x,y-o.y)<o.r+16);}
 function pickLoot(){let t=0;for(const l of LW)t+=l[1];let r=Math.random()*t;for(const l of LW){r-=l[1];if(r<=0)return l[0];}return 'pistol';}
-function mkLoot(x,y,k){k=k||pickLoot();const it={x,y,k};if(k==='brick')it.n=1+Math.floor(Math.random()*2);return it;}
+function mkLoot(x,y,k){k=k||pickLoot();const it={x,y,k};if(k==='brick')it.n=1+Math.floor(Math.random()*2);if(WP[k])it.r=rollR(false);return it;}
 function addWalls(b){
   const t=10,g=48,side=Math.floor(rr()*4);
   const segH=(y,gap,n)=>{
@@ -884,7 +897,7 @@ function genMap(){
 function chestLoot(c){
   const ws=LW.filter(l=>WP[l[0]]);let tt=0;for(const l of ws)tt+=l[1];
   let r=Math.random()*tt,k='pistol';for(const l of ws){r-=l[1];if(r<=0){k=l[0];break;}}
-  loot.push({x:c.x-14,y:c.y+26,k});
+  loot.push({x:c.x-14,y:c.y+26,k,r:rollR(true)});
   if(Math.random()<.5)loot.push({x:c.x+14,y:c.y+26,k:Math.random()<.5?'med':'shield'});
   spark(c.x,c.y,'#ffd23f',14);snd(660,.2,'sine',.1*vol(c.x,c.y),1.6);
 }
@@ -977,25 +990,25 @@ function fire(e){
   e.cd=w.rate;e.am--;if(e.am<=0)startReload(e);
   for(let i=0;i<w.pel;i++){
     const a=e.ang+(Math.random()-.5)*2*w.spr,sp=w.spd*(w.pel>1?rnd(.85,1.15):1);
-    bullets.push({x:e.x+Math.cos(e.ang)*R,y:e.y+Math.sin(e.ang)*R,vx:Math.cos(a)*sp,vy:Math.sin(a)*sp,dmg:w.dmg,life:w.rng,o:e,col:(e===P&&cur('w').c)||w.col});
+    bullets.push({x:e.x+Math.cos(e.ang)*R,y:e.y+Math.sin(e.ang)*R,vx:Math.cos(a)*sp,vy:Math.sin(a)*sp,dmg:w.dmg*RAR[e.wr||0].d,life:w.rng,o:e,col:(e===P&&cur('w').c)||w.col});
   }
   snd(w.f,.09,'sawtooth',.11*vol(e.x,e.y)+(e===P?.03:0),.45);
 }
 function die(e,by){
   e.hp=0;e.alive=false;e.place=aliveN()+1;e.killer=by||null;
   if(!teamAlive(e.team))teamPlace[e.team]=aliveTeams()+1;
-  e.use=null;if(e.w)loot.push({x:e.x,y:e.y,k:e.w,am:e.am});
+  e.use=null;if(e.w)loot.push({x:e.x,y:e.y,k:e.w,am:e.am,r:e.wr||0});
   for(let i=0;i<e.kits;i++)loot.push({x:e.x+rnd(-26,26),y:e.y+rnd(-26,26),k:'med'});for(let i=0;i<e.shs;i++)loot.push({x:e.x+rnd(-26,26),y:e.y+rnd(-26,26),k:'shield'});
   if(Math.random()<.5)loot.push({x:e.x+rnd(-20,20),y:e.y+rnd(-20,20),k:Math.random()<.5?'med':'shield'});
   if(by&&by!==e)by.kills++;
   feed(by&&by!==e?`${by.name} eliminated ${e.name}`:`${e.name} fell to the storm`,e===P||by===P);
-  e.rvT=(TS>1&&teamAlive(e.team))?(TS===2?15:30):0;
+  e.rvT=(TS>1&&teamAlive(e.team)&&Z.state!=='final')?(TS===2?15:30):0;
   spark(e.x,e.y,e.col,14);snd(90,.35,'sawtooth',.18*Math.max(.3,vol(e.x,e.y)),.4);
   if(by===P&&e!==P)elimFx(cur('x').id,e.x,e.y);
   if(by&&by!==e&&by.isBot&&Math.random()<.25)doSpray(by);
 }
 function revive(e,m){
-  e.alive=true;e.hp=50;e.sh=0;e.w=null;e.kits=0;e.shs=0;e.use=null;e.am=0;e.rl=0;e.eq='pick';e.st='ground';e.cd=0;e.hitT=0;e.vx=e.vy=0;e.killer=null;e.place=0;e.rvT=0;
+  e.alive=true;e.hp=50;e.sh=0;e.w=null;e.wr=0;e.kits=0;e.shs=0;e.use=null;e.am=0;e.rl=0;e.eq='pick';e.st='ground';e.cd=0;e.hitT=0;e.vx=e.vy=0;e.killer=null;e.place=0;e.rvT=0;
   const a=rnd(0,TAU);e.x=m.x+Math.cos(a)*34;e.y=m.y+Math.sin(a)*34;collide(e,R);
   e.ai.en=null;e.ai.wp=null;e.ai.esc=null;
   if(e===P)spec=null;
@@ -1024,7 +1037,7 @@ function pickups(e){
     else if(it.k==='shield'){if(e.shs<3){e.shs++;it.gone=true;}}
     else if(it.k==='brick'){if(e.br<5){const g=Math.min(it.n||1,5-e.br);e.br+=g;it.n=(it.n||1)-g;if(it.n<=0)it.gone=true;if(e===P)snd(300,.1,'square',.08,1.3);}}
     else if(!e.w){giveW(e,it);it.gone=true;}
-    else if(e.isBot&&WP[it.k].tier>WP[e.w].tier){loot.push({x:e.x,y:e.y,k:e.w,am:e.am});giveW(e,it);it.gone=true;}
+    else if(e.isBot&&(WP[it.k].tier>WP[e.w].tier||(it.k===e.w&&(it.r||0)>(e.wr||0)))){loot.push({x:e.x,y:e.y,k:e.w,am:e.am,r:e.wr||0});giveW(e,it);it.gone=true;}
   }
 }
 function autoPick(e){
@@ -1045,18 +1058,18 @@ function nearLoot(){
   }
   return best;
 }
-function giveW(e,it){e.w=it.k;e.am=it.am!==undefined?it.am:WP[it.k].mag;e.rl=0;}
+function giveW(e,it){e.w=it.k;e.wr=it.r||0;e.am=it.am!==undefined?it.am:WP[it.k].mag;e.rl=0;}
 function startReload(e){
   if(!e||!e.alive||e.st!=='ground'||!e.w||e.rl>0)return;
   const w=WP[e.w];if(e.am>=w.mag)return;
-  e.rl=w.rl;if(e===P)snd(300,.12,'triangle',.06,.7);
+  e.rl=w.rl*RAR[e.wr||0].r;if(e===P)snd(300,.12,'triangle',.06,.7);
 }
 function doTake(){
   const it=nearLoot();if(!it)return;
   if(it.k==='med'){P.kits++;it.gone=true;}
   else if(it.k==='shield'){P.shs++;it.gone=true;}
   else{
-    if(P.w){const o=P.w,oa=P.am;giveW(P,it);it.k=o;it.am=oa;}else{giveW(P,it);it.gone=true;}
+    if(P.w){const o=P.w,oa=P.am,or=P.wr||0;giveW(P,it);it.k=o;it.am=oa;it.r=or;}else{giveW(P,it);it.gone=true;}
     P.eq='gun';
   }
   snd(440,.12,'square',.08,1.4);
@@ -1788,7 +1801,7 @@ function drawEnt(e){
     const ty=e===P?y-38:y-32,ally=e!==P&&P&&e.team===P.team;
     ctx.save();ctx.font='700 11px "Chakra Petch",sans-serif';ctx.textAlign='center';ctx.lineJoin='round';
     ctx.lineWidth=3;ctx.strokeStyle='rgba(13,43,56,.85)';ctx.strokeText(e.name,x,ty);
-    ctx.fillStyle=e===P?'#ffb81c':ally?'#8fe3a8':'#f2ecd9';ctx.fillText(e.name,x,ty);ctx.restore();
+    ctx.fillStyle=e===P?'#ffb81c':ally?'#ff4d4d':'#f2ecd9';ctx.fillText(e.name,x,ty);ctx.restore();
   }
 }
 const TP=[['#2f6b3a','#3a7d44','#4c9455'],['#2c5a4a','#357062','#4a8c7a']];
@@ -1827,7 +1840,7 @@ function drawLoot(it,t){
     ctx.fillStyle='#4fb4ff';circ(it.x,it.y,9);ctx.fillStyle='#bfe4ff';circ(it.x-2,it.y-2,4);
   }else{
     const w=WP[it.k];
-    ctx.fillStyle=w.col+'33';circ(it.x,it.y,20*pul);
+    ctx.fillStyle=RAR[it.r||0].c+(it.r?'66':'33');circ(it.x,it.y,(20+(it.r||0)*2)*pul);
     ctx.save();ctx.translate(it.x,it.y+2);ctx.rotate(-.35);ctx.scale(1.25,1.25);ctx.translate(-w.len/2,0);
     FL='rgba(0,0,0,.3)';ctx.save();ctx.translate(1.5,2.5);gunShape(it.k,w.len,w.col);ctx.restore();FL=null;gunShape(it.k,w.len,w.col);
     ctx.restore();
@@ -2003,9 +2016,9 @@ function hud(){
   $('hpB').style.width=Math.max(0,P.hp)+'%';$('shB').style.width=P.sh+'%';
   setTxt('shT','SHIELD '+Math.ceil(P.sh)+' / 100');setTxt('hpT','HP '+Math.max(0,Math.ceil(P.hp))+' / 100');
   const wp=P.w?WP[P.w]:null;
-  setTxt('wnm',wp?wp.n:'No weapon');setTxt('wam',wp?P.am+' / '+wp.mag:'');
+  setTxt('wnm',wp?RAR[P.wr||0].n+' '+wp.n:'No weapon');$('wnm').style.color=wp?RAR[P.wr||0].c:'';setTxt('wam',wp?P.am+' / '+wp.mag:'');
   setTxt('wst',wp?(P.rl>0?'Reloading…':(P.am<=0?'Empty':'')):'');
-  $('wpg').style.width=(wp&&P.rl>0?(1-P.rl/wp.rl)*100:0)+'%';
+  $('wpg').style.width=(wp&&P.rl>0?(1-P.rl/(wp.rl*RAR[P.wr||0].r))*100:0)+'%';
   $('winfo').classList.toggle('low',!!wp&&P.am<=Math.ceil(wp.mag*.25));
   setTxt('sl2t',P.w?WP[P.w].n:'No weapon');setTxt('sl3t','x'+P.kits);setTxt('sl4t','x'+P.shs);
   $('sl3').classList.toggle('on',!!(P.use&&P.use.k==='kit'));$('sl4').classList.toggle('on',!!(P.use&&P.use.k==='shield'));
@@ -2026,7 +2039,7 @@ function hud(){
   const bk='b'+P.br;
   if(cache.brk!==bk){cache.brk=bk;$('brk').querySelectorAll('i').forEach((q,i)=>q.classList.toggle('on',i<P.br));}
   let msg='';
-  if(!P.alive)msg=teamAlive(P.team)?(P.rvT>0?'Spectating your team · Revive in '+Math.ceil(P.rvT)+'s':'Spectating your team'):'';
+  if(!P.alive)msg=teamAlive(P.team)?(P.rvT>0?'Spectating your team · Revive in '+Math.ceil(P.rvT)+'s':(TS>1&&Z.state==='final'?'Spectating your team · No revives in the final zone':'Spectating your team')):'';
   else if(P.st==='plane')msg=plane.inside?'Jump whenever you are ready':'The plane is approaching the island';
   else if(P.st==='fall')msg='Move to choose where to land';
   else if(!P.w)msg=G.time<45?'Find a chest for a weapon. Break rocks with your pickaxe':'';
