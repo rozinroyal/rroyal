@@ -173,6 +173,16 @@ input:focus-visible{outline:3px solid var(--flare);outline-offset:1px}
 #pvC,#pCv{height:200px;width:auto;aspect-ratio:180/260;align-self:center}
 .lcard.eq{border-color:var(--flare)}.lcard b{font-family:var(--f-d);font-weight:400;font-size:13px;text-align:center}
 .lcard canvas{width:100%;max-width:120px;height:auto}.lcard .btn{width:100%;font-size:12px;padding:6px 8px;box-sizing:border-box}
+#coinPop{position:absolute;left:50%;top:34%;transform:translate(-50%,0);font-family:var(--f-d);font-size:clamp(26px,7vw,44px);color:var(--flare);white-space:nowrap;text-shadow:0 3px 0 rgba(0,0,0,.6),0 0 22px rgba(255,184,28,.7);opacity:0;pointer-events:none;z-index:5}
+#coinPop.go{animation:cpop 2s ease-out both}
+@keyframes cpop{0%{opacity:0;transform:translate(-50%,24px) scale(.3)}10%{opacity:1;transform:translate(-50%,0) scale(1.35) rotate(-3deg)}22%{transform:translate(-50%,0) scale(1) rotate(0)}78%{opacity:1;transform:translate(-50%,0) scale(1)}100%{opacity:0;transform:translate(-50%,-34px) scale(1)}}
+@media (prefers-reduced-motion:reduce){#coinPop.go{animation:cpopr 2s linear both}@keyframes cpopr{0%,80%{opacity:1}100%{opacity:0}}}
+#rotate{z-index:100;align-items:center;background:var(--sea);cursor:pointer}
+#rotate .panel{gap:18px}
+#rotate .ph{width:56px;height:100px;border:4px solid var(--ink);border-radius:12px;position:relative;animation:phrot 2.4s ease-in-out infinite;box-sizing:border-box}
+#rotate .ph::after{content:'';position:absolute;left:50%;bottom:7px;width:16px;height:3px;margin-left:-8px;border-radius:2px;background:var(--flare)}
+@keyframes phrot{0%,15%{transform:rotate(0)}55%,85%{transform:rotate(-90deg)}100%{transform:rotate(0)}}
+@media (prefers-reduced-motion:reduce){#rotate .ph{animation:none;transform:rotate(-90deg)}}
 </style>
 
 <div id="app">
@@ -188,7 +198,7 @@ input:focus-visible{outline:3px solid var(--flare);outline-offset:1px}
       <div id="feed"></div>
     </div>
     <canvas id="mm" width="120" height="120"></canvas>
-    <div id="msg"></div>
+    <div id="msg"></div><div id="coinPop"></div>
     <div id="jMv" hidden></div><div id="jAim" hidden></div>
     <div id="act">
       <button id="jump" class="btn" type="button">JUMP</button>
@@ -219,7 +229,7 @@ input:focus-visible{outline:3px solid var(--flare);outline-offset:1px}
   <section id="menu" class="screen">
     <div class="lobby">
       <div class="lp">
-        <p class="kick" style="text-align:center">RRoyal · v8.0</p>
+        <p class="kick" style="text-align:center">RRoyal · v8.1</p>
         <h3 class="lt">BATTLE ROYALE</h3>
         <button id="modeBtn" class="btn alt" type="button"><span id="modeT">RANKED: OFF</span><small id="modeS">Solo</small></button>
         <button id="play" class="btn big" type="button">PLAY</button>
@@ -310,6 +320,10 @@ input:focus-visible{outline:3px solid var(--flare);outline-offset:1px}
       <p class="kick">Changelog</p>
       <h2>What's new</h2>
       <div class="form">
+        <div class="nv"><b>v8.1</b><ul>
+          <li>New: every chest you open has a 1% chance to hold 10 coins. They burst out of the chest with a sound and go straight to your balance, so you can spend them in the ITEM SHOP.</li>
+          <li>New: the game now asks you to rotate your phone to landscape as soon as it opens.</li>
+        </ul></div>
         <div class="nv"><b>v8.0</b><ul>
           <li>Change: the storm now hurts more the farther you are from the safe zone.</li>
           <li>New: ammo. Bullets are picked up automatically when you walk over them, and reloading uses them. Found in chests, buildings and around the map. You start with 60.</li>
@@ -506,8 +520,10 @@ input:focus-visible{outline:3px solid var(--flare);outline-offset:1px}
 
   <section id="rotate" class="screen" hidden>
     <div class="panel col center">
+      <div class="ph" aria-hidden="true"></div>
       <h2>Rotate your phone</h2>
-      <p class="lead">RRoyal is played in landscape.</p>
+      <p class="lead">RRoyal is played in landscape. Turn your phone sideways to continue.</p>
+      <p class="kick">Tap here to try rotating automatically</p>
     </div>
   </section>
 
@@ -616,7 +632,7 @@ PICKS.push({id:'p_battle',n:'Battle Axe',p:9999,bp:1,h:'#2a2a33',hd:'#ff5a3d',sh
 OUTS.push({id:'o_champion',n:'Champion',p:9999,bp:1,vest:'#7a2cff',hair:'#fff3c4',band:'#ffd23f',leg:'#3b1a78',glove:'#150a30',ring:'#d9b8ff'});
 const CATS={o:['Outfits',OUTS],p:['Pickaxes',PICKS],g:['Gliders',GLS],s:['Sprays',SPR],w:['Weapon colors',WCS],x:['Elim effects',FXS]};
 const ITEM={};for(const k in CATS)for(const it of CATS[k][1])ITEM[it.id]=it;
-let fx=[],sprays=[],WT=null,guestCos=null,lkCat='o',lkMode='locker',BN=[];
+let fx=[],coinFx=[],sprays=[],WT=null,guestCos=null,lkCat='o',lkMode='locker',BN=[];
 const COIN='<i class="cn"></i>';
 /* ---------- protecao anti-batota (assinatura dos dados guardados) ---------- */
 const LEG=(()=>{try{return !localStorage.getItem('rroyal-sigv');}catch(e){return true;}})();
@@ -1027,20 +1043,34 @@ function genMap(){
     trees.push({x,y,r,p:Math.random()<.3?1:0});addObs({t:'c',k:'tree',x,y,r:r*.55});n++;
   }
 }
-function chestLoot(c){
+function chestCoins(c){
+  const co=getCos();co.coins+=10;saveCos();refreshCoins();
+  for(let i=0;i<10;i++)coinFx.push({x:c.x,y:c.y-4,g:c.y+22+rnd(-6,10),vx:rnd(-110,110),vy:rnd(-340,-190),t:-i*.035,ph:rnd(0,TAU),b:0});
+  fx.push({k:'ring',x:c.x,y:c.y,t:0,life:.7});fx.push({k:'ring',x:c.x,y:c.y,t:-.14,life:.8});
+  spark(c.x,c.y,'#ffd23f',26);spark(c.x,c.y,'#fff6a8',12);
+  dtx.push({e:null,x:c.x,y:c.y-34,v:'+10 COINS',age:0,life:1.8,k:false,big:true});
+  feed('You found 10 coins in a chest!',true);
+  const el=$('coinPop');if(el){el.innerHTML=COIN+'+10 COINS';el.classList.remove('go');void el.offsetWidth;el.classList.add('go');}
+  const sc=[0,4,7,12,16,19,24,19,24,28];
+  sc.forEach((n,i)=>setTimeout(()=>{snd(660*Math.pow(2,n/12),.2,'triangle',.14,1.02);snd(1320*Math.pow(2,n/12),.1,'sine',.05);},i*65));
+  setTimeout(()=>{snd(1568,.6,'sine',.13,1.03);snd(2093,.7,'triangle',.08);snd(784,.7,'sine',.1);},760);
+  try{if(navigator.vibrate)navigator.vibrate([25,40,25,40,60]);}catch(err){}
+}
+function chestLoot(c,e){
   const ws=LW.filter(l=>WP[l[0]]);let tt=0;for(const l of ws)tt+=l[1];
   let r=Math.random()*tt,k='pistol';for(const l of ws){r-=l[1];if(r<=0){k=l[0];break;}}
   loot.push({x:c.x-14,y:c.y+26,k,r:rollR(true)});
   if(Math.random()<.5)loot.push({x:c.x+14,y:c.y+26,k:Math.random()<.5?'med':'shield'});if(Math.random()<.7)loot.push({x:c.x+30,y:c.y+14,k:'ammo',n:30});
   if(Math.random()<.14)loot.push({x:c.x,y:c.y+40,k:'dryer'});
   spark(c.x,c.y,'#ffd23f',14);snd(660,.2,'sine',.1*vol(c.x,c.y),1.6);
+  if(e===P&&Math.random()<.01)chestCoins(c);
 }
 function tickChests(){
   for(const c of chests){
     if(c.open)continue;
     for(const e of ents){
       if(!e.alive||e.st!=='ground')continue;
-      if((e.x-c.x)**2+(e.y-c.y)**2<900){c.open=true;chestLoot(c);break;}
+      if((e.x-c.x)**2+(e.y-c.y)**2<900){c.open=true;chestLoot(c,e);break;}
     }
   }
 }
@@ -1636,7 +1666,7 @@ function botGround(b,dt){
 function startGame(){
   NP=ranked?100:20;W=H=ranked?13300:4200;PHc=ranked?PHR:PH;
   genMap();
-  ents=[];bullets=[];parts=[];dtx=[];feedL=[];fx=[];sprays=[];G.time=0;overT=0;overShown=false;spec=null;
+  ents=[];bullets=[];parts=[];dtx=[];feedL=[];fx=[];coinFx=[];sprays=[];G.time=0;overT=0;overShown=false;spec=null;
   for(const k in K)K[k]=false;
   const a=rnd(0,TAU),dx=Math.cos(a),dy=Math.sin(a);
   const KK=W/4200,cx=W/2+rnd(-450,450)*KK,cy=H/2+rnd(-450,450)*KK,spd=330*KK;
@@ -1903,6 +1933,10 @@ function update(dt){
     if(dead)bullets.splice(i,1);
   }
   for(let i=parts.length-1;i>=0;i--){const p=parts[i];p.life-=dt;p.x+=p.vx*dt;p.y+=p.vy*dt;if(p.life<=0)parts.splice(i,1);}
+  for(let i=coinFx.length-1;i>=0;i--){const q=coinFx[i];q.t+=dt;if(q.t<0)continue;
+    if(q.t<.85){q.vy+=900*dt;q.x+=q.vx*dt;q.y+=q.vy*dt;if(q.vy>0&&q.y>q.g){q.y=q.g;q.vy*=-.42;q.vx*=.7;q.b++;}}
+    else if(P){const dx=P.x-q.x,dy=P.y-q.y,d=Math.hypot(dx,dy)||1,sp=Math.min(1100,260+(q.t-.85)*1800);q.x+=dx/d*sp*dt;q.y+=dy/d*sp*dt;if(d<16||q.t>2.5)coinFx.splice(i,1);}
+    else if(q.t>2)coinFx.splice(i,1);}
   for(let i=fx.length-1;i>=0;i--){fx[i].t+=dt;if(fx[i].t>=fx[i].life)fx.splice(i,1);}
   for(let i=dtx.length-1;i>=0;i--){const t=dtx[i];t.age+=dt;t.life-=dt;t.y-=38*dt;if(t.life<=0)dtx.splice(i,1);}
   if(Math.floor(G.time*2)%6===0&&loot.length>400)loot=loot.filter(l=>!l.gone);
@@ -2172,10 +2206,14 @@ function draw(){
     else{ctx.lineJoin='round';ctx.strokeStyle='#fff6a8';ctx.lineWidth=7*(1-pr)+1;ctx.beginPath();f.pts.forEach((q,i)=>i?ctx.lineTo(q[0],q[1]):ctx.moveTo(q[0],q[1]));ctx.stroke();ctx.strokeStyle='#fff';ctx.lineWidth=2;ctx.stroke();ctx.lineJoin='miter';}
   }
   ctx.globalAlpha=1;
+  for(const q of coinFx){if(q.t<0)continue;const w=Math.max(.15,Math.abs(Math.cos(q.t*14+q.ph)));
+    ctx.fillStyle='rgba(0,0,0,.25)';ctx.beginPath();ctx.ellipse(q.x,Math.max(q.y,q.t<.85?q.g:q.y)+6,5,2,0,0,TAU);if(q.t<.85)ctx.fill();
+    ctx.save();ctx.translate(q.x,q.y);ctx.scale(w,1);ctx.fillStyle='#ffb81c';ctx.strokeStyle='#a86f00';ctx.lineWidth=1.6;ctx.beginPath();ctx.arc(0,0,7,0,TAU);ctx.fill();ctx.stroke();
+    ctx.fillStyle='#fff3c4';ctx.beginPath();ctx.arc(-2,-2,2.4,0,TAU);ctx.fill();ctx.restore();}
   if(dtx.length){
     ctx.save();ctx.textAlign='center';ctx.lineJoin='round';ctx.lineWidth=3;ctx.strokeStyle='rgba(0,0,0,.65)';
     for(const t of dtx){
-      ctx.globalAlpha=Math.min(1,t.life*2.2);ctx.font=(t.k?20:15)+'px Bungee,Impact,sans-serif';
+      ctx.globalAlpha=Math.min(1,t.life*2.2);ctx.font=(t.big?26:t.k?20:15)+'px Bungee,Impact,sans-serif';
       ctx.strokeText(t.v,t.x,t.y);ctx.fillStyle=t.k?'#ff5a5a':'#ffd23f';ctx.fillText(t.v,t.x,t.y);
     }
     ctx.restore();
@@ -2680,9 +2718,12 @@ function bgTick(){
 document.addEventListener('visibilitychange',()=>{bgLast=performance.now();if(document.hidden){for(const k in K)K[k]=false;mouseDown=false;}});
 try{const bw=new Worker(URL.createObjectURL(new Blob(['setInterval(function(){postMessage(0)},50)'],{type:'text/javascript'})));bw.onmessage=bgTick;}catch(e){}
 setInterval(bgTick,1000);
+const touchPrimary=!!(window.matchMedia&&matchMedia('(pointer:coarse)').matches);
+function lockLand(){try{const go=()=>{const p=screen.orientation&&screen.orientation.lock&&screen.orientation.lock('landscape');if(p&&p.catch)p.catch(()=>{});};const el=document.documentElement;if(el.requestFullscreen&&!document.fullscreenElement){el.requestFullscreen().then(go,go);}else go();}catch(err){}}
+$('rotate').addEventListener('click',lockLand);
 function frame(ts){
   const dt=Math.min(.05,(ts-last)/1000||.016);last=ts;
-  const rot=mode==='mobile'&&state!=='menu'&&vh>vw;
+  const rot=(mode==='mobile'||touchPrimary)&&vh>vw;
   if(cache.rot!==rot){cache.rot=rot;$('rotate').hidden=!rot;if(rot){sticks.mv=null;sticks.aim=null;}}
   if(rebindPad)padListen();
   if(state==='menu')menuT+=dt;
