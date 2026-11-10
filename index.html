@@ -380,7 +380,7 @@ input:focus-visible{outline:3px solid var(--flare);outline-offset:1px}
   <section id="menu" class="screen">
     <div class="lobby">
       <div class="lp">
-        <p class="kick" style="text-align:center">RRoyal · v11.2</p>
+        <p class="kick" style="text-align:center">RRoyal · v11.3</p>
         <h3 class="lt">BATTLE ROYALE</h3>
         <button id="modeBtn" class="btn alt" type="button"><span id="modeT">RANKED: OFF</span><small id="modeS">Solo</small></button>
         <button id="play" class="btn big" type="button">PLAY</button>
@@ -511,6 +511,11 @@ input:focus-visible{outline:3px solid var(--flare);outline-offset:1px}
       <p class="kick">Changelog</p>
       <h2>What's new</h2>
       <div class="form">
+        <div class="nv"><b>v11.3</b><ul>
+          <li>New: trophy animation at the end of a Solo, Duos or Squads match. Your soldier faces the screen and the trophies count up (or down) with a bar, like the rank animation in Ranked.</li>
+          <li>Before Prestige 1 the bar fills from 0 to 1000 (for example 178 up to 1000). When it reaches 1000 the badge flashes and the Prestige 1 badge appears.</li>
+          <li>From Prestige 1 on, the bar uses the colour of your prestige and fills towards the next one (for example 1300 = 300 of 1000 on the way to Prestige 2).</li>
+        </ul></div>
         <div class="nv"><b>v11.2</b><ul>
           <li>Change: in Duos and Squads the place trophies now depend on the place of your team among the teams left (50 duos, 25 squads), using the same table as Solo for each prestige. The reduction (half in Duos, a quarter in Squads) is gone, and the trophies for eliminations are now the full ones, still counting only your first 10 eliminations.</li>
           <li>Place columns: Duos 1st, 2nd-3rd, 4th-10th, 11th-20th, 21st-30th, 31st-40th, 41st-50th. Squads 1st, 2nd-3rd, 4th-7th, 8th-12th, 13th-17th, 18th-21st, 22nd-25th.</li>
@@ -2723,7 +2728,7 @@ function rankAnim(old,nw,dl){
   const frac=rp=>{const r=rankOf(rp);if(r.i===7)return 1;const sz=(RT[r.i+1]-RT[r.i])/3,d=Math.min(2,Math.floor((rp-RT[r.i])/sz));return (rp-(RT[r.i]+d*sz))/sz;};
   let cur=rankOf(old).name,t0=null,changed=false;
   box.hidden=false;box.classList.remove('up','down');fl.className='';badge.className='';
-  btn.textContent='SKIP';tt.textContent='RANKED';
+  btn.textContent='SKIP';tt.textContent='RANKED';bar.style.background='';nm.style.color='';
   badge.innerHTML=rankIcon(rankOf(old),120);nm.textContent=cur;rpEl.textContent=old+' RP';bar.style.width=(frac(old)*100)+'%';
   dEl.className=diff>=0?'pos':'neg';dEl.textContent=(diff>=0?'+':'')+diff+' RP';
   const paint=(rp,pop)=>{
@@ -2746,6 +2751,49 @@ function rankAnim(old,nw,dl){
       tt.textContent=changed?(mood>0?'RANK UP!':'RANK DOWN'):(mood>0?'GREAT MATCH':mood<0?'TOUGH MATCH':'RESULT');
     }
     drawFront(pl,t,rkA.done?mood:0);
+    rkA.raf=requestAnimationFrame(loop);
+  };
+  rkA={raf:0,done:false,skip:()=>{skip=true;}};
+  rkA.raf=requestAnimationFrame(loop);
+}
+/* v11.3: animacao de trofeus no fim da partida (usa o mesmo ecra da animacao do Ranked) */
+const TROSVG=px=>`<svg viewBox="0 0 40 40" width="${px}" height="${px}" aria-hidden="true" style="display:block"><path d="M11 6h18v9a9 9 0 0 1-18 0z" fill="#ffd23f" stroke="#a86f00" stroke-width="2" stroke-linejoin="round"/><path d="M11 9H5v3a6 6 0 0 0 6 6M29 9h6v3a6 6 0 0 1-6 6" fill="none" stroke="#a86f00" stroke-width="2.4" stroke-linecap="round"/><rect x="17" y="24" width="6" height="6" fill="#e0a21a"/><rect x="12" y="30" width="16" height="5" rx="1.5" fill="#ffd23f" stroke="#a86f00" stroke-width="2"/></svg>`;
+function troAnim(r,o){
+  if(state!=='over')return;
+  rkStop();
+  const box=$('rka'),pl=$('rkPl'),badge=$('rkBadge'),rpEl=$('rkRp'),dEl=$('rkD'),bar=$('rkBar'),nm=$('rkName'),btn=$('rkGo'),tt=$('rkT'),fl=$('rkFl');
+  const nw=r.nw,old=r.nw-r.d,diff=r.d,mood=diff>0?1:diff<0?-1:0,dur=Math.min(3200,1200+Math.abs(diff)*6),delay=900;
+  const pr=v=>Math.floor(v/1000);
+  const look=n=>{
+    if(n<1){bar.style.background='';nm.style.color='';nm.textContent='NO PRESTIGE';badge.innerHTML=TROSVG(110);}
+    else{const c=preCol(n);bar.style.background='linear-gradient(90deg,'+c[0]+','+c[2]+')';nm.style.color=c[0];nm.textContent='PRESTIGE '+n;badge.innerHTML=preSvg(n,120);}
+  };
+  let cur=pr(old),t0=null,changed=false;
+  box.hidden=false;box.classList.remove('up','down');fl.className='';badge.className='';
+  btn.textContent='SKIP';tt.textContent='TROPHIES';
+  look(cur);rpEl.textContent=old;bar.style.width=((old%1000)/10)+'%';
+  dEl.className=diff>=0?'pos':'neg';dEl.textContent=(diff>=0?'+':'')+diff;
+  const paint=(v,pop)=>{
+    rpEl.textContent=v;bar.style.width=((v%1000)/10)+'%';
+    const n=pr(v);
+    if(n!==cur){
+      cur=n;changed=true;look(n);
+      if(pop){badge.className='';void badge.offsetWidth;badge.className='pop';fl.className='';void fl.offsetWidth;fl.className='go';box.classList.add('up');}
+    }
+  };
+  let skip=false;
+  const loop=ts=>{
+    if(!rkA)return;
+    if(t0===null)t0=ts;
+    const el=ts-t0,t=el/1000,p=skip?1:Math.max(0,Math.min(1,(el-delay)/dur)),e=1-Math.pow(1-p,3);
+    paint(Math.round(old+diff*e),!skip);
+    if(p>=1&&!rkA.done){
+      rkA.done=true;paint(nw,false);
+      if(changed)box.classList.add('up');
+      btn.textContent='CONTINUE';
+      tt.textContent=changed?'PRESTIGE UP!':(mood>0?'GREAT MATCH':mood<0?'TOUGH MATCH':'RESULT');
+    }
+    drawFront(pl,t,rkA.done?mood:0,o);
     rkA.raf=requestAnimationFrame(loop);
   };
   rkA={raf:0,done:false,skip:()=>{skip=true;}};
@@ -2777,6 +2825,7 @@ function showOver(){
       const ovT=r=>{const sg2=x=>(x>=0?'+':'')+x;
       $('ovR').textContent=sg2(r.d)+' trophies · '+MB.n+' · '+r.nw+(r.np>r.pre?' · PRESTIGE UP! P'+r.np:'');
       $('ovTd').textContent='Place '+sg2(r.pt)+' · Eliminations '+sg2(r.kt)+(r.d!==r.pt+r.kt?(r.pre>0?' · protected by the P'+r.pre+' floor':' · you never go below 0'):'')+(r.f<1?' · '+(r.f===.5?'Duos: half':'Squads: a quarter')+' of the Solo trophies':'')+(r.coins?' · +'+r.coins+' coins':'')+(MS.some((m,i)=>msReady(i))?' · Trophy Road reward ready':'');
+      troAnim(r,MB);
       };
       const pc=tpCol(pl,TS);
       if(useS){overSrv(MB.id,pc,P.kills,1,win,srvDone,ovT);}
