@@ -367,7 +367,7 @@ input:focus-visible{outline:3px solid var(--flare);outline-offset:1px}
   <section id="menu" class="screen">
     <div class="lobby">
       <div class="lp">
-        <p class="kick" style="text-align:center">RRoyal · v9.5</p>
+        <p class="kick" style="text-align:center">RRoyal · v10.0</p>
         <h3 class="lt">BATTLE ROYALE</h3>
         <button id="modeBtn" class="btn alt" type="button"><span id="modeT">RANKED: OFF</span><small id="modeS">Solo</small></button>
         <button id="play" class="btn big" type="button">PLAY</button>
@@ -498,51 +498,35 @@ input:focus-visible{outline:3px solid var(--flare);outline-offset:1px}
       <p class="kick">Changelog</p>
       <h2>What's new</h2>
       <div class="form">
-        <div class="nv"><b>v9.5</b><ul>
-          <li>New: BOXES has a CHANCES BY RARITY button with your current chance of winning each soldier (Epic, Mythic, Legendary) in the small and big box.</li>
-          <li>Fix: coins from boxes, prestiges and chests found on the map are no longer lost when the game syncs with the server.</li>
+        <div class="nv"><b>v10.0</b><ul>
+          <li>Change: skins are gone. The Outfits tab is removed from the LOCKER and the ITEM SHOP, and profiles no longer show an outfit. Your look is now the one of your chosen soldier.</li>
           <li>Change: "Brawlers" are now called "Soldiers" everywhere.</li>
-          <li>New: the main menu shows the small box AND the big box, each with its own icon, amount and progress bar.</li>
-          <li>New: the PROFILE shows your total trophies and one card per soldier: the soldier name, a prestige card with the number on top, its face and its trophies.</li>
-          <li>New: every soldier has its own look: face, size, body shape, skin and colors, in the menu, in the cards and in the match.</li>
-        </ul></div>
-        <div class="nv"><b>v9.4</b><ul>
-          <li>New: server saving. Trophies of every soldier, unlocked soldiers, prestige, Trophy Road rewards already claimed, small and big boxes, the big box progress and the box chance counters are now saved on the server, like coins and the Battle Pass.</li>
-          <li>Change: the server now calculates trophies, prestige coins, Trophy Road rewards and box prizes by itself. Editing your device does not change them.</li>
-          <li>Change: the online leaderboard sorts by your total trophies, and the server keeps that number up to date.</li>
-          <li>New: the first time you connect, your existing progress is sent to the server once, so nothing you already earned is lost.</li>
-          <li>Change: if the server is not available, the game keeps saving on your device. Matches played offline are sent to the server the next time it connects. Opening boxes needs the server once your account has used it.</li>
-          <li>Fix: coins from prestiges and boxes now go to your server coin balance, so they no longer disappear on the next sync.</li>
-        </ul></div>
-        <div class="nv"><b>v9.3</b><ul>
-          <li>New: BOXES. There are two kinds. The small box costs 100 XP (the same XP as the Battle Pass: 1 per elimination, 15 per win; you get one box for every 100 XP, and your Battle Pass levels do not go down). The big box needs 10 victories: every victory fills 1/10 of the box, with an animation on the result screen. Boxes need an account.</li>
-          <li>New: the boxes are the only way to get Boom and Frost (Epic), Breeze (Mythic) and Mirage (Legendary). Chances for each box: Epic 1%, Mythic 0.1%, Legendary 0.01%. Every box opened without a soldier raises each chance by 1% of its current value, and it stacks. When a soldier drops, the chances of that box go back to the start.</li>
-          <li>New: no soldier means coins: 10 from a small box, 50 from a big box. If you already own the soldier, you get coins instead (50 Epic, 150 Mythic, 500 Legendary) and the chances restart too.</li>
-          <li>New: opening screen. The box shakes, opens, glows with the colour of the rarity and shows the prize.</li>
-          <li>New: BOXES in the menu bar, and a box counter with the big box progress in the main menu.</li>
-          <li>Change: trophies in Duos and Squads are now proportional to Solo. Duos give half of the Solo trophies and Squads give a quarter (placement and eliminations). Solo does not change.</li>
-        </ul></div>
-        <div class="nv"><b>v9.2</b><ul>
+          <li>New: 15 soldiers (Rex, Spark, Doc, Brute, Bandit, Zen, Bastion, Trapper, Hawk, Fury, Shade, Boom, Frost, Breeze, Mirage), each with its own face, size, body shape, skin and colors, rarity, passive and active. The look shows in the menu, in the cards and in the match.</li>
+          <li>New: SOLDIERS button in the menu bar, next to LOCKER. Tap a soldier to see its passive and active and to SELECT it. Only Rex is unlocked at the start.</li>
+          <li>New: the passives and actives of the 15 soldiers work. The passive is always on. The active has a recharge (20 to 35 seconds, the stronger ones take longer) and does not use ammo. Press E on PC, or tap the round button on mobile, to use it. You can move and resize the button in HUD LAYOUT, and change the PC key in SETTINGS.</li>
+          <li>Change: the Hair dryer is gone from chests and from the map. It now only exists as the active of Breeze. The accessory slot (key 5) and the ACC button are removed.</li>
           <li>Change: Solo, Duos and Squads now have 100 players on the big map, like Ranked. Duos are 50 teams of 2 and Squads are 25 teams of 4. Quick Match (20 players) is gone.</li>
-          <li>Change: Solo, Duos and Squads use your soldier and its abilities, and give trophies. Ranked keeps the rank points (Wood to Champion), with the default soldier look and no trophies. Guests can play, but trophies are not saved.</li>
-          <li>New: trophies. Every soldier has its own, and your total is the sum of all of them. You win or lose trophies in Solo, Duos and Squads, by your place and by your eliminations (the first 10 of each match count). You never go below 0.</li>
+          <li>Change: Solo, Duos and Squads use your soldier and its abilities, and give trophies. Ranked keeps the rank points (Wood to Champion), with the default soldier look, no passive, no active and no trophies. Guests can play, but trophies are not saved.</li>
+          <li>New: trophies. Every soldier has its own, and your total is the sum of all of them. You win or lose trophies in Solo, Duos and Squads, by your place and by your eliminations (the first 10 of each match count). You never go below 0. Duos give half of the Solo trophies and Squads give a quarter.</li>
           <li>New: prestige. A soldier gets one prestige for every 1000 of its trophies, with no limit (P4 = 4000, P12 = 12000...). A prestige never goes back: from P1 on, a soldier can no longer fall below 1000 x its prestige in trophies. The higher the prestige, the fewer trophies you earn. Each new prestige gives 100 coins once (500 on P5, P10, P15...).</li>
           <li>New: the prestige badge, a diamond with the number inside. P1 to P4 are plain bronze, silver, gold and ice blue, P5 to P9 have small wings, and P10 and above have a crown and a pulsing glow. It shows on the soldier cards, next to the names in the match and on the leaderboard.</li>
           <li>New: TROPHY ROAD in the menu bar. It uses the total trophies of all your soldiers. 10 milestones (10, 60, 500, 2000, 3000, 5000, 8000, 10000, 12000 and 15000) unlock Spark, Doc, Brute, Bandit, Zen, Bastion, Trapper, Hawk, Fury and Shade when you CLAIM them. An unlocked soldier stays unlocked.</li>
           <li>Change: the SOLDIERS screen shows the trophies and the prestige of every soldier, your total at the top, the current elimination rule of each soldier and how many trophies are left for its next prestige.</li>
+          <li>New: the PROFILE shows your total trophies and one card per soldier: the soldier name, a prestige card with the number on top, its face and its trophies.</li>
           <li>Change: the leaderboard now has a TROPHIES tab, which is the first one and sorts by the total trophies of all your soldiers. The RANKED tab is still there and sorts by rank points.</li>
-        </ul></div>
-        <div class="nv"><b>v9.1</b><ul>
-          <li>New: the passives and actives of the 15 soldiers now work. The passive is always on. The active has a recharge (20 to 35 seconds, the stronger ones take longer) and does not use ammo.</li>
-          <li>New: press E on PC, or tap the round button on mobile, to use your active. The button is in the HUD and shows the recharge. You can move and resize it in HUD LAYOUT, and change the PC key in SETTINGS.</li>
-          <li>Change: the Hair dryer is gone from chests and from the map. It now only exists as the active of Breeze. The accessory slot (key 5) and the ACC button are removed.</li>
-          <li>Change: in Ranked everyone is the default soldier: no passive, no active.</li>
-        </ul></div>
-        <div class="nv"><b>v9.0</b><ul>
-          <li>Change: skins are gone. The Outfits tab is removed from the LOCKER and the ITEM SHOP, and profiles no longer show an outfit. Your look is now the one of your chosen soldier.</li>
-          <li>New: 15 soldiers (Rex, Spark, Doc, Brute, Bandit, Zen, Bastion, Trapper, Hawk, Fury, Shade, Boom, Frost, Breeze, Mirage), each with its own colors, rarity, passive and active. For now the passives and actives are only descriptions; they start working in the next update.</li>
-          <li>New: SOLDIERS button in the menu bar, next to LOCKER. Tap a soldier to see its passive and active and to SELECT it. Only Rex is unlocked for now.</li>
+          <li>New: BOXES. There are two kinds. The small box costs 100 XP (the same XP as the Battle Pass: 1 per elimination, 15 per win; you get one box for every 100 XP, and your Battle Pass levels do not go down). The big box needs 10 victories: every victory fills 1/10 of the box, with an animation on the result screen. Boxes need an account.</li>
+          <li>New: the boxes are the only way to get Boom and Frost (Epic), Breeze (Mythic) and Mirage (Legendary). Chances for each box: Epic 1%, Mythic 0.1%, Legendary 0.01%. Every box opened without a soldier raises each chance by 1% of its current value, and it stacks. When a soldier drops, the chances of that box go back to the start.</li>
+          <li>New: CHANCES BY RARITY button in BOXES. It shows your current chance of winning each soldier (Epic, Mythic, Legendary) in the small and big box.</li>
+          <li>New: no soldier means coins: 10 from a small box, 50 from a big box. If you already own the soldier, you get coins instead (50 Epic, 150 Mythic, 500 Legendary) and the chances restart too.</li>
+          <li>New: opening screen. The box shakes, opens, glows with the colour of the rarity and shows the prize.</li>
+          <li>New: BOXES in the menu bar, and the main menu shows the small box AND the big box, each with its own icon, amount and progress bar.</li>
+          <li>New: server saving. Trophies of every soldier, unlocked soldiers, prestige, Trophy Road rewards already claimed, small and big boxes, the big box progress and the box chance counters are saved on the server, like coins and the Battle Pass.</li>
+          <li>Change: the server calculates trophies, prestige coins, Trophy Road rewards and box prizes by itself. Editing your device does not change them.</li>
+          <li>Change: the online leaderboard sorts by your total trophies, and the server keeps that number up to date.</li>
+          <li>New: the first time you connect, your existing progress is sent to the server once, so nothing you already earned is lost.</li>
+          <li>Change: if the server is not available, the game keeps saving on your device. Matches played offline are sent to the server the next time it connects. Opening boxes needs the server once your account has used it.</li>
           <li>Change: the Battle Pass level 150 reward is now 100 coins instead of the Champion skin.</li>
+          <li>Fix: coins from boxes, prestiges and chests found on the map are no longer lost when the game syncs with the server.</li>
         </ul></div>
         <div class="nv"><b>v8.1</b><ul>
           <li>New: every chest you open has a 1% chance to hold 10 coins. They burst out of the chest with a sound and go straight to your balance, so you can spend them in the ITEM SHOP.</li>
