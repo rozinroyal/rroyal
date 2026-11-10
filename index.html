@@ -194,6 +194,59 @@ input:focus-visible{outline:3px solid var(--flare);outline-offset:1px}
 @keyframes prpulse{0%,100%{filter:drop-shadow(0 0 1px #ffd23f)}50%{filter:drop-shadow(0 0 7px #ffd23f)}}
 @media (prefers-reduced-motion:reduce){.prp{animation:none;filter:drop-shadow(0 0 4px #ffd23f)}}
 .prrow{display:flex;align-items:center;justify-content:center;gap:4px}
+/* v9.5: perfil com cartoes de prestigio */
+.trtot{display:flex;align-items:center;gap:12px;background:var(--panel);border-radius:12px;padding:10px 16px;width:100%;box-sizing:border-box;justify-content:center}
+.trtot b{display:block;font:400 34px/1 var(--f-d);font-variant-numeric:tabular-nums;color:var(--flare)}
+.trtot span{color:var(--mute);font-size:11px;letter-spacing:.12em;text-transform:uppercase}
+.pfg{display:grid;grid-template-columns:minmax(230px,300px) 1fr;gap:18px;width:100%}
+.pfl,.pfr{display:flex;flex-direction:column;gap:12px;min-width:0}
+#pCv,#qCv{height:250px!important;width:auto;aspect-ratio:180/260;align-self:center}
+.pfav{display:flex;align-items:center;gap:6px;background:var(--panel);border-radius:12px;padding:10px 6px 6px}
+.pfav canvas{flex:1 1 auto;min-width:0}
+.pfavb{display:flex;flex-direction:column;align-items:center;gap:8px;flex:none;padding-right:8px}
+.pfsel{width:100%;box-sizing:border-box;font:700 14px var(--f-b);padding:9px 10px;border-radius:8px;background:var(--panel);color:var(--ink);border:2px solid rgba(242,236,217,.25)}
+.pftop{display:flex;gap:10px;flex-wrap:wrap;align-items:stretch}
+.pftop .trtot{flex:1 1 220px;width:auto}
+.pfrank{flex:1 1 200px;background:var(--panel);border-radius:12px;padding:8px 14px;box-sizing:border-box;justify-content:center;font-size:20px}
+.pfhead{display:flex;align-items:center;gap:12px;flex-wrap:wrap;background:rgba(0,0,0,.3);border-radius:8px;padding:8px 12px}
+.pfhead b{font:400 16px var(--f-d);letter-spacing:.04em;margin-right:auto}
+.pfhead span{font:700 13px var(--f-b)}
+.pfpt{color:var(--flare)}
+.pfgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(98px,1fr));gap:6px 8px;justify-items:center;width:100%}
+.pfs{display:flex;flex-direction:column;align-items:center;gap:4px;cursor:pointer;touch-action:manipulation}
+.pfs .pcard{margin-top:16px}
+.pfs .scn{font-size:12px}
+.pfs.lk{opacity:.5}.pfs.lk .pcc canvas{filter:grayscale(1) brightness(.75)}
+#pMore,#qMore{align-self:center}
+.pfwk{justify-content:space-around;background:var(--panel);border-radius:12px;padding:12px;gap:10px;width:100%;box-sizing:border-box}
+.pfwk>div{align-items:center}.pfwk b{font-size:40px}
+.figs.sm b{font-size:20px}.figs.sm{gap:16px}
+@media (max-width:720px){.pfg{grid-template-columns:1fr}}
+.sgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(112px,1fr));gap:10px;width:100%}
+.sc{display:flex;flex-direction:column;align-items:center;gap:8px;background:var(--panel);border:2px solid rgba(242,236,217,.2);border-radius:12px;padding:8px 6px 10px;cursor:pointer;touch-action:manipulation}
+.sc.cur{border-color:var(--flare)}
+.scn{font:400 14px/1 var(--f-d);text-align:center;letter-spacing:.03em}
+.sct{display:flex;align-items:center;gap:4px;font:700 13px var(--f-b);font-variant-numeric:tabular-nums}
+.scbar{width:84%;height:5px;border-radius:3px;background:rgba(0,0,0,.45);overflow:hidden}
+.scbar i{display:block;height:100%;background:var(--flare)}
+.sc.lk{opacity:.55}.sc.lk .pcc canvas{filter:grayscale(1) brightness(.75)}
+.pcard{position:relative;width:92px;height:118px;margin-top:22px;--c0:#ffb81c;--c1:#7a4b00;--c2:#ffe39a;flex:none}
+.pcard::before,.pcard::after{content:'';position:absolute;clip-path:polygon(0 9%,10% 0,90% 0,100% 9%,100% 68%,50% 100%,0 68%)}
+.pcard::before{inset:0;background:var(--c1)}
+.pcard::after{inset:3px;background:linear-gradient(160deg,var(--c2) 0,var(--c0) 42%,var(--c1) 100%)}
+.pcard>*{position:absolute;z-index:2}
+.pcn{top:-14px;left:50%;transform:translateX(-50%);min-width:44px;height:32px;padding:0 8px;box-sizing:border-box;border-radius:10px;background:#0d2b38;border:3px solid var(--c0);color:#fff;font:400 20px/26px var(--f-d);text-align:center;text-shadow:0 2px 0 var(--c1)}
+.pcc{left:50%;top:24px;transform:translateX(-50%);width:62px;height:62px;border-radius:50%;background:radial-gradient(circle at 50% 40%,#2a5368,#0a1a22);border:3px solid var(--c1);overflow:hidden;box-sizing:border-box}
+.pcc canvas{display:block;width:100%;height:100%}
+.pcl{left:0;right:0;bottom:19px;text-align:center;font:700 7px var(--f-b);letter-spacing:.1em;color:#0d2b38}
+.pcw{top:20px;width:15px;height:34px;background:var(--c0);border:2px solid var(--c1);box-sizing:border-box;z-index:1}
+.pcw.l{left:-9px;clip-path:polygon(100% 0,0 25%,40% 55%,0 85%,100% 100%)}
+.pcw.r{right:-9px;clip-path:polygon(0 0,100% 25%,60% 55%,100% 85%,0 100%)}
+.pcr{top:-29px;left:50%;transform:translateX(-50%);z-index:3}
+.pcard.p0{--c0:#5d6b75;--c1:#2c363e;--c2:#9aa8b2}
+.pcard.p0 .pcn{border-color:#5d6b75;color:#9aa8b2}
+.pcard.pg{filter:drop-shadow(0 0 5px rgba(255,210,63,.75))}
+
 #rdBarW{position:relative;width:100%;height:14px;background:rgba(0,0,0,.4);border-radius:7px;overflow:hidden;flex:none}
 #rdBar{height:100%;width:0;background:var(--flare)}
 #rdBarW i{position:absolute;top:0;bottom:0;width:2px;margin-left:-1px;background:rgba(0,0,0,.55)}
@@ -209,6 +262,20 @@ input:focus-visible{outline:3px solid var(--flare);outline-offset:1px}
 /* v9.3: caixas */
 .bxm{width:100%;box-sizing:border-box;background:var(--panel);border:2px solid rgba(242,236,217,.25);border-radius:10px;padding:8px 10px;display:flex;flex-direction:column;gap:6px;cursor:pointer;touch-action:manipulation;font:inherit;color:var(--ink);text-align:left}
 .bxm[hidden]{display:none}
+.bxmw{display:grid;grid-template-columns:1fr 1fr;gap:8px;width:100%}
+.bxmi{position:relative;display:flex;flex-direction:column;align-items:center;gap:5px;background:rgba(0,0,0,.28);border:1px solid rgba(242,236,217,.15);border-radius:9px;padding:9px 6px 7px;min-width:0}
+.bxmi.big{border-color:rgba(183,139,255,.5)}
+.bxm.has{border-color:var(--flare)}
+.bxmic{position:relative;width:44px;height:36px;border:3px solid #5a3a14;border-radius:7px;background:rgba(0,0,0,.45);overflow:hidden;box-sizing:border-box;flex:none}
+.bxmi.big .bxmic{width:58px;height:46px;border-color:#5b3a99}
+.bxmic i{position:absolute;left:0;right:0;bottom:0;height:0;background:linear-gradient(#ffd23f,#e0752a);transition:height .6s}
+.bxmi.big .bxmic i{background:linear-gradient(#d9b8ff,#8f4fe0)}
+.bxmic::after{content:'';position:absolute;left:0;right:0;top:8px;height:3px;background:#5a3a14}
+.bxmi.big .bxmic::after{background:#5b3a99;top:10px}
+.bxmn{position:absolute;top:4px;right:5px;min-width:20px;height:20px;padding:0 5px;box-sizing:border-box;border-radius:10px;background:var(--flare);color:#0d2b38;font:400 12px/20px var(--f-d);text-align:center}
+.bxmi.big .bxmn{background:#b78bff}
+.bxml{font:400 12px var(--f-d);color:var(--ink)}
+.bxmt{font:700 10px var(--f-b);color:var(--mute);text-align:center;letter-spacing:.04em}
 .bxm:focus-visible{outline:3px solid var(--flare);outline-offset:2px}
 .bxmr{display:flex;justify-content:space-between;gap:8px;font-family:var(--f-d);font-size:14px;color:var(--flare)}
 .bxbar{position:relative;width:100%;height:12px;background:rgba(0,0,0,.4);border-radius:6px;overflow:hidden;flex:none}
@@ -291,16 +358,16 @@ input:focus-visible{outline:3px solid var(--flare);outline-offset:1px}
     <div class="row2"><button id="hReset" class="btn alt" type="button">Reset</button><button id="hDone" class="btn" type="button">Done</button></div>
   </div>
 
-  <nav id="nav" hidden><button id="navPlay" class="nb" type="button">PLAY</button><button id="navLock" class="nb" type="button">LOCKER</button><button id="navBr" class="nb" type="button">BRAWLERS</button><button id="navRoad" class="nb" type="button">TROPHY ROAD</button><button id="navBox" class="nb" type="button">BOXES</button><button id="navShop" class="nb" type="button">ITEM SHOP</button><button id="navBP" class="nb" type="button">BATTLE PASS</button><button id="lbBtn" class="nb" type="button">LEADERBOARD</button><button id="keysBtn" class="nb" type="button">SETTINGS</button><span class="sp"></span><span id="coinPill" class="coinpill"></span><button id="profBtn" class="nb" type="button">PROFILE</button></nav>
+  <nav id="nav" hidden><button id="navPlay" class="nb" type="button">PLAY</button><button id="navLock" class="nb" type="button">LOCKER</button><button id="navBr" class="nb" type="button">SOLDIERS</button><button id="navRoad" class="nb" type="button">TROPHY ROAD</button><button id="navBox" class="nb" type="button">BOXES</button><button id="navShop" class="nb" type="button">ITEM SHOP</button><button id="navBP" class="nb" type="button">BATTLE PASS</button><button id="lbBtn" class="nb" type="button">LEADERBOARD</button><button id="keysBtn" class="nb" type="button">SETTINGS</button><span class="sp"></span><span id="coinPill" class="coinpill"></span><button id="profBtn" class="nb" type="button">PROFILE</button></nav>
   <section id="menu" class="screen">
     <div class="lobby">
       <div class="lp">
-        <p class="kick" style="text-align:center">RRoyal · v9.4</p>
+        <p class="kick" style="text-align:center">RRoyal · v9.5</p>
         <h3 class="lt">BATTLE ROYALE</h3>
         <button id="modeBtn" class="btn alt" type="button"><span id="modeT">RANKED: OFF</span><small id="modeS">Solo</small></button>
         <button id="play" class="btn big" type="button">PLAY</button>
         <p id="mErr"></p>
-        <button id="bxMenu" class="bxm" type="button" hidden><span class="bxmr"><span id="bxmS"></span><span id="bxmB"></span></span><span class="bxbar"><i id="bxmBar"></i></span><span id="bxmT" class="kick" style="text-align:center"></span></button>
+        <button id="bxMenu" class="bxm" type="button" hidden><span class="bxmw"><span class="bxmi"><span class="bxmic"><i id="bxmSI"></i></span><b id="bxmS" class="bxmn">0</b><span class="bxml">Small box</span><span class="bxbar"><i id="bxmSBar"></i></span><span id="bxmST" class="bxmt"></span></span><span class="bxmi big"><span class="bxmic"><i id="bxmBI"></i></span><b id="bxmB" class="bxmn">0</b><span class="bxml">Big box</span><span class="bxbar"><i id="bxmBar"></i></span><span id="bxmT" class="bxmt"></span></span></span></button>
         <div id="gwrap2" hidden style="display:flex;justify-content:center"><div id="gbtn2"></div></div>
       </div>
       <div class="stagec"><div id="lobName" class="rk" style="font-size:22px"></div><canvas id="prev" width="360" height="520"></canvas></div>
@@ -308,8 +375,28 @@ input:focus-visible{outline:3px solid var(--flare);outline-offset:1px}
   </section>
 
   <canvas id="bigmap" hidden></canvas><button id="mapx" class="btn alt" type="button" hidden>CLOSE MAP</button>
-  <section id="qmode" class="screen" hidden><div class="panel col"><p class="kick">Play</p><h2>Choose a mode</h2><div class="cards"><button class="card" type="button" id="goRank"><b>RANKED</b><span>Battle Royale, 100 players, huge map. Win points, climb from Wood to Champion.</span></button><button class="card" type="button" id="goQuick"><b>SOLO · DUOS · SQUADS</b><span>100 players, huge map. Solo, Duos or Squads. Brawlers and trophies.</span></button></div><p id="qErr" class="kick" style="color:#ff9cc3"></p><button id="qBack" class="btn alt" type="button">Back</button></div></section>
-  <section id="pv" class="screen" hidden><div class="panel col"><p class="kick">Player profile</p><h2 id="pvN"></h2><canvas id="pvC" width="180" height="260"></canvas><div id="pvEq" class="eqrow"></div><div id="pvR" class="rk" style="font-size:22px"></div><div id="pvF" class="figs"></div><button id="pvBack" class="btn alt" type="button">Back</button></div></section>
+  <section id="qmode" class="screen" hidden><div class="panel col"><p class="kick">Play</p><h2>Choose a mode</h2><div class="cards"><button class="card" type="button" id="goRank"><b>RANKED</b><span>Battle Royale, 100 players, huge map. Win points, climb from Wood to Champion.</span></button><button class="card" type="button" id="goQuick"><b>SOLO · DUOS · SQUADS</b><span>100 players, huge map. Solo, Duos or Squads. Soldiers and trophies.</span></button></div><p id="qErr" class="kick" style="color:#ff9cc3"></p><button id="qBack" class="btn alt" type="button">Back</button></div></section>
+  <section id="pv" class="screen" hidden><div class="panel col" style="max-width:960px"><div class="pfg">
+          <div class="pfl">
+            <p class="kick" style="margin:0">Player profile</p><h2 id="qName" style="margin:0"></h2>
+            <p class="kick" style="margin:0">Favorite soldier</p>
+            <div class="pfav"><canvas id="qCv" width="180" height="260"></canvas><div id="qFavB" class="pfavb"></div></div>
+            <p class="kick" style="margin:0">Outfit</p>
+            <div id="qEq" class="eqrow"></div>
+          </div>
+          <div class="pfr">
+            <div class="pftop">
+              <div class="trtot"><svg viewBox="0 0 40 40" width="38" height="38" aria-hidden="true"><path d="M11 6h18v9a9 9 0 0 1-18 0z" fill="#ffd23f" stroke="#a86f00" stroke-width="2" stroke-linejoin="round"/><path d="M11 9H5v3a6 6 0 0 0 6 6M29 9h6v3a6 6 0 0 1-6 6" fill="none" stroke="#a86f00" stroke-width="2.4" stroke-linecap="round"/><rect x="17" y="24" width="6" height="6" fill="#e0a21a"/><rect x="12" y="30" width="16" height="5" rx="1.5" fill="#ffd23f" stroke="#a86f00" stroke-width="2"/></svg><div><b id="qTroT">0</b><span>total trophies</span></div></div>
+              <div id="qRank" class="rk pfrank"></div>
+            </div>
+            <div class="pfhead"><b>SOLDIERS</b><span id="qCol"></span><span id="qPreT" class="pfpt"></span></div>
+            <div id="qSold" class="pfgrid"></div>
+            <button id="qMore" class="btn alt" type="button">SEE MORE</button>
+            <div id="qWK" class="figs pfwk"></div>
+            <div id="qFigs" class="figs sm"></div>
+          </div>
+        </div>
+<p id="qNote" class="kick" style="margin:0" hidden>This player has not updated their profile yet, so only the basics are shown.</p><button id="pvBack" class="btn alt" type="button">Back</button></div></section>
   <section id="tmode" class="screen" hidden>
     <div class="panel col">
       <p class="kick">Game mode</p>
@@ -336,7 +423,7 @@ input:focus-visible{outline:3px solid var(--flare);outline-offset:1px}
   </section>
 
   <section id="prof" class="screen" hidden>
-    <div class="panel col">
+    <div class="panel col" id="profPanel">
       <p class="kick">Profile</p>
       <div id="pOut" class="form">
         <h2>Your account</h2>
@@ -348,8 +435,27 @@ input:focus-visible{outline:3px solid var(--flare);outline-offset:1px}
         <button id="pImp" class="btn alt" type="button">Import account (file)</button>
       </div>
       <div id="pIn" class="form" hidden>
-        <h2 id="pName"></h2><canvas id="pCv" width="180" height="260"></canvas><div id="pEq" class="eqrow"></div>
-        <div id="pRank" class="rk" style="font-size:22px"></div><div id="pFigs" class="figs"></div>
+        <div class="pfg">
+          <div class="pfl">
+            <h2 id="pName" style="margin:0"></h2>
+            <p class="kick" style="margin:0">Favorite soldier</p>
+            <div class="pfav"><canvas id="pCv" width="180" height="260"></canvas><div id="pFavB" class="pfavb"></div></div>
+            <select id="pFav" class="pfsel" aria-label="Favorite soldier"></select>
+            <p class="kick" style="margin:0">Outfit</p>
+            <div id="pEq" class="eqrow"></div>
+          </div>
+          <div class="pfr">
+            <div class="pftop">
+              <div class="trtot"><svg viewBox="0 0 40 40" width="38" height="38" aria-hidden="true"><path d="M11 6h18v9a9 9 0 0 1-18 0z" fill="#ffd23f" stroke="#a86f00" stroke-width="2" stroke-linejoin="round"/><path d="M11 9H5v3a6 6 0 0 0 6 6M29 9h6v3a6 6 0 0 1-6 6" fill="none" stroke="#a86f00" stroke-width="2.4" stroke-linecap="round"/><rect x="17" y="24" width="6" height="6" fill="#e0a21a"/><rect x="12" y="30" width="16" height="5" rx="1.5" fill="#ffd23f" stroke="#a86f00" stroke-width="2"/></svg><div><b id="pTroT">0</b><span>total trophies</span></div></div>
+              <div id="pRank" class="rk pfrank"></div>
+            </div>
+            <div class="pfhead"><b>SOLDIERS</b><span id="pCol"></span><span id="pPreT" class="pfpt"></span></div>
+            <div id="pSold" class="pfgrid"></div>
+            <button id="pMore" class="btn alt" type="button">SEE MORE</button>
+            <div id="pWK" class="figs pfwk"></div>
+            <div id="pFigs" class="figs sm"></div>
+          </div>
+        </div>
         <div id="nameRow" class="pw" hidden><input id="nName" type="text" placeholder="Your name" maxlength="16" autocomplete="off" autocapitalize="off" spellcheck="false"><button id="nBtn" class="btn alt" type="button">CHANGE NAME</button></div>
         <div class="row2"><button id="pSave" class="btn" type="button">SAVE</button><button id="pDl" class="btn alt" type="button">DOWNLOAD</button></div>
         <div class="pw"><input id="pShow" type="password" readonly placeholder="Password"><button id="pShowBtn" class="btn alt" type="button">SHOW</button></div>
@@ -387,8 +493,14 @@ input:focus-visible{outline:3px solid var(--flare);outline-offset:1px}
       <p class="kick">Changelog</p>
       <h2>What's new</h2>
       <div class="form">
+        <div class="nv"><b>v9.5</b><ul>
+          <li>Change: "Brawlers" are now called "Soldiers" everywhere.</li>
+          <li>New: the main menu shows the small box AND the big box, each with its own icon, amount and progress bar.</li>
+          <li>New: the PROFILE shows your total trophies and one card per soldier: the soldier name, a prestige card with the number on top, its face and its trophies.</li>
+          <li>New: every soldier has its own look: face, size, body shape, skin and colors, in the menu, in the cards and in the match.</li>
+        </ul></div>
         <div class="nv"><b>v9.4</b><ul>
-          <li>New: server saving. Trophies of every brawler, unlocked brawlers, prestige, Trophy Road rewards already claimed, small and big boxes, the big box progress and the box chance counters are now saved on the server, like coins and the Battle Pass.</li>
+          <li>New: server saving. Trophies of every soldier, unlocked soldiers, prestige, Trophy Road rewards already claimed, small and big boxes, the big box progress and the box chance counters are now saved on the server, like coins and the Battle Pass.</li>
           <li>Change: the server now calculates trophies, prestige coins, Trophy Road rewards and box prizes by itself. Editing your device does not change them.</li>
           <li>Change: the online leaderboard sorts by your total trophies, and the server keeps that number up to date.</li>
           <li>New: the first time you connect, your existing progress is sent to the server once, so nothing you already earned is lost.</li>
@@ -397,32 +509,32 @@ input:focus-visible{outline:3px solid var(--flare);outline-offset:1px}
         </ul></div>
         <div class="nv"><b>v9.3</b><ul>
           <li>New: BOXES. There are two kinds. The small box costs 100 XP (the same XP as the Battle Pass: 1 per elimination, 15 per win; you get one box for every 100 XP, and your Battle Pass levels do not go down). The big box needs 10 victories: every victory fills 1/10 of the box, with an animation on the result screen. Boxes need an account.</li>
-          <li>New: the boxes are the only way to get Boom and Frost (Epic), Breeze (Mythic) and Mirage (Legendary). Chances for each box: Epic 1%, Mythic 0.1%, Legendary 0.01%. Every box opened without a brawler raises each chance by 1% of its current value, and it stacks. When a brawler drops, the chances of that box go back to the start.</li>
-          <li>New: no brawler means coins: 10 from a small box, 50 from a big box. If you already own the brawler, you get coins instead (50 Epic, 150 Mythic, 500 Legendary) and the chances restart too.</li>
+          <li>New: the boxes are the only way to get Boom and Frost (Epic), Breeze (Mythic) and Mirage (Legendary). Chances for each box: Epic 1%, Mythic 0.1%, Legendary 0.01%. Every box opened without a soldier raises each chance by 1% of its current value, and it stacks. When a soldier drops, the chances of that box go back to the start.</li>
+          <li>New: no soldier means coins: 10 from a small box, 50 from a big box. If you already own the soldier, you get coins instead (50 Epic, 150 Mythic, 500 Legendary) and the chances restart too.</li>
           <li>New: opening screen. The box shakes, opens, glows with the colour of the rarity and shows the prize.</li>
           <li>New: BOXES in the menu bar, and a box counter with the big box progress in the main menu.</li>
           <li>Change: trophies in Duos and Squads are now proportional to Solo. Duos give half of the Solo trophies and Squads give a quarter (placement and eliminations). Solo does not change.</li>
         </ul></div>
         <div class="nv"><b>v9.2</b><ul>
           <li>Change: Solo, Duos and Squads now have 100 players on the big map, like Ranked. Duos are 50 teams of 2 and Squads are 25 teams of 4. Quick Match (20 players) is gone.</li>
-          <li>Change: Solo, Duos and Squads use your brawler and its abilities, and give trophies. Ranked keeps the rank points (Wood to Champion), with the normal soldier and no trophies. Guests can play, but trophies are not saved.</li>
-          <li>New: trophies. Every brawler has its own, and your total is the sum of all of them. You win or lose trophies in Solo, Duos and Squads, by your place and by your eliminations (the first 10 of each match count). You never go below 0.</li>
-          <li>New: prestige. A brawler gets one prestige for every 1000 of its trophies, with no limit (P4 = 4000, P12 = 12000...). A prestige never goes back: from P1 on, a brawler can no longer fall below 1000 x its prestige in trophies. The higher the prestige, the fewer trophies you earn. Each new prestige gives 100 coins once (500 on P5, P10, P15...).</li>
-          <li>New: the prestige badge, a diamond with the number inside. P1 to P4 are plain bronze, silver, gold and ice blue, P5 to P9 have small wings, and P10 and above have a crown and a pulsing glow. It shows on the brawler cards, next to the names in the match and on the leaderboard.</li>
-          <li>New: TROPHY ROAD in the menu bar. It uses the total trophies of all your brawlers. 10 milestones (10, 60, 500, 2000, 3000, 5000, 8000, 10000, 12000 and 15000) unlock Spark, Doc, Brute, Bandit, Zen, Bastion, Trapper, Hawk, Fury and Shade when you CLAIM them. An unlocked brawler stays unlocked.</li>
-          <li>Change: the BRAWLERS screen shows the trophies and the prestige of every brawler, your total at the top, the current elimination rule of each brawler and how many trophies are left for its next prestige.</li>
-          <li>Change: the leaderboard now has a TROPHIES tab, which is the first one and sorts by the total trophies of all your brawlers. The RANKED tab is still there and sorts by rank points.</li>
+          <li>Change: Solo, Duos and Squads use your soldier and its abilities, and give trophies. Ranked keeps the rank points (Wood to Champion), with the default soldier look and no trophies. Guests can play, but trophies are not saved.</li>
+          <li>New: trophies. Every soldier has its own, and your total is the sum of all of them. You win or lose trophies in Solo, Duos and Squads, by your place and by your eliminations (the first 10 of each match count). You never go below 0.</li>
+          <li>New: prestige. A soldier gets one prestige for every 1000 of its trophies, with no limit (P4 = 4000, P12 = 12000...). A prestige never goes back: from P1 on, a soldier can no longer fall below 1000 x its prestige in trophies. The higher the prestige, the fewer trophies you earn. Each new prestige gives 100 coins once (500 on P5, P10, P15...).</li>
+          <li>New: the prestige badge, a diamond with the number inside. P1 to P4 are plain bronze, silver, gold and ice blue, P5 to P9 have small wings, and P10 and above have a crown and a pulsing glow. It shows on the soldier cards, next to the names in the match and on the leaderboard.</li>
+          <li>New: TROPHY ROAD in the menu bar. It uses the total trophies of all your soldiers. 10 milestones (10, 60, 500, 2000, 3000, 5000, 8000, 10000, 12000 and 15000) unlock Spark, Doc, Brute, Bandit, Zen, Bastion, Trapper, Hawk, Fury and Shade when you CLAIM them. An unlocked soldier stays unlocked.</li>
+          <li>Change: the SOLDIERS screen shows the trophies and the prestige of every soldier, your total at the top, the current elimination rule of each soldier and how many trophies are left for its next prestige.</li>
+          <li>Change: the leaderboard now has a TROPHIES tab, which is the first one and sorts by the total trophies of all your soldiers. The RANKED tab is still there and sorts by rank points.</li>
         </ul></div>
         <div class="nv"><b>v9.1</b><ul>
-          <li>New: the passives and actives of the 15 brawlers now work. The passive is always on. The active has a recharge (20 to 35 seconds, the stronger ones take longer) and does not use ammo.</li>
+          <li>New: the passives and actives of the 15 soldiers now work. The passive is always on. The active has a recharge (20 to 35 seconds, the stronger ones take longer) and does not use ammo.</li>
           <li>New: press E on PC, or tap the round button on mobile, to use your active. The button is in the HUD and shows the recharge. You can move and resize it in HUD LAYOUT, and change the PC key in SETTINGS.</li>
           <li>Change: the Hair dryer is gone from chests and from the map. It now only exists as the active of Breeze. The accessory slot (key 5) and the ACC button are removed.</li>
-          <li>Change: in Ranked everyone is the normal soldier: no passive, no active.</li>
+          <li>Change: in Ranked everyone is the default soldier: no passive, no active.</li>
         </ul></div>
         <div class="nv"><b>v9.0</b><ul>
-          <li>Change: skins are gone. The Outfits tab is removed from the LOCKER and the ITEM SHOP, and profiles no longer show an outfit. Your look is now the one of your chosen brawler.</li>
-          <li>New: 15 brawlers (Rex, Spark, Doc, Brute, Bandit, Zen, Bastion, Trapper, Hawk, Fury, Shade, Boom, Frost, Breeze, Mirage), each with its own colors, rarity, passive and active. For now the passives and actives are only descriptions; they start working in the next update.</li>
-          <li>New: BRAWLERS button in the menu bar, next to LOCKER. Tap a brawler to see its passive and active and to SELECT it. Only Rex is unlocked for now.</li>
+          <li>Change: skins are gone. The Outfits tab is removed from the LOCKER and the ITEM SHOP, and profiles no longer show an outfit. Your look is now the one of your chosen soldier.</li>
+          <li>New: 15 soldiers (Rex, Spark, Doc, Brute, Bandit, Zen, Bastion, Trapper, Hawk, Fury, Shade, Boom, Frost, Breeze, Mirage), each with its own colors, rarity, passive and active. For now the passives and actives are only descriptions; they start working in the next update.</li>
+          <li>New: SOLDIERS button in the menu bar, next to LOCKER. Tap a soldier to see its passive and active and to SELECT it. Only Rex is unlocked for now.</li>
           <li>Change: the Battle Pass level 150 reward is now 100 coins instead of the Champion skin.</li>
         </ul></div>
         <div class="nv"><b>v8.1</b><ul>
@@ -583,7 +695,7 @@ input:focus-visible{outline:3px solid var(--flare);outline-offset:1px}
   </section>
 
   <section id="modes" class="screen" hidden><div class="panel col"><p class="kick">Battle Royale</p><h2>Choose a mode</h2>
-    <div class="cards"><button class="card" type="button" data-m="solo"><b>SOLO</b><span>Free for all. 100 players, huge map. Brawlers and trophies.</span></button><button class="card" type="button" data-m="duo"><b>DUOS</b><span>50 duos, huge map. You play with 1 bot ally. Brawlers and trophies.</span></button><button class="card" type="button" data-m="squad"><b>SQUADS</b><span>25 squads of 4, huge map. You play with 3 bot allies. Brawlers and trophies.</span></button><button class="card" type="button" data-m="ranked"><b>RANKED</b><span>100 players, huge map. Normal soldiers and rank points. No trophies. Needs an account.</span></button></div>
+    <div class="cards"><button class="card" type="button" data-m="solo"><b>SOLO</b><span>Free for all. 100 players, huge map. Soldiers and trophies.</span></button><button class="card" type="button" data-m="duo"><b>DUOS</b><span>50 duos, huge map. You play with 1 bot ally. Soldiers and trophies.</span></button><button class="card" type="button" data-m="squad"><b>SQUADS</b><span>25 squads of 4, huge map. You play with 3 bot allies. Soldiers and trophies.</span></button><button class="card" type="button" data-m="ranked"><b>RANKED</b><span>100 players, huge map. Default soldier look and rank points. No trophies. Needs an account.</span></button></div>
     <p id="mdErr"></p><button id="modesBack" class="btn alt" type="button">Back</button></div></section>
 
 <style>
@@ -615,9 +727,9 @@ input:focus-visible{outline:3px solid var(--flare);outline-offset:1px}
     </div>
   </section>
 
-  <section id="brawlers" class="screen" hidden>
+  <section id="soldiers" class="screen" hidden>
     <div class="panel col" style="max-width:680px">
-      <p class="kick">Choose your fighter</p><h2>Brawlers</h2>
+      <p class="kick">Choose your fighter</p><h2>Soldiers</h2>
       <p class="kick" id="brTot" style="margin:0"></p>
       <div id="brGrid" class="lgrid"></div>
       <button id="brBack" class="btn alt" type="button">Back</button>
@@ -789,7 +901,7 @@ try{if(matchMedia('(pointer:coarse)').matches)mode='mobile';}catch(e){}
 try{const m=localStorage.getItem('rroyal-mode');if(m==='pc'||m==='mobile')mode=m;}catch(e){}
 
 /* ---------- loja / cosmeticos / sprays ---------- */
-/* ---------- brawlers ---------- */
+/* ---------- soldiers ---------- */
 const BRAR={starter:['Starter','#c9d1d6'],rare:['Rare','#6ee7a0'],super:['Super Rare','#4fb4ff'],epic:['Epic','#b78bff'],mythic:['Mythic','#ff5a5a'],legend:['Legendary','#ffd23f']};
 /* tr: 0 = starter (unlocked), N = trophies needed, -1 = only in boxes */
 const BR=[
@@ -809,6 +921,27 @@ const BR=[
 {id:'breeze',n:'Breeze',r:'mythic',tr:-1,pas:'Immune to knockback.',an:'Dryer',act:'The dryer that is already in the game.',vest:'#6ee7a0',hair:'#ff9cc3',band:'#ffffff',leg:'#2f9a67',glove:'#145238',ring:'#c8ffe0'},
 {id:'mirage',n:'Mirage',r:'legend',tr:-1,pas:'Heals 10 HP for each elimination.',an:'Clone',act:'A decoy for 5 s that the bots chase.',vest:'#e0307a',hair:'#ffd23f',band:'#fff3c4',leg:'#8a1d52',glove:'#3a0d24',ring:'#ffb3d6'}
 ];
+
+/* ---------- v9.5: visual proprio de cada soldado (tamanho, forma, cara, cor) ---------- */
+/* sz altura, bw largura do corpo, hs tamanho da cabeca, hx largura da cabeca, sk pele, ey olhos, ec cor dos olhos, hr cabelo/chapeu, ft extras da cara, mo boca, tr forma do tronco, em emblema, pad ombreiras */
+const VIS={
+rex:{sz:1,bw:1,hs:1,hx:1,sk:'#e8bf94',ey:'round',ec:'#2d5a8a',hr:'cap',ft:['scar','brow'],mo:'smile',tr:'round',em:'star'},
+spark:{sz:.9,bw:.8,hs:.92,hx:.96,sk:'#f7d3b0',ey:'big',ec:'#1d8fe0',hr:'spiky',ft:['bolt'],mo:'grin',tr:'slim',em:'bolt',er:1.5},
+doc:{sz:1,bw:.92,hs:1,hx:.96,sk:'#d49a6a',ey:'round',ec:'#4a2f1a',hr:'part',ft:['glasses','mirror'],mo:'smile',tr:'round',em:'cross'},
+brute:{sz:1.14,bw:1.42,hs:1.1,hx:1.18,sk:'#b9784d',ey:'slit',ec:'#2a1a0d',hr:'buzz',ft:['brow','beard'],mo:'scowl',tr:'box',em:'bar',pad:1,sq:1,er:1.3},
+bandit:{sz:.96,bw:.88,hs:.98,hx:1,sk:'#ecc9a0',ey:'round',ec:'#ffd23f',hr:'beanie',ft:['mask'],mo:'smirk',tr:'slim',em:'coin'},
+zen:{sz:.98,bw:.9,hs:1.05,hx:.92,sk:'#f1d6ae',ey:'closed',ec:'#1d1d1f',hr:'bald',ft:['beard'],mo:'smile',tr:'round',em:'yin',eg:2.6},
+bastion:{sz:1.18,bw:1.44,hs:1.1,hx:1.22,sk:'#a8765a',ey:'none',ec:'#7fe8ff',hr:'helmet',ft:['visor'],mo:'flat',tr:'box',em:'shield',pad:1,sq:1},
+trapper:{sz:1.02,bw:1.05,hs:1,hx:1,sk:'#d8a97a',ey:'none',ec:'#ffb81c',hr:'capb',ft:['goggles','stubble'],mo:'flat',tr:'round',em:'trap'},
+hawk:{sz:1.1,bw:.82,hs:.92,hx:.88,sk:'#f0c9a0',ey:'slit',ec:'#ffb81c',hr:'crest',ft:['beak'],mo:'none',tr:'vee',em:'wing',er:.9},
+fury:{sz:1.06,bw:1.12,hs:1.04,hx:1.05,sk:'#e39a7a',ey:'slit',ec:'#ff3d1c',hr:'flame',ft:['angry'],mo:'fangs',tr:'vee',em:'flame',er:1.3},
+shade:{sz:.98,bw:.88,hs:1,hx:.9,sk:'#6a5a8a',ey:'glow',ec:'#c9a8ff',hr:'hood',ft:[],mo:'none',tr:'slim',em:'moon'},
+boom:{sz:1.12,bw:1.26,hs:1.06,hx:1.1,sk:'#d2915f',ey:'round',ec:'#1a1d1f',hr:'mohawk',ft:['gogglesTop','brow'],mo:'teeth',tr:'box',em:'bomb',er:1.4},
+frost:{sz:1,bw:.95,hs:1,hx:.98,sk:'#cfe8f3',ey:'round',ec:'#2f8fd0',hr:'ice',ft:['frostbeard'],mo:'blue',tr:'round',em:'flake'},
+breeze:{sz:.93,bw:.78,hs:1.08,hx:1.02,sk:'#f4c8b8',ey:'big',ec:'#2f9a67',hr:'puff',ft:['lashes','blush'],mo:'open',tr:'slim',em:'swirl',er:1.4},
+mirage:{sz:1.02,bw:.88,hs:.98,hx:.94,sk:'#f1d3bd',ey:'star',ec:'#e0307a',hr:'long',ft:['halfmask'],mo:'smirk',tr:'vee',em:'diamond'}
+};
+for(const k in VIS){const V=VIS[k];V.tz=1+(V.sz-1)*.55;V.er=V.er||1.1;V.eg=V.eg||2.3;}
 /* ---------- trofeus e prestigios (v9.2) ---------- */
 /* Os trofeus ficam na conta (acc.tp), assinados como o resto. Sem conta (convidado) nao se guarda nada. */
 const BOX_XP=100,BOX_WINS=10,BOX_P={epic:.01,mythic:.001,legend:.0001},BOX_BR={epic:['boom','frost'],mythic:['breeze'],legend:['mirage']},BOX_DUP={epic:50,mythic:150,legend:500},BOX_COIN={s:10,b:50},BOX_UP=1.01;
@@ -1085,7 +1218,85 @@ $('bpBack2').addEventListener('click',()=>show('menu'));
 $('navPlay').addEventListener('click',()=>show('menu'));
 $('navLock').addEventListener('click',()=>{lkMode='locker';lkDraw();show('locker');srvSync(true).then(()=>{if(!$('locker').hidden)lkDraw();});});
 $('navShop').addEventListener('click',()=>{lkMode='shop';lkDraw();show('locker');srvSync(true).then(()=>{if(!$('locker').hidden)lkDraw();});});
-/* ---------- ecra dos brawlers ---------- */
+
+/* ---------- v9.5: perfil com troféus e cartões de prestígio ---------- */
+const FCACHE={};
+function soldierFace(b){
+  if(FCACHE[b.id])return FCACHE[b.id];
+  const V=VIS[b.id]||VIS.rex,t=document.createElement('canvas');t.width=180;t.height=260;drawFront(t,0,0,b);
+  const o=document.createElement('canvas');o.width=o.height=128;
+  const hy=220-162*.86*V.sz,sz=124,sx=90-sz/2,sy=hy-sz*.62;
+  o.getContext('2d').drawImage(t,sx,sy,sz,sz,0,0,128,128);
+  return FCACHE[b.id]=o;
+}
+const CUPSVG=px=>'<svg viewBox="0 0 40 40" width="'+px+'" height="'+px+'" aria-hidden="true" style="flex:none"><path d="M11 6h18v9a9 9 0 0 1-18 0z" fill="#ffd23f" stroke="#a86f00" stroke-width="2.4" stroke-linejoin="round"/><path d="M11 9H5v3a6 6 0 0 0 6 6M29 9h6v3a6 6 0 0 1-6 6" fill="none" stroke="#a86f00" stroke-width="2.8" stroke-linecap="round"/><rect x="17" y="24" width="6" height="6" fill="#e0a21a"/><rect x="12" y="30" width="16" height="5" rx="1.5" fill="#ffd23f" stroke="#a86f00" stroke-width="2.4"/></svg>';
+function preCard(b,n){
+  const d=document.createElement('div');d.className='pcard'+(n>0?'':' p0')+(n>=10?' pg':'');
+  if(n>0){const c=preCol(n);d.style.setProperty('--c0',c[0]);d.style.setProperty('--c1',c[1]);d.style.setProperty('--c2',c[2]);}
+  const mk=(cl,tx)=>{const e=document.createElement('div');e.className=cl;if(tx!=null)e.textContent=tx;return e;};
+  if(n>=5){d.append(mk('pcw l'),mk('pcw r'));}
+  const cc=mk('pcc'),cv=document.createElement('canvas');cv.width=cv.height=128;cv.getContext('2d').drawImage(soldierFace(b),0,0);cc.appendChild(cv);
+  d.append(cc,mk('pcn',n),mk('pcl','PRESTIGE'));
+  if(n>=10){const r=mk('pcr');r.innerHTML='<svg viewBox="0 0 34 18" width="30" height="16" aria-hidden="true"><polygon points="2,16 4,3 11,9 17,1 23,9 30,3 32,16" fill="#ffd23f" stroke="#a86f00" stroke-width="1.6" stroke-linejoin="round"/></svg>';d.appendChild(r);}
+  return d;
+}
+const pAllM={p:false,q:false};
+const FAVK='rroyal-fav';
+function favB(){let id=null;try{id=localStorage.getItem(FAVK);}catch(e){}const b=BR.find(x=>x.id===id);return b&&brUnlocked(b)?b:curB();}
+/* dados do perfil que vao para o leaderboard (so aparencia: o total de troféus continua a vir do servidor) */
+function profPack(){
+  const t={},o=[];
+  for(const b of BR){const n=brTro(b);if(n>0)t[b.id]=n;if(b.id!=='rex'&&brUnlocked(b))o.push(b.id);}
+  return {f:favB().id,t,o};
+}
+function parseProf(v){
+  let p=v&&v.prof;if(typeof p==='string'){try{p=JSON.parse(p);}catch(e){p=null;}}
+  if(!p||typeof p!=='object')return null;
+  const t={},un=['rex'];
+  for(const b of BR)t[b.id]=Math.max(0,Math.min(1e9,Math.floor(+(p.t&&p.t[b.id]))||0));
+  if(Array.isArray(p.o))for(const i of p.o)if(BR.some(b=>b.id===i)&&!un.includes(i))un.push(i);
+  return {fav:un.includes(p.f)?p.f:'rex',t,un};
+}
+function ownProfData(){
+  const t={},un=[];for(const b of BR){t[b.id]=brTro(b);if(brUnlocked(b))un.push(b.id);}
+  return {fav:favB().id,t,un,tro:trTotal(),st:nst(acc.st),mine:true};
+}
+/* x = 'p' (o teu perfil) ou 'q' (perfil de outro jogador) */
+function profFill(x,d){
+  const E=k=>$(x+k),tr=b=>d.t[b.id]||0,pr=b=>Math.floor(tr(b)/1000),un=b=>b.tr===0||d.un.includes(b.id);
+  const fav=BR.find(b=>b.id===d.fav)||BR[0];
+  E('TroT').textContent=d.tro;
+  if(x==='p'){
+    const sel=$('pFav');sel.textContent='';
+    for(const b of BR){if(!un(b))continue;const o=document.createElement('option');o.value=b.id;o.textContent=(b===fav?'★ ':'')+b.n+' · '+tr(b)+' trophies';if(b===fav)o.selected=true;sel.appendChild(o);}
+  }
+  drawFront(E('Cv'),0,0,fav);
+  const fb=E('FavB');fb.textContent='';fb.appendChild(preCard(fav,pr(fav)));
+  const fn=document.createElement('div');fn.className='scn';fn.textContent=fav.n;fn.style.color=BRAR[fav.r][1];
+  const ft=document.createElement('div');ft.className='sct';ft.innerHTML=CUPSVG(15)+'<span></span>';ft.lastChild.textContent=tr(fav);
+  fb.append(fn,ft);
+  const list=BR.slice().sort((a,b)=>((un(b)?1:0)-(un(a)?1:0))||(pr(b)-pr(a))||(tr(b)-tr(a)));
+  const own=list.filter(un).length;let tp=0;for(const b of BR)tp+=pr(b);
+  E('Col').textContent='Collected: '+own+'/'+BR.length;E('PreT').textContent='Total prestige: '+tp;
+  const g=E('Sold');g.textContent='';
+  for(const b of (pAllM[x]?list:list.slice(0,10))){
+    const u=un(b),c=document.createElement('div');c.className='pfs'+(u?'':' lk');
+    const nm=document.createElement('div');nm.className='scn';nm.textContent=b.n;nm.style.color=BRAR[b.r][1];
+    c.append(preCard(b,pr(b)),nm);
+    if(d.mine)c.addEventListener('click',()=>brOpen(b));
+    g.appendChild(c);
+  }
+  const mb=E('More');mb.hidden=list.length<=10;mb.textContent=pAllM[x]?'SEE LESS':'SEE MORE';
+  figs(E('WK'),[['total wins',d.st.wins],['total kills',d.st.kills]]);
+  figs(E('Figs'),statRows(d.st).filter(r=>r[0]!=='wins'&&r[0]!=='kills'));
+  rankSet(E('Rank'),rankOf(d.st.rp),d.st.rp,40);
+}
+function profTro(){if(!acc)return;profFill('p',ownProfData());}
+$('pFav').addEventListener('change',()=>{try{localStorage.setItem(FAVK,$('pFav').value);}catch(e){}profTro();try{pushPre0();}catch(e){}});
+$('pMore').addEventListener('click',()=>{pAllM.p=!pAllM.p;profTro();});
+let pvLast=null;
+$('qMore').addEventListener('click',()=>{pAllM.q=!pAllM.q;if(pvLast)profFill('q',pvLast);});
+/* ---------- ecra dos soldiers ---------- */
 function brDraw(){
   const g=$('brGrid'),sel=curB();g.textContent='';$('brTot').textContent='Total trophies: '+trTotal()+(acc?'':' · Log in to earn and save trophies');
   for(const b of BR){
@@ -1119,7 +1330,7 @@ function brOpen(b){
 function rdDraw(){
   const tot=trTotal();
   $('rdT').textContent=tot+' trophies';
-  $('rdS').textContent=acc?'Total of all your brawlers. Claim a milestone to unlock its brawler.':'Log in to earn and save trophies. Guests play without saving trophies.';
+  $('rdS').textContent=acc?'Total of all your soldiers. Claim a milestone to unlock its soldier.':'Log in to earn and save trophies. Guests play without saving trophies.';
   let f=0;for(let i=0;i<MS.length;i++){const lo=i?MS[i-1]:0;f+=tot>=MS[i]?1:tot>lo?(tot-lo)/(MS[i]-lo):0;}
   $('rdBar').style.width=(f/MS.length*100)+'%';
   const bw=$('rdBarW');bw.querySelectorAll('i').forEach(x=>x.remove());
@@ -1137,15 +1348,15 @@ function rdDraw(){
     bt.textContent=done?'UNLOCKED':rdy?'CLAIM':'LOCKED';bt.disabled=done||!rdy;
     bt.addEventListener('click',()=>{
       if(!msReady(i))return;
-      if(tpOn()){tpCall('rr_tp_claim',{p_i:i}).then(x=>{tpAdopt(x.tp);$('rdMsg').textContent=b.n+' unlocked! Pick it in BRAWLERS.';rdDraw();}).catch(e=>{$('rdMsg').textContent='Server: '+e.message;});return;}
+      if(tpOn()){tpCall('rr_tp_claim',{p_i:i}).then(x=>{tpAdopt(x.tp);$('rdMsg').textContent=b.n+' unlocked! Pick it in SOLDIERS.';rdDraw();}).catch(e=>{$('rdMsg').textContent='Server: '+e.message;});return;}
       tpd().mc.push(i);tpd().mc.sort((x,y)=>x-y);sv();
-      $('rdMsg').textContent=b.n+' unlocked! Pick it in BRAWLERS.';rdDraw();
+      $('rdMsg').textContent=b.n+' unlocked! Pick it in SOLDIERS.';rdDraw();
     });
     d.append(c2,inf,bt);box.appendChild(d);
   });
 }
 /* ---------- caixas (v9.3) ---------- */
-/* As caixas ficam na conta (acc.tp.bx), assinadas como os troféus. so = caixas pequenas já abertas, gp = vitórias da caixa grande (0..9), gb = caixas grandes guardadas, ks/kb = caixas abertas seguidas sem brawler (pequena/grande), ob = brawlers ganhos em caixas */
+/* As caixas ficam na conta (acc.tp.bx), assinadas como os troféus. so = caixas pequenas já abertas, gp = vitórias da caixa grande (0..9), gb = caixas grandes guardadas, ks/kb = caixas abertas seguidas sem soldier (pequena/grande), ob = soldiers ganhos em caixas */
 const bxd=()=>{const T=tpd();if(!T.bx)T.bx={so:0,gp:0,gb:0,ks:0,kb:0,ob:[]};return T.bx;};
 const bxSmall=()=>acc?Math.max(0,Math.floor(bpGet().xp/BOX_XP)-bxd().so):0;
 const bxBig=()=>acc?bxd().gb:0;
@@ -1172,15 +1383,18 @@ function refreshBox(){
   try{
     const m=$('bxMenu'),nb=$('navBox');m.hidden=!acc;
     if(!acc){nb.textContent='BOXES';return;}
-    const s=bxSmall(),g=bxBig(),p=bxd().gp;
-    $('bxmS').textContent='Small boxes: '+s;$('bxmB').textContent='Big boxes: '+g;
-    $('bxmBar').style.width=(p*100/BOX_WINS)+'%';$('bxmT').textContent='Big box: '+p+' / '+BOX_WINS+' victories';
+    const s=bxSmall(),g=bxBig(),p=bxd().gp,xp=bpGet().xp%BOX_XP;
+    $('bxmS').textContent=s;$('bxmB').textContent=g;
+    $('bxmSBar').style.width=xp+'%';$('bxmST').textContent=xp+' / '+BOX_XP+' XP';
+    $('bxmSI').style.height=xp+'%';$('bxmBI').style.height=(p*100/BOX_WINS)+'%';
+    $('bxmBar').style.width=(p*100/BOX_WINS)+'%';$('bxmT').textContent=p+' / '+BOX_WINS+' wins';
+    m.classList.toggle('has',(s+g)>0);
     nb.textContent=(s+g)>0?'BOXES ('+(s+g)+')':'BOXES';
   }catch(e){}
 }
 function bxDraw(){
   const has=!!acc;
-  $('bxInfo').textContent=has?'Small box: 100 XP each. Big box: 10 victories. Brawlers only found in boxes: Boom, Frost, Breeze and Mirage.':'Log in to earn and open boxes. Guests do not save them.';
+  $('bxInfo').textContent=has?'Small box: 100 XP each. Big box: 10 victories. Soldiers only found in boxes: Boom, Frost, Breeze and Mirage.':'Log in to earn and open boxes. Guests do not save them.';
   const s=bxSmall(),g=bxBig(),B=has?bxd():{gp:0,ks:0,kb:0},xp=has?bpGet().xp%BOX_XP:0;
   $('bxsN').textContent='You have '+s;$('bxsX').textContent=xp+' / '+BOX_XP+' XP for the next one';
   $('bxsBar').style.width=xp+'%';$('bxsI').style.height=xp+'%';$('bxsC').textContent=bxChTxt(B.ks);
@@ -1219,8 +1433,8 @@ function bxoPlay(res){
     const T=$('bxT'),S=$('bxS');T.style.color=col;
     if(res.br){
       T.textContent=BRAR[res.rar][0].toUpperCase();
-      S.textContent=res.dup?res.br.n+' · Already yours: +'+res.coins+' coins':res.br.n+' · NEW BRAWLER! Pick it in BRAWLERS';
-    }else{T.textContent='COINS';S.textContent='No brawler this time · +'+res.coins+' coins';}
+      S.textContent=res.dup?res.br.n+' · Already yours: +'+res.coins+' coins':res.br.n+' · NEW BRAWLER! Pick it in SOLDIERS';
+    }else{T.textContent='COINS';S.textContent='No soldier this time · +'+res.coins+' coins';}
     $('bxGo').textContent='CONTINUE';
   };
   at(60,()=>{o.classList.add('shake');});
@@ -1253,9 +1467,9 @@ function bxShowOver(w){
 }
 $('navRoad').addEventListener('click',()=>{$('rdMsg').textContent='';rdDraw();show('road');srvSync(true).then(()=>{if(!$('road').hidden)rdDraw();});});
 $('rdBack').addEventListener('click',()=>show('menu'));
-$('navBr').addEventListener('click',()=>{brDraw();show('brawlers');srvSync(true).then(()=>{if(!$('brawlers').hidden)brDraw();});});
+$('navBr').addEventListener('click',()=>{brDraw();show('soldiers');srvSync(true).then(()=>{if(!$('soldiers').hidden)brDraw();});});
 $('brBack').addEventListener('click',()=>show('menu'));
-$('bdBack').addEventListener('click',()=>{brDraw();show('brawlers');});
+$('bdBack').addEventListener('click',()=>{brDraw();show('soldiers');});
 $('bdPick').addEventListener('click',()=>{if(!brCur||!brUnlocked(brCur))return;try{localStorage.setItem('rroyal-brawler',brCur.id);}catch(e){}brOpen(brCur);});
 $('ctlBtn').addEventListener('click',()=>show('ctrl'));
 function refreshMode(){try{if(ranked&&!acc)ranked=false;$('modeT').textContent='RANKED: '+(ranked?'ON':'OFF');$('modeS').textContent=ranked?'100 players · solo':({solo:'Solo · 100 players',duo:'Duos · 50 duos',squad:'Squads · 25 squads'})[tmode];$('lobName').textContent=playerName();$('gwrap2').hidden=!!acc||!$('gwrap2').dataset.ok;}catch(e){}}
@@ -1745,8 +1959,8 @@ function swapPG(){
   if(!P||!P.alive||P.st!=='ground')return;
   if(P.eq==='gun')doSlot(1);else if(P.w)doSlot(2);else doSlot(1);
 }
-/* ---------- poderes dos brawlers (v9.1) ---------- */
-let MB=null; /* brawler com poderes nesta partida (null = soldado normal, como no Ranked) */
+/* ---------- poderes dos soldiers (v9.1) ---------- */
+let MB=null; /* soldier com poderes nesta partida (null = soldado normal, como no Ranked) */
 const hasP=id=>!!MB&&MB.id===id;
 const pb=(e,id)=>e===P?hasP(id):e.bid===id; /* passivo ativo? (jogador ou bot) */
 const ACD={rex:22,spark:20,doc:28,brute:26,bandit:22,zen:30,bastion:30,trapper:20,hawk:28,fury:35,shade:30,boom:26,frost:28,breeze:22,mirage:32};
@@ -2041,9 +2255,9 @@ $('build').addEventListener('pointerdown',e=>{e.preventDefault();doBuild();});
 $('sw1').addEventListener('pointerdown',e=>{e.preventDefault();if(hudEdit)return;swapPG();});
 $('ab').addEventListener('pointerdown',e=>{e.preventDefault();if(hudEdit)return;doActive();});
 
-function show(id){for(const s of ['menu','qmode','pv','tmode','ctrl','prof','keys','lb','news','cred','over','locker','modes','bp','brawlers','brdet','road','boxes']){$(s).hidden=s!==id;if(s===id)$(s).scrollTop=0;}
-  const nv=['menu','modes','locker','lb','keys','prof','pv','news','cred','brawlers','brdet','road','boxes'].includes(id);$('nav').hidden=!nv;$('app').classList.toggle('hasnav',nv);
-  const on=(id==='menu'||id==='modes')?'navPlay':id==='bp'?'navBP':id==='locker'?(lkMode==='shop'?'navShop':'navLock'):(id==='lb'||id==='pv')?'lbBtn':id==='prof'?'profBtn':(id==='brawlers'||id==='brdet')?'navBr':id==='road'?'navRoad':id==='boxes'?'navBox':['keys','news','cred'].includes(id)?'keysBtn':'';
+function show(id){for(const s of ['menu','qmode','pv','tmode','ctrl','prof','keys','lb','news','cred','over','locker','modes','bp','soldiers','brdet','road','boxes']){$(s).hidden=s!==id;if(s===id)$(s).scrollTop=0;}
+  const nv=['menu','modes','locker','lb','keys','prof','pv','news','cred','soldiers','brdet','road','boxes'].includes(id);$('nav').hidden=!nv;$('app').classList.toggle('hasnav',nv);
+  const on=(id==='menu'||id==='modes')?'navPlay':id==='bp'?'navBP':id==='locker'?(lkMode==='shop'?'navShop':'navLock'):(id==='lb'||id==='pv')?'lbBtn':id==='prof'?'profBtn':(id==='soldiers'||id==='brdet')?'navBr':id==='road'?'navRoad':id==='boxes'?'navBox':['keys','news','cred'].includes(id)?'keysBtn':'';
   document.querySelectorAll('#nav .nb').forEach(b=>b.classList.toggle('on',b.id===on));
   refreshCoins();refreshBox();if(id==='menu')refreshMode();}
 function mark(){
@@ -2258,7 +2472,7 @@ function startGame(){
   cam.x=plane.x;cam.y=plane.y;
   state='plane';
   sticks.mv=null;sticks.aim=null;mouseDown=false;
-  for(const s of ['menu','qmode','pv','tmode','ctrl','prof','keys','lb','news','cred','over','locker','modes','bp','brawlers','brdet','road'])$(s).hidden=true;$('nav').hidden=true;$('app').classList.remove('hasnav');
+  for(const s of ['menu','qmode','pv','tmode','ctrl','prof','keys','lb','news','cred','over','locker','modes','bp','soldiers','brdet','road'])$(s).hidden=true;$('nav').hidden=true;$('app').classList.remove('hasnav');
   $('hud').hidden=false;mapOpen=false;$('bigmap').hidden=true;$('mapx').hidden=true;rkStop();$('rka').hidden=true;
 }
 /* ---------- gamepad ---------- */
@@ -2311,32 +2525,138 @@ $('ahBtn').addEventListener('click',()=>{AH=!AH;try{localStorage.setItem('rroyal
 /* ---------- rank animation ---------- */
 let rkA=null;
 function rkStop(){if(rkA){cancelAnimationFrame(rkA.raf);rkA=null;}}
+function fEmb(g,k,x,y,c){
+  g.save();g.translate(x,y);g.fillStyle=c;g.strokeStyle=c;g.lineWidth=2.2;g.lineCap='round';g.lineJoin='round';
+  const P=a=>{g.beginPath();g.moveTo(a[0],a[1]);for(let i=2;i<a.length;i+=2)g.lineTo(a[i],a[i+1]);g.closePath();g.fill();};
+  if(k==='star'){const a=[];for(let i=0;i<10;i++){const r=i%2?4:9,t=-Math.PI/2+i*Math.PI/5;a.push(Math.cos(t)*r,Math.sin(t)*r);}P(a);}
+  else if(k==='bolt')P([2,-10,-6,1,-1,1,-3,10,6,-2,1,-2]);
+  else if(k==='cross'){g.fillRect(-2.5,-8,5,16);g.fillRect(-8,-2.5,16,5);}
+  else if(k==='bar'){g.fillRect(-8,-7,16,3.5);g.fillRect(-8,-1.7,16,3.5);g.fillRect(-8,3.6,16,3.5);}
+  else if(k==='coin'){g.beginPath();g.arc(0,0,7.5,0,TAU);g.stroke();g.fillRect(-1.2,-4,2.4,8);}
+  else if(k==='yin'){g.beginPath();g.arc(0,0,8,0,TAU);g.stroke();g.beginPath();g.arc(0,0,8,Math.PI/2,Math.PI*1.5);g.fill();}
+  else if(k==='shield')P([-8,-8,8,-8,8,2,0,10,-8,2]);
+  else if(k==='trap'){g.beginPath();g.arc(0,0,6,0,TAU);g.stroke();g.beginPath();g.moveTo(-10,0);g.lineTo(10,0);g.moveTo(0,-10);g.lineTo(0,10);g.stroke();}
+  else if(k==='wing')P([-9,3,-8,-7,-2,-3,2,-9,8,-4,10,4,0,9]);
+  else if(k==='flame')P([0,-10,6,-2,5,6,0,9,-5,6,-6,-2]);
+  else if(k==='moon'){g.beginPath();g.arc(0,0,8,-Math.PI/2,Math.PI/2,true);g.quadraticCurveTo(-3,0,0,-8);g.fill();}
+  else if(k==='bomb'){g.beginPath();g.arc(0,2,6,0,TAU);g.fill();g.beginPath();g.moveTo(3,-3);g.lineTo(6,-8);g.stroke();g.beginPath();g.arc(7,-9,1.6,0,TAU);g.fill();}
+  else if(k==='flake'){g.beginPath();for(let i=0;i<3;i++){const a=i*Math.PI/3;g.moveTo(Math.cos(a)*9,Math.sin(a)*9);g.lineTo(-Math.cos(a)*9,-Math.sin(a)*9);}g.stroke();}
+  else if(k==='swirl'){g.beginPath();g.arc(0,0,8,.3,Math.PI*1.7);g.stroke();g.beginPath();g.arc(0,0,4,Math.PI,Math.PI*2.6);g.stroke();}
+  else if(k==='diamond')P([0,-9,7,0,0,9,-7,0]);
+  g.restore();
+}
+/* cabeca de frente: origem no centro da cara (raio 31) */
+function fHead(g,o,V,mood){
+  const hc=o.hair,sk=V.sk,ft=V.ft||[],has=k=>ft.includes(k),hr=V.hr,PI=Math.PI;
+  const C=(x,y,r,c)=>{g.fillStyle=c;g.beginPath();g.arc(x,y,r,0,TAU);g.fill();};
+  const P=(c,a)=>{g.fillStyle=c;g.beginPath();g.moveTo(a[0],a[1]);for(let i=2;i<a.length;i+=2)g.lineTo(a[i],a[i+1]);g.closePath();g.fill();};
+  const RQ=(x,y,w,h,c,r)=>{g.fillStyle=c;g.beginPath();if(g.roundRect)g.roundRect(x,y,w,h,r);else g.rect(x,y,w,h);g.fill();};
+  const E=(x,y,rx,ry,c,rot)=>{g.fillStyle=c;g.beginPath();g.ellipse(x,y,rx,ry,rot||0,0,TAU);g.fill();};
+  const L=(x1,y1,x2,y2,c,lw)=>{g.strokeStyle=c;g.lineWidth=lw;g.lineCap='round';g.beginPath();g.moveTo(x1,y1);g.lineTo(x2,y2);g.stroke();};
+  const dome=(r,c)=>{g.fillStyle=c;g.beginPath();g.arc(0,-4,r,PI,0);g.closePath();g.fill();};
+  /* 1. camada de tras */
+  if(hr==='long'){RQ(-34,-14,17,64,hc,8);RQ(17,-14,17,64,hc,8);}
+  else if(hr==='puff'){for(const q of [[-27,-12,13],[27,-12,13],[-17,-28,14],[17,-28,14],[0,-33,15],[-31,8,10],[31,8,10]])C(q[0],q[1],q[2],hc);}
+  else if(hr==='hood')C(0,-2,38,'#241a45');
+  else if(hr==='flame'){P(hc,[-24,-18,-28,-52,-12,-32]);P(hc,[-12,-26,-12,-64,2,-32]);P(hc,[-2,-30,8,-68,16,-28]);P(hc,[12,-28,28,-54,27,-18]);P('#ffd23f',[-7,-28,-7,-48,1,-31]);P('#ffd23f',[5,-30,9,-50,12,-29]);}
+  else if(hr==='spiky'){P(hc,[-26,-16,-30,-46,-12,-30]);P(hc,[-14,-26,-12,-58,0,-30]);P(hc,[-2,-30,10,-62,16,-28]);P(hc,[14,-28,30,-48,28,-16]);}
+  else if(hr==='crest'){P(hc,[-14,-28,-30,-58,-6,-32]);P(hc,[-4,-30,-6,-66,10,-30]);P(hc,[6,-30,24,-58,20,-24]);P('#ffb81c',[-1,-32,-2,-52,4,-32]);}
+  else if(hr==='ice'){P(hc,[-24,-20,-30,-50,-10,-32]);P(hc,[-10,-28,-6,-62,6,-30]);P(hc,[6,-30,18,-58,24,-24]);}
+  else if(hr==='mohawk')P(hc,[-9,-26,-8,-56,0,-48,8,-58,9,-26]);
+  /* 2. orelhas e cara */
+  if(hr!=='hood'){C(-31,4,6,sk);C(31,4,6,sk);C(0,0,31,sk);E(0,14,26,17,'rgba(0,0,0,.07)');}
+  else E(0,5,23,25,'#0d0a1a');
+  /* 3. barba */
+  if(has('beard'))E(0,19,24,15,hr==='bald'?'#f2ecd9':'#3a2a1c');
+  if(has('frostbeard')){E(0,20,23,14,'#e6f6ff');P('#e6f6ff',[-12,30,-9,44,-5,31]);P('#e6f6ff',[-3,32,0,48,3,32]);P('#e6f6ff',[5,31,9,44,12,30]);}
+  if(has('stubble')){g.fillStyle='rgba(40,30,20,.45)';for(let i=0;i<18;i++){const a=PI*(.12+.76*i/17),r=19+(i%3)*4;g.fillRect(Math.cos(a)*r*1.1-1,Math.sin(a)*r*.7+8,1.8,1.8);}}
+  /* 4. cabelo / chapeu de cima */
+  if(hr==='cap'){dome(32,hc);C(-26,2,9,hc);C(26,2,9,hc);}
+  else if(hr==='long'){dome(32,hc);}
+  else if(hr==='part'){dome(31.5,hc);C(-27,0,6,hc);C(27,0,6,hc);L(-14,-35,-6,-8,'rgba(0,0,0,.3)',2);}
+  else if(hr==='buzz'){g.fillStyle=hc;g.beginPath();g.arc(0,-2,32,PI*1.1,PI*1.9);g.closePath();g.fill();}
+  else if(hr==='beanie'){dome(32,hc);RQ(-33,-14,66,15,o.band,6);}
+  else if(hr==='bald'){C(0,-38,9,hc);RQ(-6,-34,12,6,hc,2);}
+  else if(hr==='helmet'){dome(34,hc);RQ(-35,-12,70,11,'#3f4b55',4);RQ(-4,-38,8,26,o.band,2);C(-25,-6,2.2,'#bfcad2');C(25,-6,2.2,'#bfcad2');}
+  else if(hr==='capb'){dome(32,o.vest);RQ(-37,-12,74,8,o.leg,4);RQ(-4,-36,8,10,o.band,2);}
+  else if(hr==='crest'||hr==='flame'||hr==='spiky'||hr==='ice'||hr==='mohawk'){g.fillStyle=hr==='ice'?hc:(hr==='mohawk'?'rgba(0,0,0,.28)':hc);g.beginPath();g.arc(0,-2,32,PI*1.1,PI*1.9);g.closePath();g.fill();}
+  else if(hr==='puff'){C(-12,-30,12,hc);C(12,-30,12,hc);C(0,-36,13,hc);dome(30,hc);}
+  /* 5. mascara / viseira / oculos */
+  if(has('mask')){RQ(-28,-5,56,19,'#14090e',8);P('#14090e',[27,2,40,-3,37,10]);P('#14090e',[27,6,41,10,36,15]);}
+  if(has('visor')){RQ(-28,-7,56,16,'#1b2228',5);RQ(-22,-1.5,17,4,V.ec,2);RQ(5,-1.5,17,4,V.ec,2);}
+  if(has('goggles')){RQ(-33,-4,66,8,'#2c3136',3);for(const sx of [-11,11]){C(sx,4,10.5,'#2c3136');C(sx,4,7.5,V.ec);C(sx-2,2,2.2,'rgba(255,255,255,.7)');}}
+  /* 6. olhos */
+  const ex=[-11,11],ey=4;
+  if(hr==='hood'){for(const x of ex){g.save();g.shadowColor=V.ec;g.shadowBlur=9;E(x,ey,5.5,4,V.ec);g.restore();E(x,ey,2,2,'#fff');}}
+  else if(V.ey==='round'){for(const x of ex){C(x,ey,5.4,'#fff');C(x+1,ey,3.5,V.ec);C(x+1,ey,1.7,'#14161a');}}
+  else if(V.ey==='big'){for(const x of ex){C(x,ey,7.4,'#fff');C(x+.5,ey+.5,5,V.ec);C(x+.5,ey+.5,2.5,'#14161a');C(x-1.5,ey-2,1.6,'#fff');}}
+  else if(V.ey==='slit'){ex.forEach((x,i)=>{const s=i?-1:1;E(x,ey,6.4,3.1,'#fff',s*.28);E(x+1,ey,2.7,2.7,V.ec);E(x+1,ey,1.2,1.2,'#14161a');});}
+  else if(V.ey==='closed'){g.lineWidth=2.4;g.strokeStyle='#2a1a0d';g.lineCap='round';for(const x of ex){g.beginPath();g.arc(x,ey-1,5.5,.15*PI,.85*PI);g.stroke();}}
+  else if(V.ey==='star'){for(const x of ex){C(x,ey,6,'#fff');P(V.ec,[x,ey-6,x+2,ey-2,x+6,ey,x+2,ey+2,x,ey+6,x-2,ey+2,x-6,ey,x-2,ey-2]);}}
+  /* 7. sobrancelhas */
+  if(has('brow')){L(-19,-5,-5,-1,hr==='bald'||hr==='buzz'?'#2a1a0d':'#2a1a0d',4.6);L(19,-5,5,-1,'#2a1a0d',4.6);}
+  if(has('angry')){L(-20,-10,-4,0,'#6e1f1c',5);L(20,-10,4,0,'#6e1f1c',5);}
+  if(V.ey==='slit'&&!has('brow')&&!has('angry')){L(-18,-4,-6,-1.5,hc,3.2);L(18,-4,6,-1.5,hc,3.2);}
+  if(has('frostbeard'))for(const s of [-1,1])L(s*17,-3,s*6,-4,'#e6f6ff',3.2);
+  /* 8. nariz / bico */
+  if(has('beak'))P('#ffb81c',[-5,7,5,7,0,24]);
+  else if(hr!=='hood'){g.strokeStyle='rgba(120,70,40,.5)';g.lineWidth=2;g.lineCap='round';g.beginPath();g.moveTo(1,8);g.quadraticCurveTo(-3,13,1,13.5);g.stroke();}
+  /* 9. boca */
+  const bad=['smile','grin','open','teeth','smirk','blue'];
+  const mo=(mood<0&&bad.includes(V.mo))?'frown':V.mo;
+  g.strokeStyle='#8a4a2a';g.lineWidth=2.6;g.lineCap='round';
+  if(mo==='smile'){g.beginPath();g.arc(0,12,10,PI*.15,PI*.85);g.stroke();}
+  else if(mo==='blue'){g.strokeStyle='#3a6fb0';g.beginPath();g.arc(0,12,10,PI*.15,PI*.85);g.stroke();}
+  else if(mo==='frown'){g.beginPath();g.arc(0,29,10,PI*1.15,PI*1.85);g.stroke();}
+  else if(mo==='scowl'){g.strokeStyle=has('beard')?'#e8d6c0':'#8a4a2a';g.beginPath();g.arc(0,29,10,PI*1.15,PI*1.85);g.stroke();}
+  else if(mo==='grin'){g.fillStyle='#5a1e1e';g.beginPath();g.arc(0,11,13,.05*PI,.95*PI);g.closePath();g.fill();RQ(-10,11.5,20,5,'#fff',2);}
+  else if(mo==='teeth'){RQ(-12,14,24,11,'#5a1e1e',4);RQ(-10.5,14.5,21,4.5,'#fff',2);}
+  else if(mo==='open'){E(0,20,6,5.5,'#7a2030');E(0,22.5,3.2,2,'#ff8fa8');}
+  else if(mo==='flat'){g.strokeStyle=has('stubble')?'#6a4a3a':'#8a4a2a';g.beginPath();g.moveTo(-8,21);g.lineTo(8,21);g.stroke();}
+  else if(mo==='smirk'){g.beginPath();g.moveTo(-8,20);g.quadraticCurveTo(0,23,9,16);g.stroke();}
+  else if(mo==='fangs'){g.beginPath();g.moveTo(-9,19);g.lineTo(9,19);g.stroke();P('#fff',[-8,19,-3,19,-5.5,27]);P('#fff',[3,19,8,19,5.5,27]);}
+  /* 10. extras */
+  if(has('scar')){L(-17,-6,-6,14,'#b0503e',2.4);L(-20,2,-13,0,'#b0503e',1.6);L(-14,8,-7,6,'#b0503e',1.6);}
+  if(has('glasses')){g.strokeStyle='#2a2a30';g.lineWidth=2.6;for(const x of ex){g.beginPath();g.arc(x,ey,8.6,0,TAU);g.stroke();}L(-2.4,ey,2.4,ey,'#2a2a30',2.4);}
+  if(has('blush')){E(-20,13,5,3,'rgba(255,110,140,.5)');E(20,13,5,3,'rgba(255,110,140,.5)');}
+  if(has('lashes')){for(const s of [-1,1]){L(s*11+s*6,ey-4,s*11+s*10,ey-8,'#1d1d1f',2);L(s*11+s*3,ey-6,s*11+s*5,ey-10,'#1d1d1f',2);}}
+  if(has('halfmask')){g.save();g.globalAlpha=.92;RQ(1,-8,29,24,'#ffd23f',9);g.restore();C(16,3,6,'#fff3c4');P(V.ec,[16,-3,18,1,22,3,18,5,16,9,14,5,10,3,14,1]);C(26,-4,2.2,'#e0307a');}
+  if(has('bolt'))P('#ffd23f',[-6,-30,-18,-12,-10,-12,-14,2,0,-18,-8,-18]);
+  if(has('gogglesTop')){RQ(-34,-22,68,9,'#5a3a14',3);for(const sx of [-12,12]){C(sx,-18,8,'#5a3a14');C(sx,-18,5.6,'#7fe0ff');C(sx-1.5,-20,1.8,'rgba(255,255,255,.8)');}}
+  if(has('mirror')){C(-12,-26,8,'#9aa6ac');C(-12,-26,5.5,'#e8f0f2');C(-12,-26,1.6,'#9aa6ac');}
+}
 function drawFront(c,t,mood,o){
-  o=o||curB();const g=c.getContext('2d'),k=c.width/180,w=180,h=260;g.setTransform(k,0,0,k,0,0);
+  o=o||curB();const V=VIS[o.id]||VIS.rex;
+  const g=c.getContext('2d'),k=c.width/180,w=180,h=260;g.setTransform(k,0,0,k,0,0);
   g.clearRect(0,0,w,h);
   const cx=w/2,jump=mood>0?Math.abs(Math.sin(t*5))*18:0,bob=mood===0?Math.sin(t*2.2)*2:0,by=h-40-jump+bob;
+  const S=.86*V.sz,SX=S*V.bw,sk=V.sk;
   const RR=(x,y,ww,hh,col,r)=>{g.fillStyle=col;g.beginPath();if(g.roundRect)g.roundRect(x,y,ww,hh,r);else g.rect(x,y,ww,hh);g.fill();};
-  g.fillStyle='rgba(0,0,0,.3)';g.beginPath();g.ellipse(cx,h-22,46-jump*.6,10,0,0,TAU);g.fill();
-  RR(cx-25,by-54,22,54,'#2d3338',7);RR(cx+3,by-54,22,54,'#2d3338',7);
-  RR(cx-28,by-12,26,14,'#1a1d1f',6);RR(cx+2,by-12,26,14,'#1a1d1f',6);
+  g.fillStyle='rgba(0,0,0,.3)';g.beginPath();g.ellipse(cx,h-22,Math.max(26,40*V.bw*.95-jump*.6),10,0,0,TAU);g.fill();
+  /* corpo (escalado por altura e largura) */
+  g.save();g.translate(cx,by);g.scale(SX,S);g.translate(-cx,-by);
+  RR(cx-25,by-54,22,54,o.leg,7);RR(cx+3,by-54,22,54,o.leg,7);
+  RR(cx-28,by-12,26,14,o.glove,6);RR(cx+2,by-12,26,14,o.glove,6);
   const arm=(s)=>{
     const sx=cx+s*30,sy=by-112,ex=cx+s*(mood>0?64:46),ey=mood>0?by-158:(mood<0?by-50:by-58);
-    g.lineCap='round';g.strokeStyle=o.vest;g.lineWidth=20;g.beginPath();g.moveTo(sx,sy);g.lineTo(ex,ey);g.stroke();
-    if(s<0){g.strokeStyle=o.band;g.lineWidth=20;g.lineCap='butt';g.beginPath();g.moveTo(sx+(ex-sx)*.3,sy+(ey-sy)*.3);g.lineTo(sx+(ex-sx)*.48,sy+(ey-sy)*.48);g.stroke();}
-    g.fillStyle='#e8bf94';g.beginPath();g.arc(ex,ey,11,0,TAU);g.fill();
+    g.lineCap='round';g.strokeStyle=o.vest;g.lineWidth=V.tr==='slim'?17:20;g.beginPath();g.moveTo(sx,sy);g.lineTo(ex,ey);g.stroke();
+    if(s<0){g.strokeStyle=o.band;g.lineWidth=V.tr==='slim'?17:20;g.lineCap='butt';g.beginPath();g.moveTo(sx+(ex-sx)*.3,sy+(ey-sy)*.3);g.lineTo(sx+(ex-sx)*.48,sy+(ey-sy)*.48);g.stroke();}
+    g.fillStyle=sk;g.beginPath();g.arc(ex,ey,V.pad?12.5:11,0,TAU);g.fill();
   };
   arm(-1);arm(1);
-  RR(cx-36,by-126,72,78,o.vest,18);
+  /* tronco com forma propria */
+  if(V.tr==='box')RR(cx-38,by-126,76,78,o.vest,7);
+  else if(V.tr==='slim')RR(cx-33,by-126,66,78,o.vest,30);
+  else if(V.tr==='vee'){g.fillStyle=o.vest;g.strokeStyle=o.vest;g.lineWidth=9;g.lineJoin='round';g.beginPath();g.moveTo(cx-37,by-122);g.lineTo(cx+37,by-122);g.lineTo(cx+24,by-52);g.lineTo(cx-24,by-52);g.closePath();g.fill();g.stroke();}
+  else RR(cx-36,by-126,72,78,o.vest,18);
+  if(V.pad){RR(cx-50,by-130,26,24,o.ring,9);RR(cx+24,by-130,26,24,o.ring,9);}
   RR(cx-28,by-92,18,18,'#3f4d34',4);RR(cx+10,by-92,18,18,'#3f4d34',4);
-  RR(cx-36,by-62,72,8,o.leg,3);
-  RR(cx-30,by-138,60,18,'#f2ecd9',9);RR(cx+8,by-130,16,38,'#e2dac0',6);
-  g.fillStyle='#e8bf94';g.beginPath();g.arc(cx,by-162,31,0,TAU);g.fill();
-  g.fillStyle=o.hair;g.beginPath();g.arc(cx,by-166,32,Math.PI,0);g.closePath();g.fill();
-  g.beginPath();g.arc(cx-26,by-160,9,0,TAU);g.arc(cx+26,by-160,9,0,TAU);g.fill();
-  g.fillStyle='#1a1d1f';g.beginPath();g.arc(cx-11,by-158,3.6,0,TAU);g.arc(cx+11,by-158,3.6,0,TAU);g.fill();
-  g.strokeStyle='#8a4a2a';g.lineWidth=2.6;g.lineCap='round';g.beginPath();
-  if(mood<0)g.arc(cx,by-138,9,Math.PI*1.15,Math.PI*1.85);else g.arc(cx,by-150,10,Math.PI*.15,Math.PI*.85);
-  g.stroke();
+  fEmb(g,V.em,cx,by-81,o.ring);
+  RR(cx-36,by-62,72,8,o.glove,3);
+  RR(cx-30,by-138,60,18,o.band,9);RR(cx+8,by-130,16,38,o.ring,6);
+  g.restore();
+  /* cabeca (escala propria) */
+  g.save();g.translate(cx,by-162*S);g.scale(S*V.hs*V.hx,S*V.hs);fHead(g,o,V,mood);g.restore();
 }
 function rankAnim(old,nw,dl){
   rkStop();
@@ -2600,8 +2920,10 @@ function drawEnt(e){
   ctx.rotate(e.ang);
   const w=(e.w&&e.swT<=0&&(e.isBot||e.eq==='gun'))?WP[e.w]:null,g=e.st==='ground',hit=e.hitT>0,me=e===P||!!e.asMe;
   const OC=me?curB():(e.bid?BRM[e.bid]:null);
-  const vest=hit?'#fff':(OC?OC.vest:e.col),skin=hit?'#fff':'#e8bf94',hair=hit?'#fff':(OC?OC.hair:['#3b2a1c','#8a5a2b','#d9b84a','#1d1d1f','#a23a22'][e.name.charCodeAt(0)%5]);
-  FL=null;part(-R-4,-8,9,16,hit?'#fff':(OC?OC.leg:'#2d3338'),3);
+  const vest=hit?'#fff':(OC?OC.vest:e.col),skin=hit?'#fff':(OC&&VIS[OC.id]?VIS[OC.id].sk:'#e8bf94'),hair=hit?'#fff':(OC?OC.hair:['#3b2a1c','#8a5a2b','#d9b84a','#1d1d1f','#a23a22'][e.name.charCodeAt(0)%5]);
+  const V=OC?(VIS[OC.id]||null):null,Z=V?V.tz:1,SW=V?V.bw:1,BT=1+(SW-1)*.5;BWF=SW;
+  ctx.scale(Z,Z);
+  FL=null;part(-R-4,-8*SW,9,16*SW,hit?'#fff':(OC?OC.leg:'#2d3338'),3);
   if(w&&g){
     FL='rgba(0,0,0,.3)';ctx.save();ctx.translate(8,3);gunShape(e.w,w.len,w.col);ctx.restore();FL=null;
     const WC=me?cur('w'):null;WT=WC&&WC.m?WC:null;
@@ -2615,25 +2937,31 @@ function drawEnt(e){
     ctx.restore();
   }
   ctx.lineCap='round';ctx.strokeStyle=hit?'#fff':'rgba(0,0,0,.35)';ctx.lineWidth=7;
-  ctx.beginPath();ctx.moveTo(0,-R+3);ctx.lineTo(9,-8);ctx.moveTo(0,R-3);ctx.lineTo(w?11+w.len*.5:11,7);ctx.stroke();
+  ctx.beginPath();ctx.moveTo(0,(-R+3)*SW);ctx.lineTo(9,-8*SW);ctx.moveTo(0,(R-3)*SW);ctx.lineTo(w?11+w.len*.5:11,7*SW);ctx.stroke();
   ctx.strokeStyle=vest;ctx.lineWidth=5.5;ctx.stroke();
+  ctx.save();ctx.scale(BT,SW);
   ctx.fillStyle=vest;ctx.beginPath();ctx.ellipse(0,0,R-1,R+1.5,0,0,TAU);ctx.fill();
   ctx.fillStyle='rgba(255,255,255,.2)';ctx.beginPath();ctx.ellipse(-2,-4,R-5,R-8,0,0,TAU);ctx.fill();
   ctx.fillStyle='rgba(0,0,0,.25)';ctx.beginPath();ctx.ellipse(2,5,R-4,R-9,0,0,TAU);ctx.fill();
   ctx.strokeStyle='#1a1d1f';ctx.lineWidth=2;ctx.beginPath();ctx.ellipse(0,0,R-1,R+1.5,0,0,TAU);ctx.stroke();
   if(!hit){part(4,-R+1,4,4,'#3f4d34',1);part(4,R-5,4,4,'#3f4d34',1);}
-  ctx.fillStyle=OC?OC.glove:skin;circ(11,-7,3.7);circ(w?11+w.len*.5:11,7,3.7);
+  ctx.restore();
+  ctx.fillStyle=OC?OC.glove:skin;circ(11,-7*SW,3.7*(V&&V.pad?1.25:1));circ(w?11+w.len*.5:11,7*SW,3.7*(V&&V.pad?1.25:1));
   const band=hit?'#fff':(OC?OC.band:'#f2ecd9');
+  ctx.save();ctx.scale(1,SW);
   part(1,-R+1,4.5,6,band,1);ctx.fillStyle=band;ctx.beginPath();ctx.moveTo(1,-R+2);ctx.lineTo(-7,-R-3);ctx.lineTo(-3,-R+5);ctx.closePath();ctx.fill();
-  ctx.fillStyle=skin;circ(-1,-8,1.8);circ(-1,8,1.8);
+  ctx.restore();
+  ctx.fillStyle=skin;circ(-1,-8*SW,1.8);circ(-1,8*SW,1.8);
   if(OC&&!hit)brBody(OC.id);
+  ctx.save();if(V)ctx.scale(V.hs,V.hs*V.hx);
   ctx.strokeStyle=hit?'#fff':(OC?OC.ring:'#cfc9b6');ctx.lineWidth=3.2;ctx.beginPath();ctx.arc(-1,0,9,0,TAU);ctx.stroke();
-  ctx.fillStyle=hair;circ(-.5,0,8);
+  ctx.fillStyle=hair;if(V&&V.sq)part(-8.5,-8,16,16,hair,5);else circ(-.5,0,8);
   ctx.strokeStyle='rgba(0,0,0,.28)';ctx.lineWidth=1;
   for(let a=-1;a<=1;a++){ctx.beginPath();ctx.moveTo(-6,a*3);ctx.lineTo(3,a*4);ctx.stroke();}
   ctx.fillStyle='rgba(255,255,255,.25)';ctx.beginPath();ctx.ellipse(-2,-2.5,4,2.4,-.4,0,TAU);ctx.fill();
   {const fc=OC?FACE[OC.id]:[2.6,4.6];ctx.fillStyle=skin;ctx.beginPath();ctx.ellipse(6,0,fc[0],fc[1],0,0,TAU);ctx.fill();}
   if(OC&&!hit)brHead(OC.id,OC);
+  ctx.restore();
   ctx.restore();
   if(e===P&&e.st==='ground'){
     ctx.fillStyle='#ffb81c';ctx.beginPath();ctx.moveTo(x,y-22);ctx.lineTo(x-6,y-32);ctx.lineTo(x+6,y-32);ctx.closePath();ctx.fill();
@@ -2654,23 +2982,24 @@ function drawEnt(e){
   ctx.globalAlpha=ga0;
 }
 
-/* ---------- visual unico de cada brawler (v9.2) ---------- */
+/* ---------- visual unico de cada soldier (v9.2) ---------- */
 const BRM={};for(const b of BR)BRM[b.id]=b;
 const FACE={rex:[2.8,4.6],spark:[2.3,3.8],doc:[2.6,4.4],brute:[3.5,5.7],bandit:[2.6,4.6],zen:[2.6,4.2],bastion:[3.3,5.3],trapper:[2.6,4.6],hawk:[2.2,4],fury:[2.8,4.8],shade:[2.4,4],boom:[3,5],frost:[2.6,4.4],breeze:[2.3,4.2],mirage:[2.6,4.4]};
 function poly(c,...p){ctx.fillStyle=c;ctx.beginPath();ctx.moveTo(p[0],p[1]);for(let i=2;i<p.length;i+=2)ctx.lineTo(p[i],p[i+1]);ctx.closePath();ctx.fill();}
 function rc(x,y,w,h,c){ctx.fillStyle=c;ctx.fillRect(x,y,w,h);}
 function cc(x,y,r,c){ctx.fillStyle=c;circ(x,y,r);}
 function spikes(c,angs,r0,r1,w){for(const a of angs)poly(c,Math.cos(a-w)*r0,Math.sin(a-w)*r0,Math.cos(a)*r1,Math.sin(a)*r1,Math.cos(a+w)*r0,Math.sin(a+w)*r0);}
-function brBody(id){ /* parte de tras / corpo: combina com a habilidade */
+let BWF=1;
+function brBody(id){const RB=R*BWF; /* parte de tras / corpo: combina com a habilidade */
   ctx.save();ctx.lineCap='round';
   if(id==='rex'){ctx.strokeStyle='#4a3a1c';ctx.lineWidth=3;ctx.beginPath();ctx.moveTo(-9,-9);ctx.lineTo(7,9);ctx.stroke();for(let i=0;i<4;i++)cc(-6+i*4,-6+i*4.2,1.3,'#ffd23f');}
   else if(id==='spark')poly('#fff3a8',-8,-9,-13,0,-10,0,-12,9,-6,-1,-9,-1);
   else if(id==='doc'){cc(-9,0,5.6,'#ffffff');rc(-13,-1.5,8,3,'#2f9a67');rc(-10.5,-4,3,8,'#2f9a67');}
-  else if(id==='brute'){cc(0,-R+1,6.5,'#7d848b');cc(0,R-1,6.5,'#7d848b');cc(-1.5,-R-.5,2.4,'#aab2b9');cc(-1.5,R-2.5,2.4,'#aab2b9');}
+  else if(id==='brute'){cc(0,-RB+1,6.5,'#7d848b');cc(0,RB-1,6.5,'#7d848b');cc(-1.5,-RB-.5,2.4,'#aab2b9');cc(-1.5,RB-2.5,2.4,'#aab2b9');}
   else if(id==='bandit'){cc(-13,0,6.5,'#8a6a3a');rc(-8.5,-1.5,3,3,'#d9c46a');cc(-14,-1,1.8,'#ffd23f');}
   else if(id==='bastion'){rc(-16,-9,5,18,'#8f9aa3');cc(-13.5,-5,.9,'#3f4b55');cc(-13.5,5,.9,'#3f4b55');}
   else if(id==='trapper'){cc(-12,0,5.5,'#2c3136');cc(-12,0,2,'#ff3d3d');for(let i=0;i<4;i++){const a=i*1.57+.78;cc(-12+Math.cos(a)*6.4,Math.sin(a)*6.4,1.2,'#2c3136');}}
-  else if(id==='hawk'){poly('#b5dcf5',-2,-R+1,-13,-R-5,-9,-R+5);poly('#b5dcf5',-2,R-1,-13,R+5,-9,R-5);}
+  else if(id==='hawk'){poly('#b5dcf5',-2,-RB+1,-13,-RB-5,-9,-RB+5);poly('#b5dcf5',-2,RB-1,-13,RB+5,-9,RB-5);}
   else if(id==='shade')poly('#8f6bff',-8,-3,-20,-5,-16,0,-20,5,-8,3);
   else if(id==='boom'){for(const y of [-6,-1.5,3])rc(-17,y,12,3,'#d2452b');rc(-12,-7,2,14,'#f2ecd9');cc(-18,0,1.7,'#ffd23f');}
   else if(id==='frost'){ctx.strokeStyle='#e0f6ff';ctx.lineWidth=1.6;for(let i=0;i<3;i++){const a=i*Math.PI/3;ctx.beginPath();ctx.moveTo(-9+Math.cos(a)*5.5,Math.sin(a)*5.5);ctx.lineTo(-9-Math.cos(a)*5.5,-Math.sin(a)*5.5);ctx.stroke();}}
@@ -2695,7 +3024,14 @@ function brHead(id,o){ /* cabeca / cara: formato e acessorios proprios */
   else if(id==='boom'){ctx.strokeStyle='#f2ecd9';ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(0,-9);ctx.lineTo(0,9);ctx.stroke();cc(0,-9,3.6,'#f2ecd9');cc(0,9,3.6,'#f2ecd9');}
   else if(id==='mirage'){cc(-5,-10,5,'rgba(255,211,63,.35)');cc(-5,10,5,'rgba(255,211,63,.35)');}
   if(id==='rex'||id==='fury'){ctx.strokeStyle=id==='fury'?'#6e1f1c':'#2a1a0d';ctx.lineWidth=1.3;ctx.beginPath();ctx.moveTo(5.5,-4);ctx.lineTo(8.5,-2);ctx.moveTo(5.5,4);ctx.lineTo(8.5,2);ctx.stroke();}
-  if(id!=='bandit'&&id!=='shade'&&id!=='hawk'&&id!=='zen'){cc(6.8,-2.3,1.1,'#1d1d1f');cc(6.8,2.3,1.1,'#1d1d1f');}
+  const VV=VIS[id]||VIS.rex;
+  if(id!=='bandit'&&id!=='shade'&&id!=='hawk'&&id!=='zen'){cc(6.8,-VV.eg,VV.er,VV.ec);cc(6.8,VV.eg,VV.er,VV.ec);}
+  {const m=VV.mo;ctx.strokeStyle='#7a3a22';ctx.lineWidth=1;
+   if(m==='smile'||m==='grin'||m==='smirk'||m==='blue'){ctx.strokeStyle=m==='blue'?'#3a6fb0':'#7a3a22';ctx.beginPath();ctx.moveTo(8.6,-1.7);ctx.lineTo(8.6,1.7);ctx.stroke();}
+   else if(m==='open')cc(8.6,0,1.2,'#7a2030');
+   else if(m==='teeth')rc(8,-1.7,1.6,3.4,'#ffffff');
+   else if(m==='fangs'){cc(8.6,-1.5,.8,'#ffffff');cc(8.6,1.5,.8,'#ffffff');}
+   else if(m==='scowl'||m==='flat'){ctx.beginPath();ctx.moveTo(8.6,-1.2);ctx.lineTo(8.6,1.2);ctx.stroke();}}
   ctx.restore();
 }
 const TP=[['#2f6b3a','#3a7d44','#4c9455'],['#2c5a4a','#357062','#4a8c7a']];
@@ -3086,9 +3422,10 @@ function sv(){
   lastPush=pushLb();
   return ok;
 }
-let lastPush=Promise.resolve('skip'),PRE_OFF=false;
+let lastPush=Promise.resolve('skip'),PRE_OFF=false,PROF_OFF=false;
 /* envia o prestigio mais alto para a coluna 'pre' do ranking (se a coluna nao existir, falha em silencio e deixa de tentar) */
 let pushPreT=0;
+function pushPre0(){lastPush=pushLb();}
 function pushPre(){if(!acc||!tpOn()||Date.now()-pushPreT<60000)return;pushPreT=Date.now();try{rpc('rr_tp_get',srvIdent()).catch(()=>{});}catch(e){}}
 async function use(n){try{return window.claude?await window.claude.use(n):null;}catch(e){return null;}}
 const SB={url:'https://qbnomfpbdkegqywcsdhr.supabase.co',key:'sb_publishable_VX0-W2vuiENv-dlipCaErQ_aWvCrjb_'},VER=1;
@@ -3129,11 +3466,11 @@ async function srvSync(force){
   srvBusy=false;srvLast=Date.now();return SRVON;
 }
 async function srvMatch(k,win,secs){const s=await rpc('rr_match',Object.assign({p_kills:k,p_win:!!win,p_secs:secs},srvIdent()));applySrv(s);return s.earned||0;}
-/* ---------- servidor: trofeus, brawlers e caixas (v9.4) ---------- */
+/* ---------- servidor: trofeus, soldiers e caixas (v9.4) ---------- */
 let TPKEY='',tpBusy=false,tpOps=0,bxBusy=false;
 const tpOn=()=>!!acc&&TPKEY==='u:'+acc.user.toLowerCase();
 const tpNet=e=>e instanceof TypeError;
-function tpAdopt(tp){if(!acc||!tp)return;acc.tp=normTp(tp);acc.ts=tpSig(acc.tp);sv();refreshBox();}
+function tpAdopt(tp){if(!acc||!tp)return;acc.tp=normTp(tp);acc.ts=tpSig(acc.tp);sv();refreshBox();try{if(!$('prof').hidden&&acc)profTro();}catch(e){}}
 async function tpCall(fn,args){tpOps++;try{return await rpc(fn,Object.assign({},args,srvIdent()));}finally{tpOps--;}}
 async function tpSync(id){
   if(!acc||tpBusy||tpOps>0)return tpOn();
@@ -3184,16 +3521,31 @@ async function cloudGet(key){try{const d=await cdoc(key);if(!d)return null;const
 const nst=s=>{s=s||{};const n=k=>+s[k]||0;return {games:n('games'),wins:n('wins'),kills:n('kills'),best:n('best'),rg:n('rg'),rw:n('rw'),rk:n('rk'),rp:n('rp'),pk:n('pk')};};
 function figs(box,rows){box.textContent='';for(const r of rows){const d=document.createElement('div'),b=document.createElement('b'),sp=document.createElement('span');b.textContent=r[1];sp.textContent=r[0];d.append(b,sp);box.appendChild(d);}}
 function statRows(s){const d=Math.max(1,s.games-s.wins);return [['rank pts',s.rp],['games',s.games],['wins',s.wins],['kills',s.kills],['K/D',(s.kills/d).toFixed(2)],['best place',s.best?'#'+s.best:'-'],['ranked games',s.rg],['ranked wins',s.rw],['ranked kills',s.rk],['peak RP',s.pk]];}
-function pvShow(v){const s=nst(v);$('pvN').textContent=String(v.name||'Player');rankSet($('pvR'),rankOf(s.rp),s.rp,34);figs($('pvF'),statRows(s));fillProfile($('pvC'),$('pvEq'),eqOf(v));show('pv');}
+function pvShow(v){
+  const st=nst(v),pp=parseProf(v),mine=!!v.mine&&!!acc;
+  let d;
+  if(mine)d=Object.assign(ownProfData(),{mine:false});
+  else d=Object.assign(pp||{fav:'rex',t:{},un:['rex']},{tro:Math.max(0,+v.tro||0),st,mine:false});
+  if(mine)d.st=st;
+  $('qName').textContent=String(v.name||'Player');
+  $('qNote').hidden=!!pp||mine;
+  pAllM.q=false;pvLast=d;profFill('q',d);eqTiles($('qEq'),mine?getCos().eq:eqOf(v));
+  $('pv').scrollTop=0;show('pv');
+}
 $('pvBack').addEventListener('click',()=>show('lb'));
 async function pushLb(){
   if(!acc)return 'skip';
   await cloudSave();
   if(sbOn()){
     try{
-      const pu=sbU('?on_conflict=name'),ph=Object.assign(sbH(),{Prefer:'resolution=merge-duplicates,return=minimal'}),pb=v=>JSON.stringify({name:acc.user,wins:acc.st.wins,kills:acc.st.kills,games:acc.st.games,rp:+acc.st.rp||0,ver:v});
-      let r=await fetch(pu,{method:'POST',headers:ph,body:pb(eqPack(getCos().eq))});
-      if(!r.ok)r=await fetch(pu,{method:'POST',headers:ph,body:pb(VER)});
+      const pu=sbU('?on_conflict=name'),ph=Object.assign(sbH(),{Prefer:'resolution=merge-duplicates,return=minimal'}),base={name:acc.user,wins:acc.st.wins,kills:acc.st.kills,games:acc.st.games,rp:+acc.st.rp||0};
+      const tries=[];if(!PROF_OFF)tries.push(Object.assign({},base,{ver:eqPack(getCos().eq),prof:JSON.stringify(profPack())}));
+      tries.push(Object.assign({},base,{ver:eqPack(getCos().eq)}),Object.assign({},base,{ver:VER}));
+      let r=null;
+      for(let i=0;i<tries.length;i++){
+        r=await fetch(pu,{method:'POST',headers:ph,body:JSON.stringify(tries[i])});
+        if(r.ok){if(i>0&&!PROF_OFF&&tries.length===3)PROF_OFF=true;break;}
+      }
       if(r.ok){pushPre();return 'ok';}
       let t='';try{t=(await r.json()).message||'';}catch(e){}
       sbErr=r.status+(t?': '+t:'');return 'fail';
@@ -3203,7 +3555,7 @@ async function pushLb(){
     const db=await use('db'),user=await use('user');
     if(!db||!user||!user.id)return 'off';
     const id=await user.id();if(!id)return 'off';
-    await db.doc('leaderboard/'+id).set(Object.assign({name:acc.user,ver:VER,eq:getCos().eq,t:Date.now(),pre:preMax(),tro:trTotal()},nst(acc.st)));
+    await db.doc('leaderboard/'+id).set(Object.assign({name:acc.user,ver:VER,eq:getCos().eq,t:Date.now(),pre:preMax(),tro:trTotal(),prof:profPack()},nst(acc.st)));
     return 'ok';
   }catch(e){return 'fail';}
 }
@@ -3213,12 +3565,13 @@ async function lbLoad(){
   try{
     let rows;
     if(sbOn()){
-      let r=PRE_OFF?null:await fetch(sbU('?select=name,wins,kills,games,rp,ver,pre,tro&order='+lbTab+'.desc,name.asc&limit=20'),{headers:sbH()});
-      if(!r||!r.ok){
-        if(r)PRE_OFF=true;
-        if(lbTab==='tro'){box.textContent='The trophies leaderboard is not ready on the server yet. Run the v9.4 SQL in Supabase, or use the Ranked tab for now.';return;}
-        r=await fetch(sbU('?select=name,wins,kills,games,rp,ver&order='+lbTab+'.desc,name.asc&limit=20'),{headers:sbH()});
-      }
+      const sel=()=>'name,wins,kills,games,rp,ver'+(PRE_OFF?'':',pre,tro')+(PROF_OFF?'':',prof');
+      const get=()=>fetch(sbU('?select='+sel()+'&order='+lbTab+'.desc,name.asc&limit=20'),{headers:sbH()});
+      const noTro='The trophies leaderboard is not ready on the server yet. Run the v9.4 SQL in Supabase, or use the Ranked tab for now.';
+      if(PRE_OFF&&lbTab==='tro'){box.textContent=noTro;return;}
+      let r=await get();
+      if(!r.ok&&!PROF_OFF){PROF_OFF=true;r=await get();}
+      if(!r.ok&&!PRE_OFF){PRE_OFF=true;if(lbTab==='tro'){box.textContent=noTro;return;}r=await get();}
       if(!r.ok)throw 0;
       rows=(await r.json()).map(v=>Object.assign({mine:!!acc&&v.name===acc.user},v));
     }else{
@@ -3265,10 +3618,10 @@ const pMsg=(err,ok)=>{$('pErr').textContent=err||'';$('pOk').textContent=ok||'';
 function pView(){setTimeout(()=>srvSync(false),0);
   refreshMode();refreshCoins();
   $('pPass').type='password';$('pEye').textContent='SHOW';$('pEye').setAttribute('aria-pressed','false');
-  $('pOut').hidden=!!acc;$('pIn').hidden=!acc;
+  $('pOut').hidden=!!acc;$('pIn').hidden=!acc;$('profPanel').style.maxWidth=acc?'960px':'';
   $('profBtn').textContent=acc?'PROFILE · '+acc.user:'PROFILE';
   if(acc){
-    const s=acc.st;$('pName').textContent=acc.user;fillProfile($('pCv'),$('pEq'),getCos().eq,curB());$('pShow').type='password';$('pShowBtn').textContent=acc.pw?'SHOW':'SAVE';$('pShow').readOnly=!!acc.pw;$('pShow').value=acc.pw||'';$('pShow').placeholder=acc.pw?'':'Type your password once to save it';rankSet($('pRank'),rankOf(s.rp),s.rp,34);figs($('pFigs'),statRows(s));
+    const s=acc.st;$('pName').textContent=acc.user;eqTiles($('pEq'),getCos().eq);$('pShow').type='password';$('pShowBtn').textContent=acc.pw?'SHOW':'SAVE';$('pShow').readOnly=!!acc.pw;$('pShow').value=acc.pw||'';$('pShow').placeholder=acc.pw?'':'Type your password once to save it';rankSet($('pRank'),rankOf(s.rp),s.rp,40);figs($('pFigs'),statRows(s).filter(r=>r[0]!=='wins'&&r[0]!=='kills'));profTro();
     $('pShow').parentElement.hidden=!!acc.gid;
     $('nameRow').hidden=!acc.gid;if(acc.gid)$('nName').value=acc.user;
   }else{
