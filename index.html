@@ -180,6 +180,7 @@ input:focus-visible{outline:3px solid var(--flare);outline-offset:1px}
 .lp{flex:0 0 auto;width:min(280px,100%);box-sizing:border-box;background:var(--panel);border-radius:14px;padding:16px;display:flex;flex-direction:column;gap:12px}
 .lp .lt{font-family:var(--f-d);font-size:26px;text-align:center;margin:0}.lp .btn{width:100%;box-sizing:border-box}
 #modeBtn{display:flex;flex-direction:column;gap:2px;align-items:center;font-size:16px;padding:10px}#modeBtn small{font:700 11px var(--f-b);letter-spacing:.1em;text-transform:uppercase}
+.trbar{position:relative;width:min(260px,90%);height:22px;box-sizing:border-box;background:rgba(0,0,0,.5);border:2px solid rgba(242,236,217,.3);border-radius:8px;overflow:hidden}.trbar[hidden]{display:none}.trbar i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--flare-d),var(--flare));transition:width .3s}.trbar span{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font:700 11px/1 var(--f-b);letter-spacing:.06em;color:#fff;text-shadow:0 1px 0 rgba(0,0,0,.85);font-variant-numeric:tabular-nums;white-space:nowrap}
 .stagec{flex:1 1 200px;display:flex;flex-direction:column;align-items:center;gap:6px}
 #prev{height:min(58vh,420px);width:auto;aspect-ratio:180/260;filter:drop-shadow(0 12px 14px rgba(0,0,0,.45))}
 #mErr,#mdErr{margin:0;min-height:16px;color:#ff9cc3;font-size:13px;text-align:center}
@@ -380,7 +381,7 @@ input:focus-visible{outline:3px solid var(--flare);outline-offset:1px}
   <section id="menu" class="screen">
     <div class="lobby">
       <div class="lp">
-        <p class="kick" style="text-align:center">RRoyal · v11.3</p>
+        <p class="kick" style="text-align:center">RRoyal · v1.0</p>
         <h3 class="lt">BATTLE ROYALE</h3>
         <button id="modeBtn" class="btn alt" type="button"><span id="modeT">RANKED: OFF</span><small id="modeS">Solo</small></button>
         <button id="play" class="btn big" type="button">PLAY</button>
@@ -388,7 +389,7 @@ input:focus-visible{outline:3px solid var(--flare);outline-offset:1px}
         <button id="bxMenu" class="bxm" type="button" hidden><span class="bxmw"><span class="bxmi"><span class="bxmic"><i id="bxmSI"></i></span><b id="bxmS" class="bxmn">0</b><span class="bxml">Small box</span><span class="bxbar"><i id="bxmSBar"></i></span><span id="bxmST" class="bxmt"></span></span><span class="bxmi big"><span class="bxmic"><i id="bxmBI"></i></span><b id="bxmB" class="bxmn">0</b><span class="bxml">Big box</span><span class="bxbar"><i id="bxmBar"></i></span><span id="bxmT" class="bxmt"></span></span></span></button>
         <div id="gwrap2" hidden style="display:flex;justify-content:center"><div id="gbtn2"></div></div>
       </div>
-      <div class="stagec"><div id="lobName" class="rk" style="font-size:22px"></div><canvas id="prev" width="360" height="520"></canvas></div>
+      <div class="stagec"><div id="lobName" class="rk" style="font-size:22px"></div><div id="lobTr" class="trbar" hidden><i id="lobTrF"></i><span id="lobTrT"></span></div><canvas id="prev" width="360" height="520"></canvas></div>
     </div>
   </section>
 
@@ -511,32 +512,35 @@ input:focus-visible{outline:3px solid var(--flare);outline-offset:1px}
       <p class="kick">Changelog</p>
       <h2>What's new</h2>
       <div class="form">
-        <div class="nv"><b>v11.3</b><ul>
+        <div class="nv"><b>v1.0</b><ul>
+          <li>RRoyal is finally released! Everyone can now play it freely.</li>
+        </ul></div>
+        <div class="nv"><b>v11.3 (test version)</b><ul>
           <li>New: trophy animation at the end of a Solo, Duos or Squads match. Your soldier faces the screen and the trophies count up (or down) with a bar, like the rank animation in Ranked.</li>
           <li>Before Prestige 1 the bar fills from 0 to 1000 (for example 178 up to 1000). When it reaches 1000 the badge flashes and the Prestige 1 badge appears.</li>
           <li>From Prestige 1 on, the bar uses the colour of your prestige and fills towards the next one (for example 1300 = 300 of 1000 on the way to Prestige 2).</li>
         </ul></div>
-        <div class="nv"><b>v11.2</b><ul>
+        <div class="nv"><b>v11.2 (test version)</b><ul>
           <li>Change: in Duos and Squads the place trophies now depend on the place of your team among the teams left (50 duos, 25 squads), using the same table as Solo for each prestige. The reduction (half in Duos, a quarter in Squads) is gone, and the trophies for eliminations are now the full ones, still counting only your first 10 eliminations.</li>
           <li>Place columns: Duos 1st, 2nd-3rd, 4th-10th, 11th-20th, 21st-30th, 31st-40th, 41st-50th. Squads 1st, 2nd-3rd, 4th-7th, 8th-12th, 13th-17th, 18th-21st, 22nd-25th.</li>
         </ul></div>
-        <div class="nv"><b>v11.1</b><ul>
+        <div class="nv"><b>v11.1 (test version)</b><ul>
           <li>New: on iPhone you can now add RRoyal to the home screen and it opens full screen, without the Safari bar. Open the game in Safari, tap Share, then "Add to Home Screen". It also has its own icon (a battle bus with a balloon).</li>
         </ul></div>
-        <div class="nv"><b>v11.0</b><ul>
+        <div class="nv"><b>v11.0 (test version)</b><ul>
           <li>New: version 11. This version brings together the pre-match lobby (10 seconds of waiting where everyone is immune and the players start spread out, with an animated battle bus countdown) and the new battle bus with a hot air balloon on top, which replaces the plane.</li>
         </ul></div>
-        <div class="nv"><b>v10.3</b><ul>
+        <div class="nv"><b>v10.3 (test version)</b><ul>
           <li>Change: the plane is gone. You now jump from a blue battle bus with a big colorful hot air balloon on top, with its own shadow on the ground.</li>
         </ul></div>
-        <div class="nv"><b>v10.2</b><ul>
+        <div class="nv"><b>v10.2 (test version)</b><ul>
           <li>Change: in the pre-match lobby the players now start much more spread out, so you are not in the middle of a crowd.</li>
           <li>Change: the lobby now only shows the battle bus message, with an animated bus driving along a track and a big countdown that pops every second. The extra text about immunity is gone.</li>
         </ul></div>
-        <div class="nv"><b>v10.1</b><ul>
+        <div class="nv"><b>v10.1 (test version)</b><ul>
           <li>New: pre-match lobby, like Fortnite. At the start of every match there are 10 seconds of waiting for the battle bus. You can move and fight (pickaxe and soldier active), but everyone is immune and nobody takes damage. Chests and loot are locked until the bus arrives. A blue ring shows the immunity and the top message shows the countdown.</li>
         </ul></div>
-        <div class="nv"><b>v10.0</b><ul>
+        <div class="nv"><b>v10.0 (test version)</b><ul>
           <li>Change: skins are gone. The Outfits tab is removed from the LOCKER and the ITEM SHOP, and profiles no longer show an outfit. Your look is now the one of your chosen soldier.</li>
           <li>Change: "Brawlers" are now called "Soldiers" everywhere.</li>
           <li>New: 15 soldiers (Rex, Spark, Doc, Brute, Bandit, Zen, Bastion, Trapper, Hawk, Fury, Shade, Boom, Frost, Breeze, Mirage), each with its own face, size, body shape, skin and colors, rarity, passive and active. The look shows in the menu, in the cards and in the match.</li>
@@ -566,11 +570,11 @@ input:focus-visible{outline:3px solid var(--flare);outline-offset:1px}
           <li>Change: the Battle Pass level 150 reward is now 100 coins instead of the Champion skin.</li>
           <li>Fix: coins from boxes, prestiges and chests found on the map are no longer lost when the game syncs with the server.</li>
         </ul></div>
-        <div class="nv"><b>v8.1</b><ul>
+        <div class="nv"><b>v8.1 (test version)</b><ul>
           <li>New: every chest you open has a 1% chance to hold 10 coins. They burst out of the chest with a sound and go straight to your balance, so you can spend them in the ITEM SHOP.</li>
           <li>New: the game now asks you to rotate your phone to landscape as soon as it opens.</li>
         </ul></div>
-        <div class="nv"><b>v8.0</b><ul>
+        <div class="nv"><b>v8.0 (test version)</b><ul>
           <li>Change: the storm now hurts more the farther you are from the safe zone.</li>
           <li>New: ammo. Bullets are picked up automatically when you walk over them, and reloading uses them. Found in chests, buildings and around the map. You start with 60.</li>
           <li>New: on mobile, press and hold the aim stick without sliding to autofire at the nearest enemy, aiming where it was 200 ms ago. Slide it to aim by hand as before.</li>
@@ -579,7 +583,7 @@ input:focus-visible{outline:3px solid var(--flare);outline-offset:1px}
           <li>New: weapons you are not holding reload on their own.</li>
           <li>Change: the Shotgun reloads one shell at a time, and you can fire while it reloads.</li>
         </ul></div>
-        <div class="nv"><b>v7.0</b><ul>
+        <div class="nv"><b>v7.0 (test version)</b><ul>
           <li>New: accessories. A new slot (key 5) holds an accessory, which is not a weapon or a heal.</li>
           <li>New: the Hair dryer, the first accessory. It blows wind and pushes you the opposite way you aim, so you can use it to move. It also pushes bots in front of you. Found in chests and around the map.</li>
           <li>New: round buttons on mobile to swap Pickaxe / weapon and weapon / accessory. They can be moved and resized in HUD LAYOUT.</li>
@@ -587,95 +591,95 @@ input:focus-visible{outline:3px solid var(--flare);outline-offset:1px}
           <li>Fix: you can now swap a weapon for the same weapon with a different rarity.</li>
           <li>Fix: HUD LAYOUT now brings buttons that were off the screen back into view.</li>
         </ul></div>
-        <div class="nv"><b>v6.0</b><ul>
+        <div class="nv"><b>v6.0 (test version)</b><ul>
           <li>New: houses have roofs, so you cannot see inside until you walk in. The roof fades away when you enter, and bots and loot inside stay hidden from outside.</li>
           <li>New: rooms inside houses, with furniture, and bigger hotels with a lobby desk, several rooms and extra chests.</li>
           <li>New: cities and towns have streets and a hotel, and roads link the places on the map. Roads show on the minimap.</li>
           <li>Fix: the RELOAD button can now be moved and resized in HUD LAYOUT, like the other buttons.</li>
           <li>Ranked: the map is now twice as big, with 12 new places, including 3 more cities, a resort and more towns.</li>
         </ul></div>
-        <div class="nv"><b>v5.8</b><ul>
+        <div class="nv"><b>v5.8 (test version)</b><ul>
           <li>Fix: the game no longer pauses when you switch to another tab or window on PC. The match keeps running in the background, with the sound muted.</li>
         </ul></div>
-        <div class="nv"><b>v5.7</b><ul>
+        <div class="nv"><b>v5.7 (test version)</b><ul>
           <li>New: a white aim line shows how far your weapon reaches. The shotgun shows its spread as an angle.</li>
         </ul></div>
-        <div class="nv"><b>v5.6</b><ul>
+        <div class="nv"><b>v5.6 (test version)</b><ul>
           <li>Security: coins, Battle Pass XP, daily missions, rewards, shop purchases and equipped items are now validated and saved on the server. Editing your device does not change them.</li>
         </ul></div>
-        <div class="nv"><b>v5.5</b><ul>
+        <div class="nv"><b>v5.5 (test version)</b><ul>
           <li>Security: coins, Battle Pass progress, items and stats are now signed. If saved data or an exported account file is edited, it is detected and reset.</li>
         </ul></div>
-        <div class="nv"><b>v5.4</b><ul>
+        <div class="nv"><b>v5.4 (test version)</b><ul>
           <li>Change: in Duos and Squads you can no longer be revived once the final zone has closed. A revive timer that already started keeps counting.</li>
         </ul></div>
-        <div class="nv"><b>v5.3</b><ul>
+        <div class="nv"><b>v5.3 (test version)</b><ul>
           <li>Balance: SMG damage x1.3, Rifle damage x1.3, Shotgun damage x2.0.</li>
         </ul></div>
-        <div class="nv"><b>v5.2</b><ul>
+        <div class="nv"><b>v5.2 (test version)</b><ul>
           <li>New: weapon rarities (Common, Uncommon, Rare, Epic, Legendary). Higher rarity means more damage and faster reload. Chests give better odds.</li>
           <li>Change: teammate names are now red in Duos and Squads.</li>
           <li>Change: the Battle Pass has a BACK button at the top and live timers.</li>
         </ul></div>
-        <div class="nv"><b>v5.1</b><ul>
+        <div class="nv"><b>v5.1 (test version)</b><ul>
           <li>New: free BATTLE PASS with 150 levels (100 XP each) and a season timer that ends on 1 Jan 2027, 00:00 Germany.</li>
           <li>New: 3 daily missions (1 x 150 XP, 2 x 50 XP) that reset at 0:00 Germany time.</li>
           <li>New: XP from 1 per kill and 15 per win. Rewards include sprays, a few coins, a pickaxe at level 50 and a skin at level 150.</li>
           <li>Change: coins are now earned only through the Battle Pass.</li>
         </ul></div>
-        <div class="nv"><b>v5.0</b><ul>
+        <div class="nv"><b>v5.0 (test version)</b><ul>
           <li>New: Fortnite-style main menu with PLAY, LOCKER, ITEM SHOP, LEADERBOARD and SETTINGS. Pick your mode next to PLAY and see your skin in the lobby.</li>
           <li>New: the LOCKER only equips what you own and the ITEM SHOP is where you spend coins.</li>
           <li>New: profiles (yours and other players' on the leaderboard) show the equipped outfit, pickaxe, glider, spray, weapon color and elimination effect.</li>
           <li>Changed: you choose PC or MOBILE once when the game opens (change it in SETTINGS), not before each match.</li>
         </ul></div>
-        <div class="nv"><b>v4.3</b><ul>
+        <div class="nv"><b>v4.3 (test version)</b><ul>
           <li>New: game coins. You earn them after every match (kills, placement and time survived, more in Ranked).</li>
           <li>New: LOCKER. Buy and equip outfits, pickaxes, gliders, sprays, weapon colors and elimination effects.</li>
           <li>New: sprays in match (T on PC, SPRAY button on mobile, rebindable in SETTINGS). Everyone starts with the RRoyal spray.</li>
           <li>New: every player now shows their name above their character, and bots get random names each match.</li>
         </ul></div>
-        <div class="nv"><b>v4.2</b><ul>
+        <div class="nv"><b>v4.2 (test version)</b><ul>
           <li>New: KEYBINDS is now SETTINGS. You can rebind the controller buttons there (click an action, then press the new button on your pad), and turn Auto heal ON or OFF.</li>
         </ul></div>
-        <div class="nv"><b>v4.1</b><ul>
+        <div class="nv"><b>v4.1 (test version)</b><ul>
           <li>New: controller support on PC and phone (Xbox, PlayStation and most Bluetooth or USB pads). Left stick moves, right stick aims and shoots, RT shoots, A jumps and picks up, B builds a wall, X reloads, Y swaps Pickaxe and weapon, LB uses a Med kit, RB uses a Shield, Back opens the map. Press any button once so the browser detects the pad.</li>
         </ul></div>
-        <div class="nv"><b>v4.0</b><ul>
+        <div class="nv"><b>v4.0 (test version)</b><ul>
           <li>New: rank animation at the end of a Ranked match. Your soldier faces the screen, the RP counts up or down next to your badge, and when your rank changes the badge flashes and swaps.</li>
         </ul></div>
-        <div class="nv"><b>v3.9</b><ul>
+        <div class="nv"><b>v3.9 (test version)</b><ul>
           <li>New: auto heal. Your Med kit is used on its own when your health drops below 50, and a Shield when your shield is at 50 or less. It stops when you shoot or swing, and starts again when you stop.</li>
         </ul></div>
-        <div class="nv"><b>v3.8</b><ul>
+        <div class="nv"><b>v3.8 (test version)</b><ul>
           <li>New (PC): scroll the mouse wheel to switch between the Pickaxe and your weapon. You can also click the slots of the item bar with the mouse.</li>
         </ul></div>
-        <div class="nv"><b>v3.7</b><ul>
+        <div class="nv"><b>v3.7 (test version)</b><ul>
           <li>New: every rank has its own badge (Wood, Stone, Bronze, Silver, Gold, Platinum, Master, Champion). It shows in your Profile, in other players' profiles and next to every name on the leaderboard. The 3 dots under the badge show your division.</li>
         </ul></div>
-        <div class="nv"><b>v3.6</b><ul>
+        <div class="nv"><b>v3.6 (test version)</b><ul>
           <li>New: Med kits and Shields are picked up automatically when you walk over them (up to 3 of each).</li>
           <li>New: damage numbers pop up when you hit an enemy. A red bigger number means a kill.</li>
           <li>Fix: the Shield and Med kit counts in the item bar were cut off. They now show clearly (x0 to x3) with the name below.</li>
         </ul></div>
-        <div class="nv"><b>v3.5</b><ul>
+        <div class="nv"><b>v3.5 (test version)</b><ul>
           <li>New: weapon panel above the item bar with the weapon name, bullets left and a RELOADING status with a progress bar.</li>
           <li>New: the Shield and HP bars now show their exact numbers.</li>
         </ul></div>
-        <div class="nv"><b>v3.4</b><ul>
+        <div class="nv"><b>v3.4 (test version)</b><ul>
           <li>New: if you sign in with Google, you can change your name any time in your Profile. Names already taken are blocked.</li>
         </ul></div>
-        <div class="nv"><b>v3.3</b><ul>
+        <div class="nv"><b>v3.3 (test version)</b><ul>
           <li>New: the online leaderboard now works on the website, and it saves your rank points for the Ranked tab.</li>
         </ul></div>
-        <div class="nv"><b>v3.2</b><ul>
+        <div class="nv"><b>v3.2 (test version)</b><ul>
           <li>New: sign in with Google from your Profile, no password needed.</li>
         </ul></div>
-        <div class="nv"><b>v3.1</b><ul>
+        <div class="nv"><b>v3.1 (test version)</b><ul>
           <li>Fix: in Ranked, some players stayed counted as alive at the end even though they were not in the match. The plane now only leaves once everyone has jumped.</li>
           <li>New: in your Profile you can see your password with a SHOW button, in case you forget it. If it is empty, type your password once to save it.</li>
         </ul></div>
-        <div class="nv"><b>v3.0</b><ul>
+        <div class="nv"><b>v3.0 (test version)</b><ul>
           <li>New: PLAY now asks for Ranked or Quick Match.</li>
           <li>Ranked Battle Royale: 100 players on a map about 5x bigger, with 8 ranks (Wood, Stone, Bronze, Silver, Gold, Platinum, Master, Champion), 3 divisions each. The higher you are, the less you gain and the more you lose.</li>
           <li>Leaderboard has a Ranked tab. Tap any player to open their full profile and stats.</li>
@@ -686,30 +690,30 @@ input:focus-visible{outline:3px solid var(--flare);outline-offset:1px}
           <li>Trees are now solid. They block movement and bullets, so use them as cover.</li>
           <li>Fix: logging in with the right password now works, including on another device.</li>
         </ul></div>
-        <div class="nv"><b>v2.0</b><ul>
+        <div class="nv"><b>v2.0 (test version)</b><ul>
           <li>Weapons now come in chests. Walk up to a chest to open it and grab what drops. Chests glow gold on the map and the minimap until opened.</li>
           <li>Bigger map (about 30% larger) with 9 villages of different sizes, plus lone houses.</li>
           <li>Trees added for style, just decoration, so they never block you.</li>
           <li>The shotgun has a new pump-action design, with a barrel, magazine tube and wooden pump.</li>
           <li>Fix: bots no longer get stuck on rocks, and rocks are spaced so no pockets can trap anyone.</li>
         </ul></div>
-        <div class="nv"><b>v1.4</b><ul>
+        <div class="nv"><b>v1.4 (test version)</b><ul>
           <li>New: HUD LAYOUT in the main menu. Drag the MOVE and AIM / FIRE sticks, the jump, pick-up and wall buttons, the item bar, the minimap and the info panel anywhere, and resize each one. Your layout is saved on your device.</li>
         </ul></div>
-        <div class="nv"><b>v1.3</b><ul>
+        <div class="nv"><b>v1.3 (test version)</b><ul>
           <li>New: a SHOW / HIDE button next to the password field when you create an account or log in.</li>
         </ul></div>
-        <div class="nv"><b>v1.2</b><ul>
+        <div class="nv"><b>v1.2 (test version)</b><ul>
           <li>Fix: bots no longer shoot at you before they are on your screen.</li>
         </ul></div>
-        <div class="nv"><b>v1.1</b><ul>
+        <div class="nv"><b>v1.1 (test version)</b><ul>
           <li>New main skin: an original soldier with blond hair, scarf, tactical vest, red armband and backpack.</li>
           <li>Bots got their own look, with different hair and vest colors.</li>
           <li>Weapons redrawn with a 3D look: shading, highlights, scopes, magazines and wooden stocks.</li>
           <li>Weapons on the ground are bigger and glow in their tier color.</li>
           <li>Version label and this What's new screen.</li>
         </ul></div>
-        <div class="nv"><b>v1.0</b><ul>
+        <div class="nv"><b>v1.0 (test version)</b><ul>
           <li>Launch: 2D battle royale for 20 players, with Solo, Duos and Squads.</li>
           <li>Bots no longer get stuck inside houses.</li>
           <li>Teammate revive in Duos (15 s) and Squads (30 s) while an ally is alive.</li>
@@ -903,8 +907,9 @@ const DRY={acc:300,max:110,push:217,range:230,cone:.5};
 const RAR=[{n:'Common',d:1,r:1,c:'#c9d1d6'},{n:'Uncommon',d:1.1,r:.9,c:'#5ee08a'},{n:'Rare',d:1.2,r:.8,c:'#4fb4ff'},{n:'Epic',d:1.35,r:.7,c:'#b78bff'},{n:'Legendary',d:1.5,r:.6,c:'#ffb81c'}];
 function rollR(ch){const w=ch?[45,28,16,8,3]:[60,25,10,4,1];let r=Math.random()*100;for(let i=0;i<5;i++){r-=w[i];if(r<=0)return i;}return 0;}
 const itemName=k=>LN[k]||WP[k].n;
-const PH=[{r:1900,wait:35,shrink:28,dps:1.5},{r:1250,wait:25,shrink:25,dps:3},{r:740,wait:22,shrink:22,dps:5},{r:400,wait:18,shrink:18,dps:8},{r:170,wait:14,shrink:14,dps:12},{r:52,wait:10,shrink:12,dps:18}];
-const PHR=PH.map(p=>({r:Math.round(p.r*3.1),wait:Math.round(p.wait*1.4),shrink:Math.round(p.shrink*1.9),dps:p.dps}));
+const PH=[{r:1900,wait:12,shrink:9,dps:1.5},{r:1250,wait:8,shrink:8,dps:3},{r:740,wait:7,shrink:7,dps:5},{r:400,wait:6,shrink:6,dps:8},{r:170,wait:5,shrink:5,dps:12},{r:52,wait:3,shrink:4,dps:18}];
+const STORM_SPEED=3;
+const PHR=[{r:1900,wait:35,shrink:28,dps:1.5},{r:1250,wait:25,shrink:25,dps:3},{r:740,wait:22,shrink:22,dps:5},{r:400,wait:18,shrink:18,dps:8},{r:170,wait:14,shrink:14,dps:12},{r:52,wait:10,shrink:12,dps:18}].map(p=>({r:Math.round(p.r*3.1),wait:Math.max(3,Math.round(p.wait*1.4/STORM_SPEED)),shrink:Math.max(3,Math.round(p.shrink*1.9/STORM_SPEED)),dps:p.dps}));
 
 let lobT=0;const LOBBY=10;
 let state='menu',ents=[],P=null,bullets=[],loot=[],obs=[],builds=[],parts=[],dtx=[],feedL=[],plane=null,Z=null,spec=null;
@@ -1533,7 +1538,7 @@ $('brBack').addEventListener('click',()=>show('menu'));
 $('bdBack').addEventListener('click',()=>{brDraw();show('soldiers');});
 $('bdPick').addEventListener('click',()=>{if(!brCur||!brUnlocked(brCur))return;try{localStorage.setItem('rroyal-brawler',brCur.id);}catch(e){}brOpen(brCur);});
 $('ctlBtn').addEventListener('click',()=>show('ctrl'));
-function refreshMode(){try{if(ranked&&!acc)ranked=false;$('modeT').textContent='RANKED: '+(ranked?'ON':'OFF');$('modeS').textContent=ranked?'100 players · solo':({solo:'Solo · 100 players',duo:'Duos · 50 duos',squad:'Squads · 25 squads'})[tmode];$('lobName').textContent=playerName();$('gwrap2').hidden=!!acc||!$('gwrap2').dataset.ok;}catch(e){}}
+function refreshMode(){try{if(ranked&&!acc)ranked=false;$('modeT').textContent='RANKED: '+(ranked?'ON':'OFF');$('modeS').textContent=ranked?'100 players · solo':({solo:'Solo · 100 players',duo:'Duos · 50 duos',squad:'Squads · 25 squads'})[tmode];$('lobName').textContent=playerName();try{const tb=$('lobTr');tb.hidden=ranked;if(!ranked){const sb=curB(),tt=trOf(sb.id),m=tt%1000;$('lobTrF').style.width=(m/10)+'%';$('lobTrT').textContent='\uD83C\uDFC6 '+tt+' · '+(1000-m)+' to P'+(Math.floor(tt/1000)+1)+(acc?'':' · log in to earn');}}catch(e){}$('gwrap2').hidden=!!acc||!$('gwrap2').dataset.ok;}catch(e){}}
 $('play').addEventListener('click',()=>{if(ranked&&!acc){ranked=false;refreshMode();$('mErr').textContent='Log in to play Ranked.';return;}$('mErr').textContent='';startGame();});
 $('modeBtn').addEventListener('click',()=>{$('mdErr').textContent='';show('modes');});
 document.querySelectorAll('#modes .card').forEach(c=>c.addEventListener('click',()=>{const m=c.dataset.m;if(m==='ranked'){if(!acc){$('mdErr').textContent='Log in or create an account to play Ranked.';return;}ranked=true;tmode='solo';}else{ranked=false;tmode=m;}refreshMode();show('menu');}));
@@ -1673,7 +1678,7 @@ function drawRoofs(vx,vy,gr,vis){
     const inn=gr&&vx>b.x&&vx<b.x+b.w&&vy>b.y&&vy<b.y+b.h,a0=b.ra===undefined?1:b.ra;
     b.ra=a0+((inn?0:1)-a0)*k;
     if(b.ra<.02)continue;
-    const K=b.kind,col=K==='hotel'?'#35507a':K==='barn'?'#a33a2c':K==='city'?'#7d838c':K==='farm'?'#8f7a4a':K==='town'?'#9b6a4a':'#b5583c';
+    const K=b.kind,col=K==='hotel'?'#35507a':K==='barn'?'#a33a2c':K==='city'?cpal(b):K==='farm'?'#8f7a4a':K==='town'?'#9b6a4a':'#b5583c';
     ctx.save();ctx.globalAlpha=b.ra;
     ctx.fillStyle='rgba(0,0,0,.25)';ctx.fillRect(b.x+5,b.y+7,b.w,b.h);
     ctx.fillStyle=col;ctx.fillRect(b.x,b.y,b.w,b.h);
@@ -1690,15 +1695,17 @@ function drawRoofs(vx,vy,gr,vis){
   }
 }
 const HS=[[80,70],[110,90],[140,110],[170,130],[210,150],[250,180]];
+const HC=[[100,90],[130,100],[160,120],[120,150],[190,130],[150,100]];
+const CP=['#7d838c','#aeb4ba','#d9dde0','#5f666e'];const cpal=b=>CP[Math.abs(Math.floor(b.x*.37+b.y*.11))%4];
 const ovl=(a,b,m)=>!(a.x+a.w+m<b.x||a.x>b.x+b.w+m||a.y+a.h+m<b.y||a.y>b.y+b.h+m);
 function genMap(){
   roads=[];obs=[];grid=new Map();builds=[];loot=[];chests=[];trees=[];const A=W*H/17640000;
   const PLS=[
  {n:'Pine Hollow',k:'village',x:.2,y:.2,c:5,r:230},{n:'Red Barn',k:'barn',x:.5,y:.2,c:3,r:150},{n:'Northgate',k:'town',x:.8,y:.2,c:7,r:280},
- {n:'Sunny Farm',k:'farm',x:.2,y:.5,c:4,r:200},{n:'Rozin City',k:'city',x:.5,y:.5,c:12,r:360},{n:'Stonebridge',k:'town',x:.8,y:.5,c:7,r:280},
+ {n:'Sunny Farm',k:'farm',x:.2,y:.5,c:4,r:200},{n:'Rozin City',k:'city',x:.5,y:.5,c:34,r:520},{n:'Stonebridge',k:'town',x:.8,y:.5,c:7,r:280},
  {n:'Harbor Point',k:'village',x:.2,y:.8,c:5,r:230},{n:'Dusty Barn',k:'barn',x:.5,y:.8,c:3,r:150},{n:'Eagle Fort',k:'village',x:.8,y:.8,c:5,r:230},
  {n:'Maple Town',k:'town',x:.35,y:.35,c:7,r:280,rk:1},{n:'Golden Barn',k:'barn',x:.65,y:.35,c:3,r:150,rk:1},{n:'Willow Farm',k:'farm',x:.35,y:.65,c:4,r:200,rk:1},{n:'Ironworks',k:'village',x:.65,y:.65,c:5,r:230,rk:1},
- {n:'Crown City',k:'city',x:.5,y:.35,c:12,r:360,rk:1},{n:'Port Royal',k:'city',x:.12,y:.65,c:12,r:360,rk:1},{n:'Sky Tower',k:'city',x:.65,y:.88,c:12,r:360,rk:1},
+ {n:'Crown City',k:'city',x:.5,y:.35,c:34,r:520,rk:1},{n:'Port Royal',k:'city',x:.12,y:.65,c:34,r:520,rk:1},{n:'Sky Tower',k:'city',x:.65,y:.88,c:34,r:520,rk:1},
  {n:'Grand Resort',k:'resort',x:.88,y:.35,c:6,r:300,rk:1},{n:'Lakeside',k:'town',x:.12,y:.35,c:7,r:280,rk:1},{n:'Ashford',k:'town',x:.88,y:.65,c:7,r:280,rk:1},
  {n:'Cedar Ridge',k:'village',x:.35,y:.12,c:5,r:230,rk:1},{n:'Mill Creek',k:'village',x:.65,y:.12,c:5,r:230,rk:1},{n:'Fox Hollow',k:'village',x:.12,y:.88,c:5,r:230,rk:1},
  {n:'Salt Flats',k:'barn',x:.35,y:.88,c:3,r:150,rk:1},{n:'Pebble Farm',k:'farm',x:.88,y:.12,c:4,r:200,rk:1},{n:'Oak Mill',k:'farm',x:.88,y:.88,c:4,r:200,rk:1}];
@@ -1709,7 +1716,7 @@ function genMap(){
   for(const p of PLACES){
     if(p.k!=='city'&&p.k!=='town'&&p.k!=='resort')continue;
     const L=p.r+110;roads.push({x:p.px-L,y:p.py-20,w:2*L,h:40});
-    if(p.k==='city')roads.push({x:p.px-20,y:p.py-L,w:40,h:2*L});
+    if(p.k==='city'){roads.push({x:p.px-20,y:p.py-L,w:40,h:2*L});const o=Math.round(p.r*.85);for(const sg of [-1,1]){roads.push({x:p.px-L,y:p.py+sg*o-16,w:2*L,h:32});roads.push({x:p.px+sg*o-16,y:p.py-L,w:32,h:2*L});}}
   }
   const link=new Set();
   PLACES.forEach((p,i)=>{
@@ -1721,12 +1728,13 @@ function genMap(){
   });
   for(const p of PLACES){
     let t=0,c=0;const nh=p.k==='resort'?2:(p.k==='city'||p.k==='town')?1:0;
-    while(c<p.c&&t<250){
+    const cty=p.k==='city';
+    while(c<p.c&&t<(cty?900:250)){
       t++;const hot=c<nh&&t<=6;
-      const z=hot?[320,220]:p.k==='barn'&&c===0?[230,160]:HS[Math.floor(rr()*(p.k==='city'?6:4))],w=Math.floor(z[0]*rs(.9,1.15)),h=Math.floor(z[1]*rs(.9,1.15));
+      const z=hot?[320,220]:p.k==='barn'&&c===0?[230,160]:(cty?HC:HS)[Math.floor(rr()*(cty?HC.length:4))],w=Math.floor(z[0]*rs(.9,1.15)),h=Math.floor(z[1]*rs(.9,1.15));
       const ox=hot?(p.k==='city'?210:p.k==='resort'?(c?-250:250):240)+rs(-30,30):rs(-p.r,p.r),oy=hot?-170+rs(-20,20):rs(-p.r,p.r);
       const x=p.px+ox-w/2,y=p.py+oy-h/2,b={x,y,w,h,cx:x+w/2,cy:y+h/2,kind:hot?'hotel':p.k==='resort'?'town':p.k};
-      if(x<140||y<140||x+w>W-140||y+h>H-140||builds.some(o=>ovl(b,o,64))||roads.some(r=>ovl(b,r,12)))continue;
+      if(x<140||y<140||x+w>W-140||y+h>H-140||builds.some(o=>ovl(b,o,cty?26:64))||roads.some(r=>ovl(b,r,12)))continue;
       builds.push(b);c++;
     }
   }
@@ -1762,7 +1770,7 @@ function genMap(){
   tries=0;n=0;
   while(n<90*A&&tries<600*A){tries++;const x=rnd(80,W-80),y=rnd(80,H-80);if(inBuild(x,y,20)||blocked(x,y))continue;loot.push(mkLoot(x,y,'ammo'));n++;}
   tries=0;n=0;
-  while(n<700*A&&tries<9000*A){
+  while(false){
     tries++;const x=rnd(50,W-50),y=rnd(50,H-50),r=rnd(26,48);
     if(inBuild(x,y,r+16)||onRoad(x,y,r+10)||qObs(x-110,y-110,x+110,y+110).some(o=>o.t==='c'&&Math.hypot(o.x-x,o.y-y)<o.r+r*.55+30)||chests.some(c=>Math.hypot(c.x-x,c.y-y)<r+30))continue;
     trees.push({x,y,r,p:Math.random()<.3?1:0});addObs({t:'c',k:'tree',x,y,r:r*.55});n++;
@@ -2429,7 +2437,7 @@ function botGround(b,dt){
   if(A.scan<=0){A.scan=.2+Math.random()*.15;A.en=findEnemy(b);}
   if(A.en&&(!A.en.alive||A.en.st!=='ground'||A.en.camo>0||(A.en===P&&!inView(b.x,b.y))))A.en=null;
   if(A.en)b.use=null;else if(!b.use){if(b.hp<75&&b.kits>0)startUse(b,'kit');else if(b.sh<50&&b.shs>0)startUse(b,'shield');}
-  const useNext=Z.state==='shrink'||Z.state==='final'||(Z.state==='wait'&&Z.t<12);
+  const useNext=true;
   const cx=useNext?Z.tcx:Z.cx,cy=useNext?Z.tcy:Z.cy,cr=useNext?Z.tr:Z.r;
   const mustGo=Math.hypot(b.x-cx,b.y-cy)>cr-70,urgent=Math.hypot(b.x-Z.cx,b.y-Z.cy)>Z.r-40;
   const w=WP[b.w],lead=leaderOf(b);
@@ -2441,7 +2449,7 @@ function botGround(b,dt){
     let want=0;if(d>w.rng*.75)want=1;else if(d<Math.min(160,w.rng*.35))want=-1;
     const nx=dx/d,ny=dy/d,st=Math.sin(G.time*1.3+b.id)>0?1:-1;
     mx=nx*want-ny*st*.6;my=ny*want+nx*st*.6;
-    if(urgent||(mustGo&&Z.state==='shrink')){const zx=cx-b.x,zy=cy-b.y,zd=Math.hypot(zx,zy)||1;mx=zx/zd;my=zy/zd;}
+    if(urgent||mustGo){const zx=cx-b.x,zy=cy-b.y,zd=Math.hypot(zx,zy)||1;mx=zx/zd;my=zy/zd;}
     if(d<w.rng*.95&&A.rt<=0&&Math.abs(angDiff(b.ang,aimAng))<.3)shoot=true;
   }else{
     if(!A.en)A.rt=.45+Math.random()*.4;
@@ -3242,7 +3250,7 @@ function draw(){
   // pisos
   for(const b of builds){
     if(!vis(b.cx,b.cy,200))continue;
-    ctx.fillStyle=b.kind==='hotel'?'#b9a27a':b.kind==='barn'?'#9a5a3e':b.kind==='city'?'#8d8f96':b.kind==='farm'?'#b89a5a':'#a98a63';ctx.fillRect(b.x,b.y,b.w,b.h);
+    ctx.fillStyle=b.kind==='hotel'?'#b9a27a':b.kind==='barn'?'#9a5a3e':b.kind==='city'?'#b4b8bd':b.kind==='farm'?'#b89a5a':'#a98a63';ctx.fillRect(b.x,b.y,b.w,b.h);
     ctx.strokeStyle='rgba(0,0,0,.09)';ctx.lineWidth=1;ctx.beginPath();
     for(let y=b.y+18;y<b.y+b.h;y+=18){ctx.moveTo(b.x,y);ctx.lineTo(b.x+b.w,y);}
     ctx.stroke();
@@ -3578,7 +3586,14 @@ function pendAll(){try{return JSON.parse(localStorage.getItem(PNK))||{};}catch(e
 function pendId(){const i=srvIdent();return i?i.p_id:null;}
 function pendGet(id){if(!id)return 0;const n=Math.floor(+pendAll()[id])||0;return n>0?n:0;}
 function pendSet(id,n){if(!id)return;try{const a=pendAll();if(n>0)a[id]=n;else delete a[id];localStorage.setItem(PNK,JSON.stringify(a));}catch(e){}}
-function addPend(n){n=Math.floor(+n)||0;if(n<=0)return;pendSet(pendId(),pendGet(pendId())+n);const c=getCos();c.coins+=n;saveCos();refreshCoins();}
+let pendFlushing=false,pendFailT=0;
+function pendFlush(){
+  if(pendFlushing||!SRVON||Date.now()-pendFailT<60000)return;
+  const id=srvIdent();if(!id)return;const n=pendGet(id.p_id);if(n<=0)return;
+  pendFlushing=true;
+  rpc('rr_add_pend',Object.assign({p_n:n},id)).then(s=>{pendSet(id.p_id,pendGet(id.p_id)-n);applySrv(s);}).catch(()=>{pendFailT=Date.now();}).finally(()=>{pendFlushing=false;if(pendGet(id.p_id)>0&&Date.now()-pendFailT>=60000)setTimeout(pendFlush,500);});
+}
+function addPend(n){n=Math.floor(+n)||0;if(n<=0)return;pendSet(pendId(),pendGet(pendId())+n);const c=getCos();c.coins+=n;saveCos();refreshCoins();pendFlush();}
 function rndTok(){const a=new Uint8Array(24);crypto.getRandomValues(a);return Array.from(a,x=>x.toString(16).padStart(2,'0')).join('');}
 function srvIdent(){
   if(acc){if(!acc.tok||acc.tok.length<32){acc.tok=rndTok();sv();}return {p_id:'u:'+acc.user.toLowerCase(),p_tok:acc.tok};}
@@ -3613,6 +3628,7 @@ async function srvRun(id,changed){
     try{applySrv(await rpc('rr_get',id));SRVON=true;}catch(e){SRVON=false;}
     if(!SRVON||!acc)TPKEY='';else await tpSync(id);
   }finally{srvBusy=false;srvLast=Date.now();}
+  try{pendFlush();}catch(e){}
   if(srvAgain){srvAgain=false;srvLast=0;return srvSync(true);}
   return SRVON;
 }
