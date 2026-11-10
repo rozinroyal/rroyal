@@ -289,6 +289,11 @@ input:focus-visible{outline:3px solid var(--flare);outline-offset:1px}
 .bxi i{position:absolute;left:0;right:0;bottom:0;height:0;background:linear-gradient(#ffd23f,#e0752a);transition:height 1.3s ease-out}
 .bxi::after{content:'';position:absolute;left:0;right:0;top:9px;height:3px;background:#5a3a14}
 .bxch{font-size:11px;color:var(--mute)}
+.bxodds{width:100%;box-sizing:border-box;background:var(--panel);border:2px solid rgba(242,236,217,.2);border-radius:10px;padding:10px;display:flex;flex-direction:column;gap:8px}
+.bxodds[hidden]{display:none}
+.bxor{border-left:4px solid var(--rc,#c9d1d6);padding-left:8px;display:flex;flex-direction:column;gap:2px}
+.bxor b{font-size:14px}
+.bxor span,.bxodds .bxn{font-size:12px;color:var(--mute)}
 #bxo{z-index:60;align-items:center;background:radial-gradient(rgba(13,43,56,.88),rgba(5,14,20,.97));--bc:#c9d1d6}
 #bxo .rays{position:absolute;left:50%;top:50%;width:170vmax;height:170vmax;margin:-85vmax 0 0 -85vmax;background:repeating-conic-gradient(var(--bc) 0 8deg,transparent 8deg 16deg);animation:rkspin 28s linear infinite;opacity:0;transition:opacity .6s;pointer-events:none}
 #bxo.open .rays{opacity:.28}
@@ -494,6 +499,8 @@ input:focus-visible{outline:3px solid var(--flare);outline-offset:1px}
       <h2>What's new</h2>
       <div class="form">
         <div class="nv"><b>v9.5</b><ul>
+          <li>New: BOXES has a CHANCES BY RARITY button with your current chance of winning each soldier (Epic, Mythic, Legendary) in the small and big box.</li>
+          <li>Fix: coins from boxes, prestiges and chests found on the map are no longer lost when the game syncs with the server.</li>
           <li>Change: "Brawlers" are now called "Soldiers" everywhere.</li>
           <li>New: the main menu shows the small box AND the big box, each with its own icon, amount and progress bar.</li>
           <li>New: the PROFILE shows your total trophies and one card per soldier: the soldier name, a prestige card with the number on top, its face and its trophies.</li>
@@ -775,6 +782,8 @@ input:focus-visible{outline:3px solid var(--flare);outline-offset:1px}
         <div class="rdi"><b>Big box</b><span id="bxgN"></span><span class="bxbar"><i id="bxgBar"></i></span><span id="bxgX"></span><span id="bxgC" class="bxch"></span></div>
         <button id="bxgGo" class="btn alt" type="button">OPEN</button>
       </div>
+      <button id="bxOddsBtn" class="btn alt" type="button">CHANCES BY RARITY</button>
+      <div id="bxOdds" class="bxodds" hidden></div>
       <p id="bxMsg" style="margin:0;min-height:18px;color:var(--hp);font-size:13px"></p>
       <button id="bxBack" class="btn alt" type="button">Back</button>
     </div>
@@ -1166,7 +1175,7 @@ function lkDraw(){
     if(shop){b.disabled=own;if(own)b.textContent='OWNED';else b.innerHTML=COIN+it.p;}
     else{b.disabled=eq;b.textContent=eq?'EQUIPPED':'EQUIP';}
     b.addEventListener('click',()=>{
-      if(SRVON){if(shop&&own)return;rpc(shop?'rr_buy':'rr_equip',Object.assign({p_item:it.id},srvIdent())).then(s=>{applySrv(s);$('lkMsg').textContent=shop?'Purchased and equipped.':'';lkDraw();}).catch(e=>{$('lkMsg').textContent=e.message;});return;}
+      if(SRVON){if(shop&&own)return;rpc(shop?'rr_buy':'rr_equip',Object.assign({p_item:it.id},srvIdent())).then(s=>{applySrv(s);$('lkMsg').textContent=shop?'Purchased and equipped.':'';lkDraw();}).catch(e=>{const pd=pendGet(pendId());$('lkMsg').textContent=(shop&&pd>0&&it.p>SRVC&&it.p<=SRVC+pd)?'Not enough coins on the server: '+pd+' of your coins are not on the server yet and cannot be spent.':e.message;});return;}
       if(shop){if(own)return;if(c.coins<it.p){$('lkMsg').textContent='Not enough coins. Coins only come from the Battle Pass.';return;}c.coins-=it.p;c.own.push(it.id);c.eq[lkCat]=it.id;$('lkMsg').textContent='Purchased and equipped.';}
       else{c.eq[lkCat]=it.id;$('lkMsg').textContent='';}
       saveCos();refreshCoins();lkDraw();
@@ -1375,7 +1384,7 @@ function bxRoll(kind){
     if(kind==='s')b.ks=0;else b.kb=0;
   }else{res.coins=BOX_COIN[kind];if(kind==='s')b.ks++;else b.kb++;}
   if(kind==='s')b.so++;else b.gb--;
-  if(res.coins)getCos().coins+=res.coins;
+  if(res.coins)addPend(res.coins);
   saveCos();refreshCoins();refreshBox();
   return res;
 }
@@ -1402,14 +1411,34 @@ function bxDraw(){
   $('bxgBar').style.width=(B.gp*100/BOX_WINS)+'%';$('bxgI').style.height=(B.gp*100/BOX_WINS)+'%';$('bxgC').textContent=bxChTxt(B.kb);
   $('bxgBox').classList.toggle('full',g>0);
   $('bxsGo').disabled=!has||s<1;$('bxgGo').disabled=!has||g<1;
+  if(!$('bxOdds').hidden)bxOddsDraw();
+}
+function bxOddsDraw(){
+  const o=$('bxOdds');o.textContent='';
+  const B=acc?bxd():{ks:0,kb:0};
+  const mk=(t,tag,cls)=>{const e=document.createElement(tag||'span');if(cls)e.className=cls;e.textContent=t;return e;};
+  const pc=(r,k,n)=>(BOX_P[r]*bxF(k)*100/(n||1)).toPrecision(3)+'%';
+  o.appendChild(mk('Chance of winning a soldier in each box','b'));
+  for(const r of ['epic','mythic','legend']){
+    const ids=BOX_BR[r],nm=ids.map(i=>BR.find(z=>z.id===i).n),many=ids.length>1;
+    const d=document.createElement('div');d.className='bxor';d.style.setProperty('--rc',BRAR[r][1]);
+    const h=mk(BRAR[r][0]+' · '+nm.join(', '),'b');h.style.color=BRAR[r][1];
+    d.append(h,
+      mk('Small box: '+pc(r,B.ks)+(many?' ('+pc(r,B.ks,ids.length)+' for each soldier)':'')),
+      mk('Big box: '+pc(r,B.kb)+(many?' ('+pc(r,B.kb,ids.length)+' for each soldier)':'')),
+      mk('Base chance: '+pc(r,0)));
+    o.appendChild(d);
+  }
+  o.appendChild(mk('Chances shown are your current ones. Every box opened without a soldier raises each chance by 1% of its current value (small and big boxes count separately). Winning a soldier restarts that box type.','span','bxn'));
+  o.appendChild(mk('No soldier: +'+BOX_COIN.s+' coins (small box) or +'+BOX_COIN.b+' coins (big box). Soldier you already own: +'+BOX_DUP.epic+' coins (Epic), +'+BOX_DUP.mythic+' (Mythic), +'+BOX_DUP.legend+' (Legendary).','span','bxn'));
 }
 function bxOpen(kind){
   if(!acc)return;
   if(kind==='s'?bxSmall()<1:bxBig()<1)return;
   $('bxMsg').textContent='';
   if(tpOn()){
-    if(bxBusy)return;bxBusy=true;
-    tpCall('rr_tp_open',{p_kind:kind}).then(x=>{bxBusy=false;tpAdopt(x.tp);const q=x.res;bxoPlay({kind:q.kind,rar:q.rar||null,br:q.br?BR.find(z=>z.id===q.br):null,dup:!!q.dup,coins:q.coins|0});srvLast=0;srvSync(true);}).catch(e=>{bxBusy=false;$('bxMsg').textContent='Server: '+e.message;bxDraw();});
+    if(bxBusy)return;bxBusy=true;const b0=SRVC;
+    tpCall('rr_tp_open',{p_kind:kind}).then(x=>{bxBusy=false;tpAdopt(x.tp);const q=x.res,owed=q.coins|0;bxoPlay({kind:q.kind,rar:q.rar||null,br:q.br?BR.find(z=>z.id===q.br):null,dup:!!q.dup,coins:owed});srvLast=0;srvSync(true).then(()=>{if(owed>0&&SRVON){const got=SRVC-b0;if(got<owed)addPend(owed-got);}refreshCoins();});}).catch(e=>{bxBusy=false;$('bxMsg').textContent='Server: '+e.message;bxDraw();});
     return;
   }
   if(acc.tsv){$('bxMsg').textContent='The server is not reachable. Boxes need the server. Try again in a moment.';return;}
@@ -1455,6 +1484,7 @@ $('bxGo').addEventListener('click',()=>{
 $('bxsGo').addEventListener('click',()=>bxOpen('s'));
 $('bxgGo').addEventListener('click',()=>bxOpen('b'));
 $('bxBack').addEventListener('click',()=>show('menu'));
+$('bxOddsBtn').addEventListener('click',()=>{const o=$('bxOdds'),b=$('bxOddsBtn');if(o.hidden){bxOddsDraw();o.hidden=false;b.textContent='HIDE CHANCES';}else{o.hidden=true;b.textContent='CHANCES BY RARITY';}});
 $('navBox').addEventListener('click',()=>{$('bxMsg').textContent='';bxDraw();show('boxes');srvSync(true).then(()=>{if(!$('boxes').hidden)bxDraw();});});
 $('bxMenu').addEventListener('click',()=>{$('bxMsg').textContent='';bxDraw();show('boxes');});
 /* animação da caixa grande no ecrã de resultado */
@@ -1708,7 +1738,7 @@ function genMap(){
   }
 }
 function chestCoins(c){
-  const co=getCos();co.coins+=10;saveCos();refreshCoins();
+  addPend(10);
   for(let i=0;i<10;i++)coinFx.push({x:c.x,y:c.y-4,g:c.y+22+rnd(-6,10),vx:rnd(-110,110),vy:rnd(-340,-190),t:-i*.035,ph:rnd(0,TAU),b:0});
   fx.push({k:'ring',x:c.x,y:c.y,t:0,life:.7});fx.push({k:'ring',x:c.x,y:c.y,t:-.14,life:.8});
   spark(c.x,c.y,'#ffd23f',26);spark(c.x,c.y,'#fff6a8',12);
@@ -2721,7 +2751,7 @@ function showOver(){
       $('ovTd').textContent='Place '+sg2(r.pt)+' · Eliminations '+sg2(r.kt)+(r.d!==r.pt+r.kt?(r.pre>0?' · protected by the P'+r.pre+' floor':' · you never go below 0'):'')+(r.f<1?' · '+(r.f===.5?'Duos: half':'Squads: a quarter')+' of the Solo trophies':'')+(r.coins?' · +'+r.coins+' coins':'')+(MS.some((m,i)=>msReady(i))?' · Trophy Road reward ready':'');
       };
       if(useS){overSrv(MB.id,(pl-1)*TS+1,P.kills,TS,win,srvDone,ovT);}
-      else{const r=tpApply(MB.id,(pl-1)*TS+1,P.kills,TS);if(acc.tsv)tpQueue(MB.id,(pl-1)*TS+1,P.kills,TS,win);ovT(r);if(r.coins)srvDone.then(()=>{const c=getCos();c.coins+=r.coins;saveCos();refreshCoins();});}
+      else{const r=tpApply(MB.id,(pl-1)*TS+1,P.kills,TS);if(acc.tsv)tpQueue(MB.id,(pl-1)*TS+1,P.kills,TS,win);ovT(r);if(r.coins&&!acc.tsv)srvDone.then(()=>addPend(r.coins));}
     }
     if(!useS&&ranked&&win&&acc.tsv)tpQueue('',1,P.kills,1,true);sv();if(useS&&ranked)overSrv('',1,P.kills,1,true,srvDone,null);if(!useS)bxShowOver(bxw);refreshBox();
   }else{
@@ -3434,7 +3464,14 @@ const sbOn=()=>!!(SB.url&&SB.key);
 const sbH=()=>{const h={apikey:SB.key,'Content-Type':'application/json'};if(!SB.key.startsWith('sb_'))h.Authorization='Bearer '+SB.key;return h;};
 const sbU=q=>SB.url.replace(/\/$/,'')+'/rest/v1/leaderboard'+q;
 /* ---------- servidor: moedas, passe e itens ---------- */
-let SRVON=false,srvBusy=false,srvLast=0,srvKey='';
+let SRVON=false,srvBusy=false,srvLast=0,srvKey='',srvAgain=false,srvCur=null,SRVC=0;
+/* moedas que o servidor ainda não tem (baús do mapa, ou prémios que o servidor não creditou). Ficam guardadas aqui e somam-se ao saldo do servidor, para não desaparecerem na sincronização. */
+const PNK='rroyal-pend';
+function pendAll(){try{return JSON.parse(localStorage.getItem(PNK))||{};}catch(e){return {};}}
+function pendId(){const i=srvIdent();return i?i.p_id:null;}
+function pendGet(id){if(!id)return 0;const n=Math.floor(+pendAll()[id])||0;return n>0?n:0;}
+function pendSet(id,n){if(!id)return;try{const a=pendAll();if(n>0)a[id]=n;else delete a[id];localStorage.setItem(PNK,JSON.stringify(a));}catch(e){}}
+function addPend(n){n=Math.floor(+n)||0;if(n<=0)return;pendSet(pendId(),pendGet(pendId())+n);const c=getCos();c.coins+=n;saveCos();refreshCoins();}
 function rndTok(){const a=new Uint8Array(24);crypto.getRandomValues(a);return Array.from(a,x=>x.toString(16).padStart(2,'0')).join('');}
 function srvIdent(){
   if(acc){if(!acc.tok||acc.tok.length<32){acc.tok=rndTok();sv();}return {p_id:'u:'+acc.user.toLowerCase(),p_tok:acc.tok};}
@@ -3450,20 +3487,27 @@ async function rpc(fn,args){
 }
 function applySrv(s){
   const c=getCos(),b=bpGet();
-  c.coins=Math.max(0,Math.floor(+s.coins)||0);
+  SRVC=Math.max(0,Math.floor(+s.coins)||0);c.coins=SRVC+pendGet(pendId());
   c.own=(Array.isArray(s.owned)?s.owned:[]).filter(i=>ITEM[i]);
   for(const k in CATS){const e=s.eq&&s.eq[k];c.eq[k]=ITEM[e]&&(ITEM[e].p===0||c.own.includes(e))?e:CATS[k][1][0].id;}
   b.xp=Math.max(0,Math.min(BP_MAX*BP_XP,Math.floor(+s.xp)||0));b.cl=(Array.isArray(s.claimed)?s.claimed:[]).map(Number);b.d=String(s.day||'');b.m=Array.isArray(s.missions)?s.missions:[];
   saveCos();refreshCoins();
 }
-async function srvSync(force){
-  const id=srvIdent();if(!id)return false;
+function srvSync(force){
+  const id=srvIdent();if(!id)return Promise.resolve(false);
   const changed=id.p_id!==srvKey;
-  if(srvBusy||(!changed&&Date.now()-srvLast<(force?1500:15000)))return SRVON;
+  if(srvBusy){if(force||changed){srvAgain=true;return srvCur;}return Promise.resolve(SRVON);}
+  if(!changed&&Date.now()-srvLast<(force?1500:15000))return Promise.resolve(SRVON);
+  srvCur=srvRun(id,changed);return srvCur;
+}
+async function srvRun(id,changed){
   srvBusy=true;if(changed)SRVON=false;srvKey=id.p_id;
-  try{applySrv(await rpc('rr_get',id));SRVON=true;}catch(e){SRVON=false;}
-  if(!SRVON||!acc)TPKEY='';else await tpSync(id);
-  srvBusy=false;srvLast=Date.now();return SRVON;
+  try{
+    try{applySrv(await rpc('rr_get',id));SRVON=true;}catch(e){SRVON=false;}
+    if(!SRVON||!acc)TPKEY='';else await tpSync(id);
+  }finally{srvBusy=false;srvLast=Date.now();}
+  if(srvAgain){srvAgain=false;srvLast=0;return srvSync(true);}
+  return SRVON;
 }
 async function srvMatch(k,win,secs){const s=await rpc('rr_match',Object.assign({p_kills:k,p_win:!!win,p_secs:secs},srvIdent()));applySrv(s);return s.earned||0;}
 /* ---------- servidor: trofeus, soldiers e caixas (v9.4) ---------- */
@@ -3479,13 +3523,14 @@ async function tpSync(id){
     let r=await rpc('rr_tp_get',id);
     if(!r.imp)r=await rpc('rr_tp_import',Object.assign({p_data:normTp(acc.tp)},id));
     TPKEY=id.p_id;acc.tsv=1;
-    let tp=r.tp;
+    let tp=r.tp,owed=0;const b0=SRVC;
     while(acc.tq&&acc.tq.length){
       const q=acc.tq[0];
-      try{const x=await rpc('rr_tp_match',Object.assign({p_br:q.br||'',p_place:q.pl,p_kills:q.k,p_ts:q.ts,p_win:!!q.win},id));tp=x.tp;acc.tq.shift();}
+      try{const x=await rpc('rr_tp_match',Object.assign({p_br:q.br||'',p_place:q.pl,p_kills:q.k,p_ts:q.ts,p_win:!!q.win},id));tp=x.tp;owed+=((x.res&&x.res.coins)|0)||0;acc.tq.shift();}
       catch(e){if(tpNet(e))break;acc.tq.shift();}
     }
     if(tpOps===0)tpAdopt(tp);
+    if(owed>0){try{applySrv(await rpc('rr_get',id));const got=SRVC-b0;if(got<owed)addPend(owed-got);}catch(e){}}
   }catch(e){TPKEY='';}
   tpBusy=false;return tpOn();
 }
@@ -3499,10 +3544,13 @@ function tpQueue(br,pl100,k,ts,win){
 }
 function overSrv(br,pl100,k,ts,win,srvDone,show){
   if(br)$('ovR').textContent='Saving to the server…';
-  srvDone.then(()=>tpMatch(br,pl100,k,ts,win)).then(x=>{
+  let b0=0;
+  srvDone.then(()=>{b0=SRVC;return tpMatch(br,pl100,k,ts,win);}).then(x=>{
     if(br&&x.res)show(x.res);
     if(x.bxw)bxShowOver(x.bxw);
-    refreshBox();srvLast=0;srvSync(true);
+    refreshBox();
+    const owed=((x.res&&x.res.coins)|0)||0;
+    srvLast=0;srvSync(true).then(()=>{if(owed>0&&SRVON){const got=SRVC-b0;if(got<owed)addPend(owed-got);}});
   },()=>{
     let w=null;if(win)w=bxWin();
     tpQueue(br,pl100,k,ts,win);
