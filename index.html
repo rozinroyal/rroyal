@@ -380,7 +380,7 @@ input:focus-visible{outline:3px solid var(--flare);outline-offset:1px}
   <section id="menu" class="screen">
     <div class="lobby">
       <div class="lp">
-        <p class="kick" style="text-align:center">RRoyal · v11.1</p>
+        <p class="kick" style="text-align:center">RRoyal · v11.2</p>
         <h3 class="lt">BATTLE ROYALE</h3>
         <button id="modeBtn" class="btn alt" type="button"><span id="modeT">RANKED: OFF</span><small id="modeS">Solo</small></button>
         <button id="play" class="btn big" type="button">PLAY</button>
@@ -511,6 +511,10 @@ input:focus-visible{outline:3px solid var(--flare);outline-offset:1px}
       <p class="kick">Changelog</p>
       <h2>What's new</h2>
       <div class="form">
+        <div class="nv"><b>v11.2</b><ul>
+          <li>Change: in Duos and Squads the place trophies now depend on the place of your team among the teams left (50 duos, 25 squads), using the same table as Solo for each prestige. The reduction (half in Duos, a quarter in Squads) is gone, and the trophies for eliminations are now the full ones, still counting only your first 10 eliminations.</li>
+          <li>Place columns: Duos 1st, 2nd-3rd, 4th-10th, 11th-20th, 21st-30th, 31st-40th, 41st-50th. Squads 1st, 2nd-3rd, 4th-7th, 8th-12th, 13th-17th, 18th-21st, 22nd-25th.</li>
+        </ul></div>
         <div class="nv"><b>v11.1</b><ul>
           <li>New: on iPhone you can now add RRoyal to the home screen and it opens full screen, without the Safari bar. Open the game in Safari, tap Share, then "Add to Home Screen". It also has its own icon (a battle bus with a balloon).</li>
         </ul></div>
@@ -1006,6 +1010,14 @@ const brLock=b=>b.tr>0?b.tr+' total trophies (Trophy Road)':'Only in boxes';
 const brTro=b=>trOf(b.id);
 const killRule=pre=>pre===0?'4 trophies per elimination':pre===1?'2 trophies per elimination':pre===2?'1 trophy per elimination':pre===3?'1 trophy per 2 eliminations':'No elimination trophies';
 const toNext=id=>{const pr=preOf(id);return (pr+1)*1000-trOf(id);};
+/* v11.2: Duo/Squad contam a colocacao pela posicao da equipa (50 / 25 equipas); devolve um lugar de Solo dentro da coluna certa da tabela */
+function tpCol(pl,ts){
+  const cut=ts===2?[1,3,10,20,30,40,50]:ts===4?[1,3,7,12,17,21,25]:null;
+  if(!cut)return pl;
+  const first=[1,2,4,11,26,51,76];
+  let i=0;while(i<6&&pl>cut[i])i++;
+  return first[i];
+}
 function tpApply(id,pl100,kills,ts){
   const T=tpd(),old=T.t[id]||0,pre=Math.floor(old/1000),k=Math.min(10,Math.max(0,kills|0));
   const kt=pre===0?4*k:pre===1?2*k:pre===2?k:pre===3?Math.floor(k/2):0;
@@ -2766,8 +2778,9 @@ function showOver(){
       $('ovR').textContent=sg2(r.d)+' trophies · '+MB.n+' · '+r.nw+(r.np>r.pre?' · PRESTIGE UP! P'+r.np:'');
       $('ovTd').textContent='Place '+sg2(r.pt)+' · Eliminations '+sg2(r.kt)+(r.d!==r.pt+r.kt?(r.pre>0?' · protected by the P'+r.pre+' floor':' · you never go below 0'):'')+(r.f<1?' · '+(r.f===.5?'Duos: half':'Squads: a quarter')+' of the Solo trophies':'')+(r.coins?' · +'+r.coins+' coins':'')+(MS.some((m,i)=>msReady(i))?' · Trophy Road reward ready':'');
       };
-      if(useS){overSrv(MB.id,(pl-1)*TS+1,P.kills,TS,win,srvDone,ovT);}
-      else{const r=tpApply(MB.id,(pl-1)*TS+1,P.kills,TS);if(acc.tsv)tpQueue(MB.id,(pl-1)*TS+1,P.kills,TS,win);ovT(r);if(r.coins&&!acc.tsv)srvDone.then(()=>addPend(r.coins));}
+      const pc=tpCol(pl,TS);
+      if(useS){overSrv(MB.id,pc,P.kills,1,win,srvDone,ovT);}
+      else{const r=tpApply(MB.id,pc,P.kills,1);if(acc.tsv)tpQueue(MB.id,pc,P.kills,1,win);ovT(r);if(r.coins&&!acc.tsv)srvDone.then(()=>addPend(r.coins));}
     }
     if(!useS&&ranked&&win&&acc.tsv)tpQueue('',1,P.kills,1,true);sv();if(useS&&ranked)overSrv('',1,P.kills,1,true,srvDone,null);if(!useS)bxShowOver(bxw);refreshBox();
   }else{
