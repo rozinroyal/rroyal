@@ -26,6 +26,19 @@ body{height:100%;margin:0;background:var(--sea);color:var(--ink);font:500 14px/1
 #feed div{background:var(--panel);padding:2px 8px;border-radius:4px;font-size:12px}
 #feed .me{color:var(--flare)}
 #mm{pointer-events:auto;cursor:pointer;position:absolute;top:0;right:0;width:96px;height:96px;border:2px solid rgba(242,236,217,.35);border-radius:6px;background:#17414f}
+#bus{position:absolute;left:0;right:0;top:14%;pointer-events:none;text-align:center;font-family:var(--f-d);text-shadow:0 2px 0 rgba(0,0,0,.6)}
+#bus[hidden]{display:none}
+#bus .bt{font-size:clamp(13px,3.6vw,18px);letter-spacing:.14em;color:#bfe3ff;animation:busfl 1s ease-in-out infinite}
+#bus .bn{display:inline-block;font-size:clamp(46px,13vw,78px);line-height:1;color:#ffd23f;filter:drop-shadow(0 0 14px rgba(255,210,63,.55))}
+#bus .bn.pop{animation:buspop .5s cubic-bezier(.2,1.6,.4,1)}
+#bus .tr{position:relative;width:78%;max-width:520px;height:46px;margin:6px auto 0;border-bottom:3px dashed rgba(255,255,255,.35)}
+#bus .bi{position:absolute;bottom:2px;left:0;font-size:34px;line-height:1;transform:translateX(-50%);filter:drop-shadow(0 3px 0 rgba(0,0,0,.4))}
+#bus .bi i{display:block;font-style:normal;animation:busbump .32s ease-in-out infinite}
+#bus .bi::before{content:'';position:absolute;right:100%;top:55%;width:70px;height:12px;background:repeating-linear-gradient(90deg,rgba(255,255,255,.55) 0 14px,transparent 14px 24px);opacity:.7;animation:busln .35s linear infinite}
+@keyframes busbump{0%,100%{transform:translateY(0) rotate(-1deg)}50%{transform:translateY(-4px) rotate(1.5deg)}}
+@keyframes busln{from{transform:translateX(0)}to{transform:translateX(-24px)}}
+@keyframes buspop{0%{transform:scale(2.2);opacity:0}100%{transform:scale(1);opacity:1}}
+@keyframes busfl{0%,100%{opacity:.75}50%{opacity:1}}
 #msg{position:absolute;left:0;right:0;top:26%;text-align:center;font-family:var(--f-d);font-size:clamp(15px,4.4vw,22px);text-shadow:0 2px 0 rgba(0,0,0,.55);padding:0 8px;text-wrap:balance}
 #act{position:absolute;left:50%;bottom:124px;transform:translateX(-50%);display:flex;flex-direction:column;gap:8px;align-items:center}
 #stats{position:absolute;left:50%;bottom:0;transform:translateX(-50%);width:min(340px,100%);display:flex;flex-direction:column;gap:5px}
@@ -336,7 +349,7 @@ input:focus-visible{outline:3px solid var(--flare);outline-offset:1px}
       <div id="feed"></div>
     </div>
     <canvas id="mm" width="120" height="120"></canvas>
-    <div id="msg"></div><div id="coinPop"></div>
+    <div id="bus" hidden><div class="bt">BATTLE BUS COMING IN</div><div class="bn" id="busN">10</div><div class="tr"><div class="bi" id="busI"><i>🚌</i></div></div></div><div id="msg"></div><div id="coinPop"></div>
     <div id="jMv" hidden></div><div id="jAim" hidden></div>
     <div id="act">
       <button id="jump" class="btn" type="button">JUMP</button>
@@ -367,7 +380,7 @@ input:focus-visible{outline:3px solid var(--flare);outline-offset:1px}
   <section id="menu" class="screen">
     <div class="lobby">
       <div class="lp">
-        <p class="kick" style="text-align:center">RRoyal · v10.0</p>
+        <p class="kick" style="text-align:center">RRoyal · v11.0</p>
         <h3 class="lt">BATTLE ROYALE</h3>
         <button id="modeBtn" class="btn alt" type="button"><span id="modeT">RANKED: OFF</span><small id="modeS">Solo</small></button>
         <button id="play" class="btn big" type="button">PLAY</button>
@@ -498,6 +511,19 @@ input:focus-visible{outline:3px solid var(--flare);outline-offset:1px}
       <p class="kick">Changelog</p>
       <h2>What's new</h2>
       <div class="form">
+        <div class="nv"><b>v11.0</b><ul>
+          <li>New: version 11. This version brings together the pre-match lobby (10 seconds of waiting where everyone is immune and the players start spread out, with an animated battle bus countdown) and the new battle bus with a hot air balloon on top, which replaces the plane.</li>
+        </ul></div>
+        <div class="nv"><b>v10.3</b><ul>
+          <li>Change: the plane is gone. You now jump from a blue battle bus with a big colorful hot air balloon on top, with its own shadow on the ground.</li>
+        </ul></div>
+        <div class="nv"><b>v10.2</b><ul>
+          <li>Change: in the pre-match lobby the players now start much more spread out, so you are not in the middle of a crowd.</li>
+          <li>Change: the lobby now only shows the battle bus message, with an animated bus driving along a track and a big countdown that pops every second. The extra text about immunity is gone.</li>
+        </ul></div>
+        <div class="nv"><b>v10.1</b><ul>
+          <li>New: pre-match lobby, like Fortnite. At the start of every match there are 10 seconds of waiting for the battle bus. You can move and fight (pickaxe and soldier active), but everyone is immune and nobody takes damage. Chests and loot are locked until the bus arrives. A blue ring shows the immunity and the top message shows the countdown.</li>
+        </ul></div>
         <div class="nv"><b>v10.0</b><ul>
           <li>Change: skins are gone. The Outfits tab is removed from the LOCKER and the ITEM SHOP, and profiles no longer show an outfit. Your look is now the one of your chosen soldier.</li>
           <li>Change: "Brawlers" are now called "Soldiers" everywhere.</li>
@@ -868,6 +894,7 @@ const itemName=k=>LN[k]||WP[k].n;
 const PH=[{r:1900,wait:35,shrink:28,dps:1.5},{r:1250,wait:25,shrink:25,dps:3},{r:740,wait:22,shrink:22,dps:5},{r:400,wait:18,shrink:18,dps:8},{r:170,wait:14,shrink:14,dps:12},{r:52,wait:10,shrink:12,dps:18}];
 const PHR=PH.map(p=>({r:Math.round(p.r*3.1),wait:Math.round(p.wait*1.4),shrink:Math.round(p.shrink*1.9),dps:p.dps}));
 
+let lobT=0;const LOBBY=10;
 let state='menu',ents=[],P=null,bullets=[],loot=[],obs=[],builds=[],parts=[],dtx=[],feedL=[],plane=null,Z=null,spec=null;
 let G={time:0},overT=0,overShown=false,menuT=0,vw=0,vh=0,dpr=1,scale=1,mouseAng=0,mouseDown=false;
 const cam={x:W/2,y:H/2};
@@ -1864,7 +1891,7 @@ function revive(e,m){
   feed(`${m.name} revived ${e.name}`,e===P||m===P);
 }
 function hurt(e,d,by){
-  if(!e.alive||e.st!=='ground')return;
+  if(!e.alive||e.st!=='ground'||lobT>0)return;
   let rem=d;
   if(e.sh>0){const s=Math.min(e.sh,rem);e.sh-=s;rem-=s;}
   if(e.tsh>0)e.tsh=Math.min(e.tsh,e.sh);
@@ -1937,6 +1964,7 @@ function endReload(e){
   }else{const t=Math.min(w.mag-e.am,e.ammo);e.am+=t;e.ammo-=t;}
 }
 function doTake(){
+  if(lobT>0)return;
   const it=nearLoot();if(!it)return;
   if(it.k==='med'){P.kits++;it.gone=true;}
   else if(it.k==='shield'){P.shs++;it.gone=true;}
@@ -2480,10 +2508,11 @@ function startGame(){
     b.ai.jt=Math.min(exT-.2,tj[b.team]+rnd(0,.5));
     ents.push(b);
   }
-  ents.forEach(e=>{e.x=plane.x;e.y=plane.y;});
+  lobT=LOBBY;G.time=-LOBBY;
+  {const lx=W/2,ly=H/2;ents.forEach(e=>{e.st='ground';const aa=rnd(0,TAU),rr=Math.sqrt(Math.random())*2700;e.x=lx+Math.cos(aa)*rr;e.y=ly+Math.sin(aa)*rr;collide(e,R);e.ang=rnd(0,TAU);});}
   const ZR=Math.hypot(W,H)/2+30;Z={cx:W/2,cy:H/2,r:ZR,tcx:W/2,tcy:H/2,tr:ZR,scx:0,scy:0,sr:0,ph:0,state:'wait',t:0,dur:1,dps:0};
   planPhase();
-  cam.x=plane.x;cam.y=plane.y;
+  cam.x=P.x;cam.y=P.y;
   state='plane';
   sticks.mv=null;sticks.aim=null;mouseDown=false;
   for(const s of ['menu','qmode','pv','tmode','ctrl','prof','keys','lb','news','cred','over','locker','modes','bp','soldiers','brdet','road'])$(s).hidden=true;$('nav').hidden=true;$('app').classList.remove('hasnav');
@@ -2743,10 +2772,22 @@ function showOver(){
     if(MB)$('ovR').textContent='Guest: trophies are not saved. Log in to earn them.';
   }
 }
+function endLobby(){
+  lobT=0;G.time=0;bullets=[];mines=[];zones=[];decoys=[];AB.cd=0;AB.t=0;
+  for(const e of ents){
+    if(!e.alive)continue;
+    e.st='plane';e.x=plane.x;e.y=plane.y;e.vx=e.vy=0;e.wx=e.wy=0;e.use=null;e.rl=0;e.cd=0;e.hitT=0;e.stn=0;e.eq='pick';
+    e.ai.en=null;e.ai.wp=null;e.ai.esc=null;e.ai.tg=null;
+  }
+  sticks.mv=null;sticks.aim=null;mouseDown=false;
+  cam.x=plane.x;cam.y=plane.y;
+  feed('The battle bus has arrived!',true);snd(440,.3,'sine',.12,1.6);
+}
 function update(dt){
-  tickChests();
+  if(lobT>0){lobT-=dt;if(lobT<=0)endLobby();}
+  else tickChests();
   G.time+=dt;
-  if(plane&&!plane.dead){
+  if(plane&&!plane.dead&&lobT<=0){
     plane.t+=dt;plane.x=plane.sx+plane.dx*plane.spd*plane.t;plane.y=plane.sy+plane.dy*plane.spd*plane.t;
     plane.inside=plane.x>=0&&plane.x<=W&&plane.y>=0&&plane.y<=H;
     if(plane.inside)plane.entered=true;
@@ -2754,7 +2795,7 @@ function update(dt){
     if(plane.out||plane.t>40)for(const e of ents)if(e.alive&&e.st==='plane')jump(e);
     if(plane.out||plane.t>40)plane.dead=true;
   }
-  zoneUpdate(dt);
+  if(lobT<=0)zoneUpdate(dt);
   for(const e of ents){
     if(!e.alive){
       if(e.rvT>0){
@@ -2800,7 +2841,7 @@ function update(dt){
         if(firing){e.use=null;if(dly){}else if(e.eq==='gun'&&e.w)fire(e);else swing(e);}
         else if(AH&&!e.use){if(e.sh<100&&e.shs>0)startUse(e,'shield');else if(e.hp<e.mh&&e.kits>0)startUse(e,'kit');}
       }
-      if(e.isBot)pickups(e);else autoPick(e);
+      if(lobT<=0){if(e.isBot)pickups(e);else autoPick(e);}
       if(Math.hypot(e.x-Z.cx,e.y-Z.cy)>Z.r&&Z.dps>0&&!inBubble(e)){
         e.hp-=Z.dps*(pb(e,'zen')?.7:1)*(1+Math.min(7,Math.max(0,Math.hypot(e.x-Z.cx,e.y-Z.cy)-Z.r)/600))*dt;
         if(e.hp<=0)die(e,null);
@@ -2874,11 +2915,24 @@ const grassPat=ctx.createPattern(pc,'repeat');
 function ell(x,y,rx,ry){ctx.beginPath();ctx.ellipse(x,y,rx,ry,0,0,TAU);ctx.fill();}
 function circ(x,y,r){ctx.beginPath();ctx.arc(x,y,r,0,TAU);ctx.fill();}
 function planeShape(c){
-  const col=c||'#f2ecd9';
-  ctx.fillStyle=col;ell(0,0,56,12);
-  ctx.beginPath();ctx.moveTo(12,0);ctx.lineTo(-14,-58);ctx.lineTo(-28,-58);ctx.lineTo(-10,0);ctx.lineTo(-28,58);ctx.lineTo(-14,58);ctx.closePath();ctx.fill();
-  ctx.beginPath();ctx.moveTo(-42,0);ctx.lineTo(-56,-22);ctx.lineTo(-62,-22);ctx.lineTo(-54,0);ctx.lineTo(-62,22);ctx.lineTo(-56,22);ctx.closePath();ctx.fill();
-  if(!c){ctx.fillStyle='#ffb81c';ell(34,0,10,6);ctx.fillRect(-30,-3,60,6);ctx.fillStyle='#f2ecd9';ell(0,0,10,5);}
+  /* autocarro de batalha com balao (vista de cima); c = cor da sombra */
+  const sh=!!c,F=col=>{ctx.fillStyle=sh?c:col;};
+  const rp=(x,y,w,h,r)=>{ctx.moveTo(x+r,y);ctx.lineTo(x+w-r,y);ctx.quadraticCurveTo(x+w,y,x+w,y+r);ctx.lineTo(x+w,y+h-r);ctx.quadraticCurveTo(x+w,y+h,x+w-r,y+h);ctx.lineTo(x+r,y+h);ctx.quadraticCurveTo(x,y+h,x,y+h-r);ctx.lineTo(x,y+r);ctx.quadraticCurveTo(x,y,x+r,y);ctx.closePath();};
+  if(sh){ctx.fillStyle=c;ctx.beginPath();rp(-56,-20,112,40,10);ctx.moveTo(38,0);ctx.arc(-2,0,40,0,TAU);ctx.fill();return;}
+  F('#14141a');for(const x of [-36,32])for(const y of [-23,23]){ctx.beginPath();rp(x-9,y-4,18,8,3);ctx.fill();}
+  F('#2b7fd8');ctx.beginPath();rp(-56,-19,112,38,10);ctx.fill();
+  F('#1d5fa8');ctx.beginPath();rp(-56,-3,112,6,3);ctx.fill();
+  F('#a9dcff');ctx.beginPath();rp(40,-15,12,30,4);ctx.fill();
+  F('#ffd23f');ell(56,-12,3,3);ell(56,12,3,3);
+  F('#ff5a5a');ell(-56,-12,2.4,2.4);ell(-56,12,2.4,2.4);
+  ctx.strokeStyle='rgba(70,45,20,.9)';ctx.lineWidth=1.6;ctx.beginPath();
+  for(const sy of [-1,1])for(const [rx,bx] of [[23.7,22],[-27.7,-26]]){ctx.moveTo(rx,sy*30.6);ctx.lineTo(bx,sy*19);}
+  ctx.stroke();
+  const cx=-2,R0=40,cols=['#ff4d6d','#ffd23f','#3fa9ff','#ffd23f'];
+  for(let i=0;i<12;i++){ctx.fillStyle=cols[i%4];ctx.beginPath();ctx.moveTo(cx,0);ctx.arc(cx,0,R0,i*TAU/12,(i+1)*TAU/12);ctx.closePath();ctx.fill();}
+  ctx.strokeStyle='rgba(0,0,0,.28)';ctx.lineWidth=2;ctx.beginPath();ctx.arc(cx,0,R0,0,TAU);ctx.stroke();
+  ctx.fillStyle='rgba(255,255,255,.3)';ell(cx-12,-12,13,9);
+  ctx.fillStyle='rgba(255,255,255,.55)';ctx.beginPath();ctx.arc(cx,0,4.5,0,TAU);ctx.fill();
 }
 let FL=null;
 function part(x,y,w,h,c,r){
@@ -2920,6 +2974,7 @@ function drawAim(e){
 }
 function drawEnt(e){
   if(!e.alive||e.st==='plane')return;
+  if(lobT>0&&e.st==='ground'){ctx.save();ctx.strokeStyle='rgba(120,200,255,'+(.45+.25*Math.sin(G.time*6+e.id)).toFixed(2)+')';ctx.lineWidth=2;ctx.beginPath();ctx.arc(e.x,e.y,R+5,0,TAU);ctx.stroke();ctx.restore();}
   const ga0=ctx.globalAlpha;if(e.camo>0)ctx.globalAlpha=.4;
   let x=e.x,y=e.y;
   if(e.st==='fall'){
@@ -3346,10 +3401,13 @@ function hud(){
   if(cache.brk!==bk){cache.brk=bk;$('brk').querySelectorAll('i').forEach((q,i)=>q.classList.toggle('on',i<P.br));}
   let msg='';
   if(!P.alive)msg=teamAlive(P.team)?(P.rvT>0?'Spectating your team · Revive in '+Math.ceil(P.rvT)+'s':(TS>1&&Z.state==='final'?'Spectating your team · No revives in the final zone':'Spectating your team')):'';
-  else if(P.st==='plane')msg=plane.inside?'Jump whenever you are ready':'The plane is approaching the island';
+  else if(P.st==='plane')msg=plane.inside?'Jump whenever you are ready':'The battle bus is approaching the island';
   else if(P.st==='fall')msg='Move to choose where to land';
   else if(!P.w)msg=G.time<45?'Find a chest for a weapon. Break rocks with your pickaxe':'';
   setTxt('msg',msg);
+  {const on=lobT>0&&P.alive;if(cache.busOn!==on){cache.busOn=on;$('bus').hidden=!on;}
+   if(on){const n=Math.ceil(lobT);if(cache.busN!==n){cache.busN=n;const el=$('busN');el.textContent=n;el.classList.remove('pop');void el.offsetWidth;el.classList.add('pop');}
+    $('busI').style.left=Math.min(100,(1-lobT/LOBBY)*100).toFixed(1)+'%';}}
   const key=feedL.filter(f=>G.time-f.t<6).map(f=>(f.me?'*':'')+f.text).join('|');
   if(cache.feed!==key){
     cache.feed=key;const fd=$('feed');fd.textContent='';
